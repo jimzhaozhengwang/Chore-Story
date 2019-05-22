@@ -1,9 +1,20 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+import click
+from flask import current_app, g
+from flask.cli import with_appcontext
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
+
+
+# @click.command("init-db")
+# @with_appcontext
+# def init_db_command():
+#     """Clear existing data and create new tables."""
+#     db.create_all(app=create_app())
+#     click.echo("Initialized the database.")
 
 
 def create_app():
@@ -33,5 +44,11 @@ def create_app():
     # blueprint for non-auth parts of app
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+
+    @app.cli.command('init-db')
+    def init_db_command():
+        """Clear existing data and create new tables."""
+        db.create_all(app=app)
+        click.echo("Initialized the database.")
 
     return app
