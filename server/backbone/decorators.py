@@ -1,6 +1,6 @@
 from functools import wraps
 
-from flask import current_app
+from flask import abort
 from flask_login import current_user, login_required
 
 
@@ -13,7 +13,8 @@ def admin_only(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if not getattr(current_user, 'admin', False):
-            return current_app.login_manager.unauthorized()
+            # If not admin user send back 404
+            abort(404)
         return func(*args, **kwargs)
     return decorated_view
 
