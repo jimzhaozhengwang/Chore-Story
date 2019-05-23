@@ -1,4 +1,4 @@
-# Bacbone
+# Backbone
 Runs on a single machine using Docker-compose to manage it's services
 Backend uses `python3.7`
 
