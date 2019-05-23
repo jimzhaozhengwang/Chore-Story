@@ -1,8 +1,7 @@
-import click
 from flask import Blueprint, render_template
-from flask.cli import with_appcontext
 from flask_login import login_required, current_user
 
+from .decorators import admin_login_required
 from . import create_app
 
 main = Blueprint('main', __name__)
@@ -18,18 +17,11 @@ def index():
 def profile():
     return render_template('profile.html', name=current_user.name)
 
-@click.command("init-db")
-@with_appcontext
-def init_db_command():
-    from . import db
-    db.create_all(app=create_app()) # pass the create_app result so Flask-SQLAlchemy gets the configuration.
 
-
-def init_app(app):
-    """Register database functions with the Flask app. This is called by
-    the application factory.
-    """
-    app.cli.add_command(init_db_command)
+@main.route('/admin')
+@admin_login_required
+def admin_example():
+    return render_template('profile.html', name='admin ' + current_user.name)
 
 
 if __name__ == '__main__':

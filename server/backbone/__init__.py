@@ -9,14 +9,6 @@ from flask.cli import with_appcontext
 db = SQLAlchemy()
 
 
-# @click.command("init-db")
-# @with_appcontext
-# def init_db_command():
-#     """Clear existing data and create new tables."""
-#     db.create_all(app=create_app())
-#     click.echo("Initialized the database.")
-
-
 def create_app():
     app = Flask(__name__)
 

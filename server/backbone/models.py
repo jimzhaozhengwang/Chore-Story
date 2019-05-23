@@ -12,7 +12,7 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(1000), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
     pid = db.Column(db.Integer, nullable=True, default=None)  # connecting account to a parent
-    children = relationship('Avatar')
+    # children = relationship('Avatar')
 
 
 class Avatar(db.Model):
