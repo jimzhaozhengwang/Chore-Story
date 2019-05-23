@@ -1,24 +1,30 @@
 from flask_login import UserMixin
-from sqlalchemy.orm import relationship
+from sqlalchemy import Table
 
 from . import db
 
+user_table = 'parents'
+child_table = 'children'
 
-class User(UserMixin, db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, nullable=False, primary_key=True)  # primary keys are required by SQLAlchemy
+family_association = Table('parents-children', db.Model.metadata,
+                           db.Column('parent_id', db.Integer, db.ForeignKey(f'{user_table}.id')),
+                           db.Column('child_id', db.Integer, db.ForeignKey(f'{child_table}.id')))
+
+
+class Parent(UserMixin, db.Model):
+    __tablename__ = user_table
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
+    admin = db.Column(db.Boolean, nullable=False, default=False)
+    name = db.Column(db.String(1000), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
-    name = db.Column(db.String(1000), nullable=False)
-    admin = db.Column(db.Boolean, nullable=False, default=False)
-    pid = db.Column(db.Integer, nullable=True, default=None)  # connecting account to a parent
-    # children = relationship('Avatar')
+    children = db.relationship('Child', secondary=family_association)
 
 
-class Avatar(db.Model):
-    __tablename__ = 'avatars'
-    uid = db.Column(db.Integer, primary_key=True)  # connecting an avatar to a user
+class Child(db.Model):
+    __tablename__ = child_table
+    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
     level = db.Column(db.Integer)
     xp = db.Column(db.Integer)
-    child_acc = db.Column(db.Boolean)
+    name = db.Column(db.String(1000), nullable=False)
 
