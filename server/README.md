@@ -18,7 +18,7 @@ Services:
     ```
 3. Install all of the dependencies(pinned in `requirement.txt`):
     ```bash
-    python3.7 -m pip install -r backbone/backbone/requirements.txt
+    python3.7 -m pip install -r server/backbone/requirements.txt
     ```
 4. Build the necessary database
     ```bash

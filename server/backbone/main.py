@@ -3,7 +3,7 @@ from flask import Blueprint, render_template
 from flask.cli import with_appcontext
 from flask_login import login_required, current_user
 
-from backbone import create_app
+from . import create_app
 
 main = Blueprint('main', __name__)
 
@@ -21,7 +21,7 @@ def profile():
 @click.command("init-db")
 @with_appcontext
 def init_db_command():
-    from backbone import db, create_app
+    from . import db
     db.create_all(app=create_app()) # pass the create_app result so Flask-SQLAlchemy gets the configuration.
 
 
