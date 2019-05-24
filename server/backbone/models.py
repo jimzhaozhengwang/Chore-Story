@@ -15,6 +15,7 @@ class Parent(UserMixin, db.Model):
     __tablename__ = user_table
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    api_key = db.Column(db.String(36), default=None)
     name = db.Column(db.String(1000), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
