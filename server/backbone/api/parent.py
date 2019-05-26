@@ -9,9 +9,7 @@ from . import *
 
 @api_bp.route('/login', methods=['POST'])
 @json_content_only
-def login(body):
-    email, password = extract_params(body, ['email', 'password'])
-
+def login(email, password):
     user = Parent.query.filter_by(email=email).first()
 
     # check if user actually exists
@@ -23,7 +21,8 @@ def login(body):
     g.login_via_request = True
     new_api_key = str(uuid4())
     # make sure it's a unique api key
-    while Parent.query.filter_by(api_key=new_api_key).first() is not None:
+    while (Parent.query.filter_by(api_key=new_api_key).first() is not None or
+           Child.query.filter_by(api_key=new_api_key).first() is not None):
         new_api_key = str(uuid4())
     user.api_key = str(new_api_key)
     db.session.commit()
@@ -33,9 +32,7 @@ def login(body):
 @api_bp.route('/add_child', methods=['POST'])
 @parent_login_required
 @json_content_only
-def add_child(body):
-    # Get params
-    name, = extract_params(body, ['name'])
+def add_child(name):
     # Generate child
     new_child = Child(level=1, xp=0, name=name)
     current_user.children.append(new_child)
@@ -47,16 +44,15 @@ def add_child(body):
 @api_bp.route('/generate_child_login')
 @parent_login_required
 @json_content_only
-def generate_child_login(body):
-    # Get params
-    id, = extract_params(body, ['id'])
-    child = Child.query.filter_by(id=id).first()
+def generate_child_login(cid):
+    child = Child.query.filter_by(id=cid).first()
     user = current_user
     if child not in user.children:
         raise BackboneException(403, "Not user's child")
     new_api_key = str(uuid4())
     # make sure it's a unique api key
-    while Child.query.filter_by(api_key=new_api_key).first() is not None:
+    while (Parent.query.filter_by(api_key=new_api_key).first() is not None or
+           Child.query.filter_by(api_key=new_api_key).first() is not None):
         new_api_key = str(uuid4())
     child.api_key = new_api_key
     db.session.commit()
@@ -66,10 +62,7 @@ def generate_child_login(body):
 @api_bp.route('/get_child', methods=['POST'])
 @parent_login_required
 @json_content_only
-def get_child_info(body):
-    # Get params
-    cid, = extract_params(body, ['id'])
-    # Return info
+def get_child_info(cid):
     child = Child.query.filter_by(id=cid).first()
     if not child or child not in current_user.children:
         abort(401)

@@ -53,6 +53,19 @@ def admin_login_required(func):
     return decorated_view
 
 
+def extract_params(body, params):
+    """
+    Extract params from body nicely
+    :param params: list of param names
+    :param body: body in a dictionary form
+    :return: a tuple of the extracted params
+    """
+    try:
+        return tuple(body[e] for e in params)
+    except KeyError:
+        raise BackboneException(400, "Invalid post body")
+
+
 def json_content_only(func):
     """
     Unified decorator, does the same as login_required + admin_only
@@ -61,12 +74,14 @@ def json_content_only(func):
     """
     @wraps(func)
     def json_view_only():
-        needs_body = len(inspect.getfullargspec(func)[0]) > 0
+        argspec = inspect.getfullargspec(func)
+        args = extract_params(request.json, argspec[0])
+        needs_body = len(args) > 0
         try:
             if not request.is_json:
                 raise BackboneException(400, 'Method body must be a valid JSON')
             if needs_body:
-                return json.jsonify({'data': func(request.json)})
+                return json.jsonify({'data': func(*args)})
             else:
                 return json.jsonify({'data': func()})
         except BackboneException as e:

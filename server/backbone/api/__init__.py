@@ -9,19 +9,6 @@ from ..decorators import json_content_only, parent_login_required, child_login_r
 from ..exceptions import BackboneException
 
 
-def extract_params(body, params):
-    """
-    Extract params from body nicely
-    :param params: list of param names
-    :param body: body in a dictionary form
-    :return: a tuple of the extracted params
-    """
-    try:
-        return tuple(body[e] for e in params)
-    except KeyError:
-        raise BackboneException(400, "Invalid post body")
-
-
 def generate_prnt_resp(usr):
     """
     Generate a dictionary description of a Parent object, used by for example /me
@@ -47,7 +34,7 @@ def generate_chd_resp(usr):
     return d
 
 
-__all__ = ['db', 'Parent', 'Child', 'api_bp', 'generate_prnt_resp', 'generate_chd_resp', 'extract_params',
+__all__ = ['db', 'Parent', 'Child', 'api_bp', 'generate_prnt_resp', 'generate_chd_resp',
            'login_required', 'current_user', 'logout_user', 'json_content_only', 'BackboneException',
            'parent_login_required', 'child_login_required']
 

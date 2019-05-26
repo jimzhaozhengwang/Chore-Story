@@ -21,7 +21,7 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    from .models import Parent
+    from .models import Parent, Child
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -38,7 +38,8 @@ def create_app():
             #     api_key = base64.b64decode(api_key)
             # except TypeError:
             #     pass
-            user = Parent.query.filter_by(api_key=api_key).first()
+            user = (Parent.query.filter_by(api_key=api_key).first() or
+                    Child.query.filter_by(api_key=api_key).first())
             if user:
                 return user
         return None
