@@ -2,9 +2,27 @@ from os import abort
 from uuid import uuid4
 
 from flask import g
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import *
+
+
+@api_bp.route('/register', methods=['POST'])
+@json_content_only
+def register(email, name, password):
+    user = Parent.query.filter_by(
+        email=email).first()  # if this returns a user, then the email already exists in database
+
+    if user:  # if a user is found, we want to redirect back to signup page so user can try again
+        raise BackboneException(409, "Email already used")
+
+    # create new user with the form data. Hash the password so plaintext version isn't saved.
+    new_user = Parent(email=email, name=name, password=generate_password_hash(password))
+
+    # add the new user to the database
+    db.session.add(new_user)
+    db.session.commit()
+    return "User successfully created"
 
 
 @api_bp.route('/login', methods=['POST'])
@@ -41,7 +59,7 @@ def add_child(name):
     return generate_chd_resp(new_child)
 
 
-@api_bp.route('/generate_child_login')
+@api_bp.route('/generate_child_login', methods=['GET'])
 @parent_login_required
 @json_content_only
 def generate_child_login(cid):
@@ -56,15 +74,18 @@ def generate_child_login(cid):
         new_api_key = str(uuid4())
     child.api_key = new_api_key
     db.session.commit()
-    return {'api_key': new_api_key}
+    return new_api_key
 
 
-@api_bp.route('/get_child', methods=['POST'])
+@api_bp.route('/add_quest', methods=['POST'])
 @parent_login_required
 @json_content_only
-def get_child_info(cid):
+def add_quest(cid, title, description, reward):
     child = Child.query.filter_by(id=cid).first()
-    if not child or child not in current_user.children:
-        abort(401)
-    return generate_chd_resp(child)
-
+    if child not in current_user.children:
+        raise BackboneException(403, "Not user's child")
+    new_quest = Quest(title=title, description=description, reward=reward)
+    child.quests.append(new_quest)
+    db.session.add(new_quest)
+    db.session.commit()
+    return generate_qst_resp(new_quest)

@@ -74,10 +74,10 @@ def json_content_only(func):
     """
     @wraps(func)
     def json_view_only():
-        argspec = inspect.getfullargspec(func)
-        args = extract_params(request.json, argspec[0])
-        needs_body = len(args) > 0
         try:
+            argspec = inspect.getfullargspec(func)
+            args = extract_params(request.json, argspec[0])
+            needs_body = len(args) > 0
             if not request.is_json:
                 raise BackboneException(400, 'Method body must be a valid JSON')
             if needs_body:
