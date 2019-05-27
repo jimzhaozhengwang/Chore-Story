@@ -58,6 +58,7 @@ class Quest(db.Model):
     description = db.Column(db.String(1000), nullable=False)
     reward = db.Column(db.Integer, nullable=False)
     completed = db.Column(db.Boolean, default=False, nullable=False)
+    owner = db.Column(db.Integer, db.ForeignKey(f'{child_table}.id'))
 
     def __repr__(self):
         return f"Quest {self.name}"
