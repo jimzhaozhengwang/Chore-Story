@@ -88,4 +88,4 @@ def add_quest(cid, title, description, reward):
     child.quests.append(new_quest)
     db.session.add(new_quest)
     db.session.commit()
-    return generate_qst_resp(new_quest)
+    return new_quest.id

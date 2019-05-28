@@ -41,3 +41,17 @@ def get_child_info(cid):
         if not friend or friend not in current_user.all_friends:
             abort(401)
         return generate_chd_resp(friend)
+
+
+@api_bp.route('/get_quest', methods=['GET'])
+@login_required
+@json_content_only
+def get_quest(qid):
+    quest = Quest.query.filter_by(id=qid).first()
+    if isinstance(inspect(current_user).object, Parent):
+        if quest.owner not in [c.id for c in current_user.children]:
+            raise BackboneException(404, "Quest not found")
+    elif isinstance(inspect(current_user).object, Child):
+        if quest not in current_user.quests:
+            raise BackboneException(404, "Quest not found")
+    return generate_qst_resp(quest)
