@@ -63,6 +63,11 @@ def create_app():
     @app.cli.command('init-db')
     def init_db_command():
         """Clear existing data and create new tables."""
+        import os
+        db_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'db.sqlite')
+        if os.path.isfile(db_file):
+            print(f"Removing already existing db file: {db_file}")
+            os.remove(db_file)
         db.create_all(app=app)
         click.echo("Initialized the database.")
 

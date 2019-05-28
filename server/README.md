@@ -18,11 +18,12 @@ Services:
     ```
 3. Install all of the dependencies(pinned in `requirement.txt`):
     ```bash
+    cd server/backbone
     python3.7 -m pip install -r server/backbone/requirements.txt
     ```
 4. Build the necessary database
     ```bash
-    cd backbone
+    cd ..
     FLASK_APP=backbone flask init-db
     ```
 
