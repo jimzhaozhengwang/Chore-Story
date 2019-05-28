@@ -59,14 +59,14 @@ def add_child(name):
     return generate_chd_resp(new_child)
 
 
-@api_bp.route('/generate_child_login', methods=['GET'])
+@api_bp.route('/generate_child_login/<int:cid>', methods=['GET'])
 @parent_login_required
-@json_content_only
+@backbone_error_handle
 def generate_child_login(cid):
     child = Child.query.filter_by(id=cid).first()
     user = current_user
     if child not in user.children:
-        raise BackboneException(403, "Not user's child")
+        raise BackboneException(404, "Child not found")
     new_api_key = str(uuid4())
     # make sure it's a unique api key
     while (Parent.query.filter_by(api_key=new_api_key).first() is not None or
@@ -83,7 +83,7 @@ def generate_child_login(cid):
 def add_quest(cid, title, description, reward):
     child = Child.query.filter_by(id=cid).first()
     if child not in current_user.children:
-        raise BackboneException(403, "Not user's child")
+        raise BackboneException(404, "Child not found")
     new_quest = Quest(title=title, description=description, reward=reward)
     child.quests.append(new_quest)
     db.session.add(new_quest)

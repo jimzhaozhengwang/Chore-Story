@@ -5,7 +5,7 @@ api_bp = Blueprint('api', __name__)
 
 from .. import db
 from ..models import Parent, Child, Quest
-from ..decorators import json_content_only, parent_login_required, child_login_required
+from ..decorators import json_content_only, json_return, backbone_error_handle, parent_login_required, child_login_required
 from ..exceptions import BackboneException
 
 
@@ -48,6 +48,7 @@ def generate_qst_resp(usr):
 
 __all__ = ['db', 'Parent', 'Child', 'api_bp', 'generate_prnt_resp', 'generate_chd_resp',
            'login_required', 'current_user', 'logout_user', 'json_content_only', 'BackboneException',
-           'parent_login_required', 'child_login_required', 'Quest', 'generate_qst_resp']
+           'parent_login_required', 'child_login_required', 'Quest', 'generate_qst_resp',
+           'json_return', 'backbone_error_handle']
 
 from . import child, parent, common

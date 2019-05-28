@@ -7,12 +7,26 @@ from .models import Parent, Child
 from .exceptions import BackboneException
 
 
+def json_return(output):
+    """Helper for returning a json output"""
+    return json.jsonify({"data": output})
+
+
+def backbone_error_handle(func):
+    """A decorator for catching BackboneExceptions and returning error messages to clients"""
+    @wraps(func)
+    def protected_view(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except BackboneException as e:
+            return json.jsonify({'error': {'status': e.error_code,
+                                           'detail': e.message},
+                                 'data': None})
+    return protected_view
+
+
 def parent_login_required(func):
-    """
-    This decorator is the same as login_required, but makes sure logged in user is a of parent type
-    :param func: The view function to decorate.
-    :type func: function
-    """
+    """This decorator is the same as login_required, but makes sure logged in user is a of parent type"""
     @login_required
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -23,11 +37,7 @@ def parent_login_required(func):
 
 
 def child_login_required(func):
-    """
-    This decorator is the same as login_required, but makes sure logged in user is a of child type
-    :param func: The view function to decorate.
-    :type func: function
-    """
+    """This decorator is the same as login_required, but makes sure logged in user is a of child type"""
     @login_required
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -38,11 +48,7 @@ def child_login_required(func):
 
 
 def admin_login_required(func):
-    """
-    Unified decorator, does the same as login_required + admin_only
-    :param func: The view function to decorate.
-    :type func: function
-    """
+    """Makes sure that user is logged in and that they are of parent type and an admin"""
     @parent_login_required
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -54,12 +60,7 @@ def admin_login_required(func):
 
 
 def extract_params(body, params):
-    """
-    Extract params from body nicely
-    :param params: list of param names
-    :param body: body in a dictionary form
-    :return: a tuple of the extracted params
-    """
+    """Extract params from body nicely"""
     try:
         return tuple(body[e] for e in params)
     except KeyError:
@@ -67,24 +68,17 @@ def extract_params(body, params):
 
 
 def json_content_only(func):
-    """
-    Unified decorator, does the same as login_required + admin_only
-    :param func: The view function to decorate.
-    :type func: function
-    """
+    """A decorator to automatically extract json elements"""
+    @backbone_error_handle
     @wraps(func)
     def json_view_only():
-        try:
-            argspec = inspect.getfullargspec(func)
-            args = extract_params(request.json, argspec[0])
-            needs_body = len(args) > 0
-            if not request.is_json:
-                raise BackboneException(400, 'Method body must be a valid JSON')
-            if needs_body:
-                return json.jsonify({'data': func(*args)})
-            else:
-                return json.jsonify({'data': func()})
-        except BackboneException as e:
-            return json.jsonify({'error': {'status': e.error_code,
-                                           'detail': e.message}})
+        argspec = inspect.getfullargspec(func)
+        args = extract_params(request.json, argspec[0])
+        needs_body = len(args) > 0
+        if not request.is_json:
+            raise BackboneException(400, 'Method body must be a valid JSON')
+        if needs_body:
+            return json_return(func(*args))
+        else:
+            return json_return(func())
     return json_view_only

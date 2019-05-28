@@ -1,21 +1,24 @@
 from . import *
 
-def _until_next_level():
-    return 12
 
-@api_bp.route('/until_next_level', methods=['GET'])
-@child_login_required
-@json_content_only
-def until_next_level():
+def _until_next_level(current_level):
     # For now this is a constant 12 xp / level, but this
     #  function makes us able to change this on the fly
-    return _until_next_level()
+    return 12
+
+@api_bp.route('/until_next_level/<int:current_level>', methods=['GET'])
+@child_login_required
+@backbone_error_handle
+def until_next_level(current_level):
+    """Returns how much xp is needed to level up to current_level+1"""
+    return _until_next_level(current_level)
 
 
 @api_bp.route('/add_friend', methods=['POST'])
 @child_login_required
 @json_content_only
 def add_friend(fid):
+    """Add child of id fid"""
     potential_friend = Child.query.filter_by(id=fid).first()
     if not potential_friend:
         raise BackboneException(404, "Child not found")

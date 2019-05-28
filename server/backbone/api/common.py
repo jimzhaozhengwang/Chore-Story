@@ -27,9 +27,9 @@ def me():
         return resp
 
 
-@api_bp.route('/get_child', methods=['GET'])
+@api_bp.route('/get_child/<int:cid>', methods=['GET'])
 @login_required
-@json_content_only
+@backbone_error_handle
 def get_child_info(cid):
     if isinstance(inspect(current_user).object, Parent):
         child = Child.query.filter_by(id=cid).first()
@@ -43,9 +43,9 @@ def get_child_info(cid):
         return generate_chd_resp(friend)
 
 
-@api_bp.route('/get_quest', methods=['GET'])
+@api_bp.route('/get_quest/<int:qid>', methods=['GET'])
 @login_required
-@json_content_only
+@backbone_error_handle
 def get_quest(qid):
     quest = Quest.query.filter_by(id=qid).first()
     if isinstance(inspect(current_user).object, Parent):
@@ -54,4 +54,4 @@ def get_quest(qid):
     elif isinstance(inspect(current_user).object, Child):
         if quest not in current_user.quests:
             raise BackboneException(404, "Quest not found")
-    return generate_qst_resp(quest)
+    return json_return(generate_qst_resp(quest))
