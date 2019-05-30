@@ -56,7 +56,9 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
 
 
 def find_next_time(qst, time_now=datetime.utcnow()):
-    """Helper function to find next occurrence of a recurring event"""
+    """Helper function to find next occurrence of a quest"""
+    if not qst.recurring:
+        return qst.due
     time = qst.due
     for ts in itertools.cycle([e.value for e in qst.timestamps]):
         if time >= time_now:
@@ -64,9 +66,17 @@ def find_next_time(qst, time_now=datetime.utcnow()):
         time = time + timedelta(seconds=ts)
 
 
+def is_qst_completed(qst, ts):
+    """find if a quest was completed for the certain ts due time"""
+    if find_next_time(qst, ts) != ts:
+        raise BackboneException(400, "Invalid due time")
+    return ts in [c.value for c in qst.completions]
+
+
 __all__ = ['db', 'Parent', 'Child', 'api_bp', 'generate_prnt_resp', 'generate_chd_resp',
            'login_required', 'current_user', 'logout_user', 'json_content_only', 'BackboneException',
            'parent_login_required', 'child_login_required', 'Quest', 'generate_qst_resp',
-           'json_return', 'backbone_error_handle', 'QuestTimes', 'find_next_time', 'QuestCompletions']
+           'json_return', 'backbone_error_handle', 'QuestTimes', 'find_next_time', 'QuestCompletions',
+           'is_qst_completed']
 
 from . import child, parent, common

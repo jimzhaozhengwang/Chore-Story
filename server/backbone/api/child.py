@@ -122,17 +122,19 @@ def complete_quest(qid, ts):
 
         {
          "data": {
-          "completed_on": "1559145134",
-          "description": "You're going on a quest to save the princess, brush your teeth so you don't embarass yourself.",
-          "due": 1559145600.0,
-          "id": 1,
-          "next_occurrence": 1559404800.0,
-          "recurring": true,
-          "reward": 12,
-          "title": "Brush your teeth",
           "completed_now": true,
-          "lvled_up": false
+          "lvled_up": false,
+          "quest": {
+            "completed_on": "1559145134",
+            "description": "You're going on a quest to save the princess, brush your teeth so you don't embarass yourself.",
+            "due": 1559145600.0,
+            "id": 1,
+            "next_occurrence": 1559404800.0,
+            "recurring": true,
+            "reward": 12,
+            "title": "Brush your teeth",
           }
+         }
         }
 
     :param qid: id of quest to be completed
@@ -142,19 +144,14 @@ def complete_quest(qid, ts):
     if not ts:
         ts = datetime.utcnow()
     else:
-        ts = datetime.timestamp(ts)
-    # TODO how to complete past non-recurring quest?
+        ts = datetime.fromtimestamp(ts)
     quest = Quest.query.filter_by(id=qid).first()
-    completed_now = False
-    lvl_up = False
     if quest not in current_user.quests:
         raise BackboneException(404, "Quest not found")
-    if quest.completions:
-        pass
-    else:
-        # Update quest and child objects
-        completed_now = True
-        quest_completion = QuestCompletions(ts=datetime.utcnow())
+    completed_now = not is_qst_completed(quest, ts)
+    lvl_up = False
+    if completed_now:
+        quest_completion = QuestCompletions(value=ts, ts=datetime.utcnow())
         quest.completions.append(quest_completion)
         db.session.add(quest_completion)
         current_user.xp += quest.reward
@@ -164,10 +161,11 @@ def complete_quest(qid, ts):
             current_user.level += 1
             current_user.xp -= to_reach
         db.session.commit()
-    resp = generate_qst_resp(quest)
-    # TODO completed on and other crap has to come out of generate_resp fn
-    resp['completed_now'] = completed_now
-    resp['lvled_up'] = lvl_up
+    resp = {
+        'completed_now': completed_now,
+        'lvled_up': lvl_up,
+        'qst': generate_qst_resp(quest, ts)
+    }
     return json_return(resp)
 
 
@@ -194,14 +192,15 @@ def get_quests(ts):
           ]
         }
 
-    :param ts: timestamp that should be used to retermine window start/end
+    :param ts: timestamp that should be used to determine window start/end
     :return: list of quest ids
     """
+    # TODO add window as a parameter, look around window is to arbitrary
     # Get current time if no time was requested
     if not ts:
         ts = datetime.utcnow()
     else:
-        ts = datetime.utcfromtimestamp(ts)
+        ts = datetime.fromtimestamp(ts)
     # Get timestamp range
     start = ts + LOOK_BACK
     end = ts + LOOK_AHEAD

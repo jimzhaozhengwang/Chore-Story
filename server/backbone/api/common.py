@@ -15,11 +15,6 @@ def logout():
 
     **Login required, either Parent, or Child**
 
-    **Errors**:
-
-    409, Email already user - email is already in use by another user
-
-
     **Example return**:
 
     .. code-block:: json
@@ -56,7 +51,7 @@ def me():
             "children": [1, 2],
             "email": "markooo.keller@gmail.com",
             "id": 1,
-            "name": "Mark",
+            "name": "mark",
             "type": "parent"
           }
         }
@@ -84,6 +79,10 @@ def get_child_info(cid):
 
     **Login Required**
 
+    **Errors**:
+
+    404, Child not found - Child either doesn't exist, or permission denied
+
     **Example return**:
 
     .. code-block:: json
@@ -102,12 +101,12 @@ def get_child_info(cid):
     if isinstance(inspect(current_user).object, Parent):
         child = Child.query.filter_by(id=cid).first()
         if not child or child not in current_user.children:
-            raise BackboneException(404, "Child account not found")
+            raise BackboneException(404, "Child not found")
         return json_return(generate_chd_resp(child))
     elif isinstance(inspect(current_user).object, Child):
         friend = Child.query.filter_by(id=cid).first()
         if not friend or friend not in current_user.all_friends:
-            raise BackboneException(404, "Child account not found")
+            raise BackboneException(404, "Child not found")
         return json_return(generate_chd_resp(friend))
 
 
