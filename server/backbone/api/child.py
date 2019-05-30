@@ -126,7 +126,7 @@ def complete_quest(qid, ts):
           "description": "You're going on a quest to save the princess, brush your teeth so you don't embarass yourself.",
           "due": 1559145600.0,
           "id": 1,
-          "next_occurence": 1559404800.0,
+          "next_occurrence": 1559404800.0,
           "recurring": true,
           "reward": 12,
           "title": "Brush your teeth",
@@ -188,12 +188,10 @@ def get_quests(ts):
     .. code-block:: json
 
         {
-          "data": {
-            "id": 2,
-            "level": 1,
-            "name": "Jim",
-            "xp": 0
-          }
+          "data": [
+            1,
+            2
+          ]
         }
 
     :param ts: timestamp that should be used to retermine window start/end

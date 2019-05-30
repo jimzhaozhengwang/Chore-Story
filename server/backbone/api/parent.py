@@ -121,17 +121,12 @@ def add_child(name):
 
     **Parent login required**
 
-    **Errors**:
-
-    406, Bad login details - user with ``email`` and/or ``password`` not found
-
     **Example post body**:
 
     .. code-block:: json
 
         {
-        "email": "example@inter.net",
-        "password": "backbone"
+        "name": "Jim",
         }
 
     **Example return**:
@@ -147,9 +142,8 @@ def add_child(name):
           }
         }
 
-    :param email: email address of user
-    :param password: password of user
-    :return: new api_key of user
+    :param name: name of child
+    :return: a description of the new child
     """
     # Generate child
     new_child = Child(level=1, xp=0, name=name)
@@ -237,10 +231,10 @@ def add_quest(cid, title, description, reward, due, timestamps=None):
         {
           "data": {
             "completed_on": "",
-            "description": "You're going on a quest to save the princess, brush your teeth so you don't embarass yourself.",
+            "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
             "due": 1559131200.0,
             "id": 10,
-            "next_occurence": 1559131200.0,
+            "next_occurrence": 1559131200.0,
             "recurring": true,
             "reward": 2,
             "title": "Brush your teeth"
@@ -292,7 +286,7 @@ def modify_quest(qid, title, description, reward, due, timestamps=None):
         {
          "cid": 1,
          "title": "Brush your teeth",
-         "description": "You're going on a quest to save the princess, brush your teeth so you don't embarass yourself.",
+         "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
          "reward": 2,
          "timestamps": [86400],
          "due": 1559131200
@@ -310,17 +304,17 @@ def modify_quest(qid, title, description, reward, due, timestamps=None):
         {
           "data": {
             "completed_on": "",
-            "description": "You're going on a quest to save the princess, brush your teeth so you don't embarass yourself.",
+            "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
             "due": 1559131200.0,
             "id": 10,
-            "next_occurence": 1559131200.0,
+            "next_occurrence": 1559131200.0,
             "recurring": true,
             "reward": 2,
             "title": "Brush your teeth"
           }
         }
 
-    :param cid: id of child
+    :param qid: id of quest
     :param title: title of quest
     :param description: description of quest
     :param reward: number of exp points to reward child for completing quest

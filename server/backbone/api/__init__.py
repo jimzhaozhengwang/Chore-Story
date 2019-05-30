@@ -49,7 +49,7 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
     looking_for = find_next_time(qst, ts) if qst.recurring else qst.due
     d['due'] = datetime.timestamp(d['due'])
     if qst.recurring:
-        d['next_occurence'] = datetime.timestamp(looking_for)
+        d['next_occurrence'] = datetime.timestamp(looking_for)
     filtered_completions = list(filter(lambda c: c.value == looking_for, qst.completions))
     d['completed_on'] = filtered_completions[0].ts if len(filtered_completions) == 1 else ''
     return d

@@ -19,15 +19,6 @@ def logout():
 
     409, Email already user - email is already in use by another user
 
-    **Example post body**:
-
-    .. code-block:: json
-
-        {
-        "email": "example@inter.net",
-        "name": "backbone",
-        "password": "backbone"
-        }
 
     **Example return**:
 
@@ -37,15 +28,12 @@ def logout():
         "data": null
         }
 
-    :param email: email address of new user
-    :param name: name of new user
-    :param password: password of new user
     :return: None
     """
     current_user.api_key = None
     db.session.commit()
     logout_user()
-    return {}
+    return None
 
 
 @api_bp.route('/me', methods=['GET'])
@@ -147,10 +135,10 @@ def get_quest(qid, ts):
         {
          "data": {
            "completed_on": "",
-           "description": "You're going on a quest to save the princess, brush your teeth so you don't embarass yourself.",
+           "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
            "due": 1559145600.0,
            "id": 1,
-           "next_occurence": 1559404800.0,
+           "next_occurrence": 1559404800.0,
            "recurring": true,
            "reward": 12,
            "title": "This is the initial quest"
@@ -158,7 +146,7 @@ def get_quest(qid, ts):
         }
 
     :param qid: id of quest of interest
-    :param ts: timestamp we want the ``next_occurence`` to be relative to if ommited current time will be used
+    :param ts: timestamp we want the ``next_occurrence`` to be relative to if omitted current time will be used
     :return: a JSON object describing the quest, see example
     """
     if not ts:
@@ -188,13 +176,28 @@ def modify_child(cid, name):
 
     **Errors**:
 
-    404, Child not found - child doesn't exists, or permision denied
+    404, Child not found - child doesn't exists, or permission denied
+
+    **Example post body**:
+
+    .. code-block:: json
+
+        {
+          "name": "Jim"
+        }
 
     **Example return**:
 
     .. code-block:: json
 
-
+        {
+          "data": {
+            "id": 2,
+            "level": 1,
+            "name": "Jim",
+            "xp": 0
+          }
+        }
 
     :param cid: child's id
     :param name: new name of child
