@@ -60,25 +60,24 @@ def admin_login_required(func):
 
 
 def extract_params(body, params):
-    """Extract params from body nicely"""
-    try:
-        return tuple(body[e] for e in params)
-    except KeyError:
-        raise BackboneException(400, "Invalid post body")
+    """Extract params from body nicely if possible"""
+    d = {}
+    for p in params:
+        if p in body.keys():
+            d[p] = body[p]
+    return d
 
 
 def json_content_only(func):
     """A decorator to automatically extract json elements"""
     @backbone_error_handle
     @wraps(func)
-    def json_view_only():
-        argspec = inspect.getfullargspec(func)
-        args = extract_params(request.json, argspec[0])
-        needs_body = len(args) > 0
+    def json_view_only(**kwargs):
+        args = inspect.getfullargspec(func)[0]
+        kwargs.update(extract_params(request.json, args))
+        if list(kwargs.keys()) != args:
+            raise BackboneException(400, "Invalid input")
         if not request.is_json:
             raise BackboneException(400, 'Method body must be a valid JSON')
-        if needs_body:
-            return json_return(func(*args))
-        else:
-            return json_return(func())
+        return json_return(func(**kwargs))
     return json_view_only

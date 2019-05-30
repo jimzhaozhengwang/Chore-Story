@@ -6,6 +6,8 @@ from . import db
 user_table = 'parents'
 child_table = 'children'
 quest_table = 'quests'
+quest_times_table = 'questTimes'
+quest_completions_table = 'questCompletions'
 
 family_association = Table('parents-children', db.Model.metadata,
                            db.Column('parent_id', db.Integer, db.ForeignKey(f'{user_table}.id')),
@@ -41,7 +43,7 @@ class Child(UserMixin, db.Model):
     level = db.Column(db.Integer)
     xp = db.Column(db.Integer)
     name = db.Column(db.String(1000), nullable=False)
-    added_friends = db.relationship("Child", secondary=friendship,
+    added_friends = db.relationship("Child", secondary=friendship,  # NOTE secondary will delete and update when Child updates/deletes
                                     primaryjoin=(id == friendship.c.friend_a_id),
                                     secondaryjoin=(id == friendship.c.friend_b_id))
     quests = db.relationship('Quest')
@@ -57,11 +59,32 @@ class Quest(db.Model):
     title = db.Column(db.String(350), nullable=False)
     description = db.Column(db.String(1000), nullable=False)
     reward = db.Column(db.Integer, nullable=False)
-    completed = db.Column(db.Boolean, default=False, nullable=False)
     owner = db.Column(db.Integer, db.ForeignKey(f'{child_table}.id'))
+    due = db.Column(db.TIMESTAMP, nullable=False)
+    recurring = db.Column(db.Boolean, default=False, nullable=False)
+    timestamps = db.relationship("QuestTimes")
+    completions = db.relationship("QuestCompletions")
 
     def __repr__(self):
-        return f"Quest {self.name}"
+        return ("Recurring " if self.recurring else "") +\
+               f"Quest {self.id}"
+
+
+class QuestTimes(db.Model):
+    __tablename__ = quest_times_table
+
+    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
+    owner = db.Column(db.Integer, db.ForeignKey(f'{quest_table}.id'))
+    value = db.Column(db.Float, nullable=False)
+
+
+class QuestCompletions(db.Model):
+    __tablename__ = quest_completions_table
+
+    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)  # ID of completion
+    owner = db.Column(db.Integer, db.ForeignKey(f'{quest_table}.id'))  # Quest's ID
+    value = db.Column(db.TIMESTAMP, nullable=False)  # Which due date was completed
+    ts = db.Column(db.TIMESTAMP, nullable=False)  # When was it completed
 
 
 friendship_union = db.select([

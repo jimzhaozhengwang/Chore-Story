@@ -1,10 +1,9 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 
-from .decorators import admin_login_required
 from . import create_app
-
-main = Blueprint('main', __name__)
+from .views import main
+from .decorators import admin_login_required
 
 
 @main.route('/')

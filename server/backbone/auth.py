@@ -4,8 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from . import db
 from .models import Parent
-
-auth = Blueprint('auth', __name__)
+from .views import auth
 
 
 @auth.route('/login')

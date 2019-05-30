@@ -1,4 +1,9 @@
+from datetime import datetime, timedelta
+
 from . import *
+
+LOOK_BACK = timedelta(hours=0)
+LOOK_AHEAD = timedelta(days=1)
 
 
 def _until_next_level(current_level):
@@ -6,60 +11,208 @@ def _until_next_level(current_level):
     #  function makes us able to change this on the fly
     return 12
 
-@api_bp.route('/until_next_level/<int:current_level>', methods=['GET'])
+
+@api_bp.route('/lvlup/<int:current_level>', methods=['GET'])
 @child_login_required
 @backbone_error_handle
 def until_next_level(current_level):
-    """Returns how much xp is needed to level up to current_level+1"""
-    return _until_next_level(current_level)
+    """
+    .. :quickref: User; get exp limit of level
+
+    Returns how much xp is needed to level up to ``current_level`` + 1
+
+    **Child login required**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+        "data": 12
+        }
+
+    :param current_level: the level from which we'd like to level up
+    :return: return the number of xp needed to level up.
+    """
+    return json_return(_until_next_level(current_level))
 
 
-@api_bp.route('/add_friend', methods=['POST'])
+@api_bp.route('/friend/<int:fid>', methods=['POST'])
 @child_login_required
 @json_content_only
 def add_friend(fid):
-    """Add child of id fid"""
+    """
+    .. :quickref: Friend; add a friend
+
+    Add a friend to currently logged in child account.
+
+    **Child login required**
+
+    **Errors**:
+
+    404, Child not found - child id is invalid
+
+    **Example Return**:
+
+    .. code-block:: json
+
+        {
+        "data": null
+        }
+
+    :param fid: child id of friend
+    :return: None
+    """
     potential_friend = Child.query.filter_by(id=fid).first()
     if not potential_friend:
         raise BackboneException(404, "Child not found")
     current_user.added_friends.append(potential_friend)
     db.session.commit()
     # TODO what to return here
-    return True
+    return None
 
 
-@api_bp.route('/get_friends', methods=['GET'])
+@api_bp.route('/friend', methods=['GET'])
 @child_login_required
-@json_content_only
+@backbone_error_handle
 def get_friends():
+    """
+    .. :quickref: Friend; list ids of friend
+
+    List ids of currently logged in user.
+
+    **Child login required**
+
+    **Example Return**:
+
+    .. code-block:: json
+
+        {
+         "data": [
+            1,
+            2
+         ]
+        }
+
+    :return: list of child ids
+    """
     return [f.id for f in current_user.all_friends]
 
 
-@api_bp.route('/complete_quest', methods=['POST'])
+@api_bp.route('/quest/<int:qid>/complete', methods=['POST'], defaults={'ts': None})
+@api_bp.route('/quest/<int:qid>/<float:ts>/complete', methods=['POST'])
 @child_login_required
-@json_content_only
-def complete_quest(qid):
-    """returns whether child lvled up"""
+@backbone_error_handle
+def complete_quest(qid, ts):
+    """
+    .. :quickref: Quest; complete a quest
+
+    Complete a quest that has completion at ``ts``, if ``ts`` not supplied, then the closest/only occurrence
+    will be completed.
+
+    **Child login required**
+
+    **Errors**:
+
+    404, Quest not found - quest does not exists, or not currently logged in child's
+
+    **Example Return**:
+
+    .. code-block:: json
+
+        {
+         "data": {
+          "completed_on": "1559145134",
+          "description": "You're going on a quest to save the princess, brush your teeth so you don't embarass yourself.",
+          "due": 1559145600.0,
+          "id": 1,
+          "next_occurence": 1559404800.0,
+          "recurring": true,
+          "reward": 12,
+          "title": "Brush your teeth",
+          "completed_now": true,
+          "lvled_up": false
+          }
+        }
+
+    :param qid: id of quest to be completed
+    :param ts: timestamp the quest needs to be completed by
+    :return: quest description with ``lvled_up`` and ``completed_now`` filds added
+    """
+    if not ts:
+        ts = datetime.utcnow()
+    else:
+        ts = datetime.timestamp(ts)
+    # TODO how to complete past non-recurring quest?
     quest = Quest.query.filter_by(id=qid).first()
+    completed_now = False
+    lvl_up = False
     if quest not in current_user.quests:
         raise BackboneException(404, "Quest not found")
-    if quest.completed:
-        return False
-    # Update quest and child objects
-    quest.completed = True
-    current_user.xp += quest.reward
-    to_reach = _until_next_level()
-    lvl_up = False
-    if current_user.xp >= to_reach:
-        lvl_up = True
-        current_user.level += 1
-        current_user.xp -= to_reach
-    db.session.commit()
-    return lvl_up
+    if quest.completions:
+        pass
+    else:
+        # Update quest and child objects
+        completed_now = True
+        quest_completion = QuestCompletions(ts=datetime.utcnow())
+        quest.completions.append(quest_completion)
+        db.session.add(quest_completion)
+        current_user.xp += quest.reward
+        to_reach = _until_next_level(current_user.level)
+        if current_user.xp >= to_reach:
+            lvl_up = True
+            current_user.level += 1
+            current_user.xp -= to_reach
+        db.session.commit()
+    resp = generate_qst_resp(quest)
+    # TODO completed on and other crap has to come out of generate_resp fn
+    resp['completed_now'] = completed_now
+    resp['lvled_up'] = lvl_up
+    return json_return(resp)
 
 
-@api_bp.route('/get_quests', methods=['GET'])
+@api_bp.route('/quest', defaults={'ts': None}, methods=['GET'])
+@api_bp.route('/quest/<float:ts>', methods=['GET'])
 @child_login_required
-@json_content_only
-def get_quests():
-    return [q.id for q in current_user.quests]
+@backbone_error_handle
+def get_quests(ts):
+    """
+    .. :quickref: Quest; get quests within look around window from ts
+
+    Get ids of quests due in the range [ts, ts + 24 hrs], if ``ts`` is not supplied, current time is used.
+
+    **Child login required**
+
+    **Example Return**:
+
+    .. code-block:: json
+
+        {
+          "data": {
+            "id": 2,
+            "level": 1,
+            "name": "Jim",
+            "xp": 0
+          }
+        }
+
+    :param ts: timestamp that should be used to retermine window start/end
+    :return: list of quest ids
+    """
+    # Get current time if no time was requested
+    if not ts:
+        ts = datetime.utcnow()
+    else:
+        ts = datetime.utcfromtimestamp(ts)
+    # Get timestamp range
+    start = ts + LOOK_BACK
+    end = ts + LOOK_AHEAD
+
+    # Get one time quests in window
+    one_time_relevants = [q.id for q in current_user.quests if not q.recurring and start <= q.due <= end]
+
+    # Get reoccurring time quests in window
+    recurring_relevants = [q.id for q in current_user.quests if q.recurring and
+                           start <= find_next_time(q, ts) <= end]
+
+    return json_return(one_time_relevants + recurring_relevants)
