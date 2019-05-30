@@ -294,3 +294,6 @@ tags
 
 # End of https://www.gitignore.io/api/vim,flask,python,intellij+all
 
+
+# Don't submit compiled documentation
+backbone/_build
