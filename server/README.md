@@ -4,7 +4,7 @@ Backend uses `python3.7`
 
 Services:
  * SQLite
- * our Flask service - backbone
+ * Our Flask service: `backbone`
 
 ## To run backbone
 1. Clone repo
@@ -26,4 +26,21 @@ Services:
     cd ..
     FLASK_APP=backbone flask init-db
     ```
+    Note: Flask command needs to be run from the server directory.
 
+## Generating Backbone documentation
+
+1. Go into Backbone directory
+    ```bash
+    cd server/backbone
+    ```
+2. Generate documentation using Sphinx
+    * pdf (make sure you have Latex installed)
+    ```bash
+    make pdflatex
+    ```
+    * html
+    ```bash
+    make html
+    ```
+    Output will be in on of `_build` sub-directories.
