@@ -155,7 +155,7 @@ def add_child(name):
 
 @api_bp.route('/child_login/<int:cid>', methods=['GET'])
 @parent_login_required
-@json_content_only
+@backbone_error_handle
 def generate_child_login(cid):
     """
     .. :quickref: User; generate child login token
@@ -192,7 +192,7 @@ def generate_child_login(cid):
         new_api_key = str(uuid4())
     child.api_key = new_api_key
     db.session.commit()
-    return new_api_key
+    return json_return(new_api_key)
 
 
 @api_bp.route('/quest', methods=['POST'])

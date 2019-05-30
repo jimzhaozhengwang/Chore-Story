@@ -2,9 +2,6 @@ from datetime import datetime, timedelta
 
 from . import *
 
-LOOK_BACK = timedelta(hours=0)
-LOOK_AHEAD = timedelta(days=1)
-
 
 def _until_next_level(current_level):
     # For now this is a constant 12 xp / level, but this
@@ -96,7 +93,7 @@ def get_friends():
 
     :return: list of child ids
     """
-    return [f.id for f in current_user.all_friends]
+    return json_return([f.id for f in current_user.all_friends])
 
 
 @api_bp.route('/quest/<int:qid>/complete', methods=['POST'], defaults={'ts': None})
@@ -141,13 +138,13 @@ def complete_quest(qid, ts):
     :param ts: timestamp the quest needs to be completed by
     :return: quest description with ``lvled_up`` and ``completed_now`` filds added
     """
-    if not ts:
-        ts = datetime.utcnow()
-    else:
-        ts = datetime.fromtimestamp(ts)
     quest = Quest.query.filter_by(id=qid).first()
     if quest not in current_user.quests:
         raise BackboneException(404, "Quest not found")
+    if not ts:
+        ts = find_next_time(quest)
+    else:
+        ts = datetime.fromtimestamp(ts)
     completed_now = not is_qst_completed(quest, ts)
     lvl_up = False
     if completed_now:
@@ -169,11 +166,38 @@ def complete_quest(qid, ts):
     return json_return(resp)
 
 
-@api_bp.route('/quest', defaults={'ts': None}, methods=['GET'])
-@api_bp.route('/quest/<float:ts>', methods=['GET'])
+@api_bp.route('/quest', methods=['GET'])
 @child_login_required
 @backbone_error_handle
-def get_quests(ts):
+def get_all_quests():
+    """
+    .. :quickref: Quest; get all quests of current child
+
+    Get all of the currently logged in child's quest ids
+
+    **Child login required**
+
+    **Example Return**:
+
+    .. code-block:: json
+
+        {
+         "data": [
+          1,
+          2
+         ]
+        }
+
+    :return: list of the quests ids of current child
+    """
+    return json_return([q.id for q in current_user.quests])
+
+
+@api_bp.route('/quest/<float:ts>', methods=['GET'], defaults={'lookahead': 86400.0})
+@api_bp.route('/quest/<float:ts>/<float:lookahead>', methods=['GET'])
+@child_login_required
+@backbone_error_handle
+def get_quests(ts, lookahead):
     """
     .. :quickref: Quest; get quests within look around window from ts
 
@@ -196,14 +220,9 @@ def get_quests(ts):
     :return: list of quest ids
     """
     # TODO add window as a parameter, look around window is to arbitrary
-    # Get current time if no time was requested
-    if not ts:
-        ts = datetime.utcnow()
-    else:
-        ts = datetime.fromtimestamp(ts)
     # Get timestamp range
-    start = ts + LOOK_BACK
-    end = ts + LOOK_AHEAD
+    start = ts
+    end = ts + timedelta(seconds=lookahead)
 
     # Get one time quests in window
     one_time_relevants = [q.id for q in current_user.quests if not q.recurring and start <= q.due <= end]

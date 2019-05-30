@@ -40,6 +40,7 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
     """
     Generate a dictionary description of a  object, used by for example /get_quest
     :param qst: a Parent object
+    :param ts: a datetime object that we want to get next occurrence from
     :return: a dictionary of description of Parent object
     """
     d = {}
@@ -51,7 +52,7 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
     if qst.recurring:
         d['next_occurrence'] = datetime.timestamp(looking_for)
     filtered_completions = list(filter(lambda c: c.value == looking_for, qst.completions))
-    d['completed_on'] = filtered_completions[0].ts if len(filtered_completions) == 1 else ''
+    d['completed_on'] = filtered_completions[0].ts if len(filtered_completions) == 1 else None
     return d
 
 
