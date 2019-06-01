@@ -221,14 +221,14 @@ def get_quests(ts, lookahead):
     """
     # TODO add window as a parameter, look around window is to arbitrary
     # Get timestamp range
-    start = ts
-    end = ts + timedelta(seconds=lookahead)
+    start = datetime.utcfromtimestamp(ts)
+    end = start + timedelta(seconds=lookahead)
 
     # Get one time quests in window
     one_time_relevants = [q.id for q in current_user.quests if not q.recurring and start <= q.due <= end]
 
     # Get reoccurring time quests in window
     recurring_relevants = [q.id for q in current_user.quests if q.recurring and
-                           start <= find_next_time(q, ts) <= end]
+                           start <= find_next_time(q, start) <= end]
 
     return json_return(one_time_relevants + recurring_relevants)

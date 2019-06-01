@@ -337,3 +337,40 @@ def modify_quest(qid, title, description, reward, due, timestamps=None):
     old_quest.timestamps = timestamps
     db.session.commit()
     return generate_qst_resp(old_quest)
+
+
+@api_bp.route('/quest/<int:qid>/delete', methods=['POST'])
+@parent_login_required
+@backbone_error_handle
+def delete_quest(qid):
+    """
+    .. :quickref: Quest; delete a quest
+
+    Delete a quest belonging to one of the current user's children.
+
+    **Parent login required**
+
+    **Errors**:
+
+    404, Quest not found - either quest doesn't exist, or permission denied
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": true
+        }
+
+    :param qid: id of quest to be deleted
+    :return: whether quest was deleted
+    """
+    quest = Quest.query.filter_by(id=qid).first()
+    if not quest:
+        raise BackboneException(404, "Quest not found")
+    owner = Child.query.filter_by(id=quest.owner).first()
+    if not owner or owner not in current_user.children:
+        raise BackboneException(404, "Quest not found")
+    db.session.delete(quest)
+    db.session.commit()
+    return json_return(True if not Quest.query.filter_by(id=qid).first() else False)
