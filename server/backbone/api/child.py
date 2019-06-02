@@ -58,15 +58,14 @@ def add_friend(fid):
         }
 
     :param fid: child id of friend
-    :return: None
+    :return: whether friend was added
     """
     potential_friend = Child.query.filter_by(id=fid).first()
     if not potential_friend:
         raise BackboneException(404, "Child not found")
     current_user.added_friends.append(potential_friend)
     db.session.commit()
-    # TODO what to return here
-    return None
+    return potential_friend in current_user.all_friends
 
 
 @api_bp.route('/friend', methods=['GET'])

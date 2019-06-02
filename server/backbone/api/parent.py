@@ -2,6 +2,7 @@ from datetime import datetime
 from uuid import uuid4
 
 from flask import g
+from sqlalchemy import inspect
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import *
@@ -40,7 +41,7 @@ def register(email, name, password):
     :param email: email address of new user
     :param name: name of new user
     :param password: password of new user
-    :return: None
+    :return: whether user was registered
     """
     user = Parent.query.filter_by(
         email=email).first()  # if this returns a user, then the email already exists in database
@@ -54,7 +55,7 @@ def register(email, name, password):
     # add the new user to the database
     db.session.add(new_user)
     db.session.commit()
-    return None
+    return True if Parent.query.filter_by(email=email).first() else False
 
 
 @api_bp.route('/login', methods=['POST'])
@@ -152,6 +153,39 @@ def add_child(name):
     db.session.commit()
     return generate_chd_resp(new_child)
 
+
+@api_bp.route('/child/<int:cid>/delete', methods=['POST'])
+@login_required
+@backbone_error_handle
+def delete_child(cid):
+    """
+    .. :quickref: Child; delete existing child
+
+    Search for child and delete them if current user's child.
+
+    **Parent login required**
+
+    **Errors**:
+
+    404, Child not found - child doesn't exists, or permission denied
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": true
+        }
+
+    :param cid: child's id
+    :return: whether child was deleted
+    """
+    child = Child.query.filter_by(id=cid).first()
+    if not child or child not in current_user.children:
+        raise BackboneException(404, "Child not found")
+    db.session.delete(child)
+    db.session.commit()
+    return json_return(True if not Child.query.filter_by(id=cid).first() else False)
 
 @api_bp.route('/child_login/<int:cid>', methods=['GET'])
 @parent_login_required
