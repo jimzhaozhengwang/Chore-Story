@@ -218,7 +218,6 @@ def get_quests(ts, lookahead):
     :param ts: timestamp that should be used to determine window start/end
     :return: list of quest ids
     """
-    # TODO add window as a parameter, look around window is to arbitrary
     # Get timestamp range
     start = datetime.utcfromtimestamp(ts)
     end = start + timedelta(seconds=lookahead)

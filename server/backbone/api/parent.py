@@ -367,7 +367,6 @@ def modify_quest(qid, title, description, reward, due, timestamps):
     old_quest.description = description
     old_quest.reward = reward
     old_quest.due = datetime.utcfromtimestamp(due)
-    # TODO if timestamps change old ones should be deleted
     for ots in old_quest.timestamps:
         db.session.delete(ots)
     old_quest.timestamps = [QuestTimes(value=ts) for ts in timestamps]
