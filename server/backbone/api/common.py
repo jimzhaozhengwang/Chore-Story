@@ -23,12 +23,12 @@ def logout():
         "data": null
         }
 
-    :return: None
+    :return: whether api key has been destroyed
     """
     current_user.api_key = None
     db.session.commit()
     logout_user()
-    return None
+    return current_user.api_key is None
 
 
 @api_bp.route('/me', methods=['GET'])

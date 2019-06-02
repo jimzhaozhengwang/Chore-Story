@@ -55,7 +55,7 @@ def register(email, name, password):
     # add the new user to the database
     db.session.add(new_user)
     db.session.commit()
-    return True if Parent.query.filter_by(email=email).first() else False
+    return Parent.query.filter_by(email=email).first() is not None
 
 
 @api_bp.route('/login', methods=['POST'])
@@ -185,7 +185,8 @@ def delete_child(cid):
         raise BackboneException(404, "Child not found")
     db.session.delete(child)
     db.session.commit()
-    return json_return(True if not Child.query.filter_by(id=cid).first() else False)
+    return json_return(Child.query.filter_by(id=cid).first() is None)
+
 
 @api_bp.route('/child_login/<int:cid>', methods=['GET'])
 @parent_login_required
@@ -305,7 +306,7 @@ def add_quest(cid, title, description, reward, due, timestamps=None):
 @api_bp.route('/quest/<int:qid>', methods=['POST'])
 @parent_login_required
 @json_content_only
-def modify_quest(qid, title, description, reward, due, timestamps=None):
+def modify_quest(qid, title, description, reward, due, timestamps):
     """
     .. :quickref: User; modify a quest of an own child
 
@@ -356,7 +357,6 @@ def modify_quest(qid, title, description, reward, due, timestamps=None):
     :param timestamps: a list of timestamps, for quest to be done by those intervals
     :return: description of the updated quest
     """
-    # TODO if quest has been done refuse to update
     old_quest = Quest.query.filter_by(id=qid).first()
     if not old_quest:
         raise BackboneException(404, "Child not found")
@@ -366,9 +366,11 @@ def modify_quest(qid, title, description, reward, due, timestamps=None):
     old_quest.title = title
     old_quest.description = description
     old_quest.reward = reward
-    old_quest.due = due
+    old_quest.due = datetime.utcfromtimestamp(due)
     # TODO if timestamps change old ones should be deleted
-    old_quest.timestamps = timestamps
+    for ots in old_quest.timestamps:
+        db.session.delete(ots)
+    old_quest.timestamps = [QuestTimes(value=ts) for ts in timestamps]
     db.session.commit()
     return generate_qst_resp(old_quest)
 
@@ -407,4 +409,4 @@ def delete_quest(qid):
         raise BackboneException(404, "Quest not found")
     db.session.delete(quest)
     db.session.commit()
-    return json_return(True if not Quest.query.filter_by(id=qid).first() else False)
+    return json_return(Quest.query.filter_by(id=qid).first() is None)
