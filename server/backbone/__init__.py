@@ -37,11 +37,17 @@ def create_app():
             #     api_key = base64.b64decode(api_key)
             # except TypeError:
             #     pass
-            user = (Parent.query.filter_by(api_key=api_key).first() or
-                    Child.query.filter_by(api_key=api_key).first())
-            if user:
-                return user
-        return None
+            try:
+                parent_key, child_key = api_key.split(':', 1)
+            except ValueError:
+                return
+            if ((parent_key != '' and child_key != '') or  # someone trying to hack?
+                    (parent_key == '' and child_key == '')):  # is a developer sending api key?
+                return
+            user = (Parent.query.filter_by(api_key=parent_key).first() if parent_key else
+                    Child.query.filter_by(api_key=child_key).first())
+            return user
+        return
 
     # blueprint for auth routes in our app
     from .auth import auth as auth_blueprint

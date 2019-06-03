@@ -30,7 +30,7 @@ class Parent(UserMixin, db.Model):
 
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     admin = db.Column(db.Boolean, nullable=False, default=False)
-    api_key = db.Column(db.String(36), default=None, unique=True)
+    api_key = db.Column(db.String(37), default=None, unique=True)
     name = db.Column(db.String(1000), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
@@ -44,7 +44,7 @@ class Child(UserMixin, db.Model):
     __tablename__ = child_table
 
     id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
-    api_key = db.Column(db.String(36), default=None, unique=True)
+    api_key = db.Column(db.String(37), default=None, unique=True)
     level = db.Column(db.Integer)
     xp = db.Column(db.Integer)
     name = db.Column(db.String(1000), nullable=False)

@@ -103,8 +103,7 @@ def login(email, password):
     g.login_via_request = True
     new_api_key = str(uuid4())
     # make sure it's a unique api key
-    while (Parent.query.filter_by(api_key=new_api_key).first() is not None or
-           Child.query.filter_by(api_key=new_api_key).first() is not None):
+    while Parent.query.filter_by(api_key=new_api_key).first() is not None:
         new_api_key = str(uuid4())
     user.api_key = str(new_api_key)
     db.session.commit()
@@ -222,8 +221,7 @@ def generate_child_login(cid):
         raise BackboneException(404, "Child not found")
     new_api_key = str(uuid4())
     # make sure it's a unique api key
-    while (Parent.query.filter_by(api_key=new_api_key).first() is not None or
-           Child.query.filter_by(api_key=new_api_key).first() is not None):
+    while Child.query.filter_by(api_key=new_api_key).first() is not None:
         new_api_key = str(uuid4())
     child.api_key = new_api_key
     db.session.commit()
