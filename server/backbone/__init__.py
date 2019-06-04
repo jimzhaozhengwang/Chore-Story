@@ -8,10 +8,25 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+def grab_secret_key():
+    import os
+    import sys
+    path = os.path.join(os.path.dirname(__file__), 'secret_key.txt')
+    if not os.path.exists(path):
+        print("secret_key.txt file is missing, we need this to start backbone", file=sys.stderr)
+        exit(200)
+    with open(path, 'r') as f:
+        try:
+            return f.read().strip()
+        except IOError:
+            print("secret_key.txt file could not be read, we need this to start backbone", file=sys.stderr)
+            exit(200)
+
+
 def create_app():
     app = Flask(__name__)
 
-    app.config['SECRET_KEY'] = 'CmxIn2GpX8CsD9KSVY7voBdFvlQV7MXaUW34jHXTyYDX7E'
+    app.config['SECRET_KEY'] = grab_secret_key()
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

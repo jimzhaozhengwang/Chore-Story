@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'backbone'
-copyright = '2019, Isabelle Leeson, Cristian David, Mark Tamas Keller, and Zhaozheng (Jim) Wang '
+copyright = '2019, Isabelle Leeson, Cristian David, Mark Tamas Keller, and Zhaozheng (Jim) Wang'
 author = 'Mark Keller'
 
 # -- General configuration ---------------------------------------------------
