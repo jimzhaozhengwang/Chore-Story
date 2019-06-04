@@ -1,10 +1,11 @@
 import inspect
 from functools import wraps
+
 from flask import abort, request, json
 from flask_login import current_user, login_required
 
-from .models import Parent, Child
 from .exceptions import BackboneException
+from .models import Parent, Child
 
 
 def json_return(output):
@@ -14,6 +15,7 @@ def json_return(output):
 
 def backbone_error_handle(func):
     """A decorator for catching BackboneExceptions and returning error messages to clients"""
+
     @wraps(func)
     def protected_view(*args, **kwargs):
         try:
@@ -22,33 +24,39 @@ def backbone_error_handle(func):
             return json.jsonify({'error': {'status': e.error_code,
                                            'detail': e.message},
                                  'data': None})
+
     return protected_view
 
 
 def parent_login_required(func):
     """This decorator is the same as login_required, but makes sure logged in user is a of parent type"""
+
     @login_required
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if isinstance(current_user, Parent):
             abort(404)
         return func(*args, **kwargs)
+
     return decorated_view
 
 
 def child_login_required(func):
     """This decorator is the same as login_required, but makes sure logged in user is a of child type"""
+
     @login_required
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if isinstance(current_user, Child):
             abort(404)
         return func(*args, **kwargs)
+
     return decorated_view
 
 
 def admin_login_required(func):
     """Makes sure that user is logged in and that they are of parent type and an admin"""
+
     @parent_login_required
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -56,6 +64,7 @@ def admin_login_required(func):
             # If not admin user send back 404
             abort(404)
         return func(*args, **kwargs)
+
     return decorated_view
 
 
@@ -70,6 +79,7 @@ def extract_params(body, params):
 
 def json_content_only(func):
     """A decorator to automatically extract json elements"""
+
     @backbone_error_handle
     @wraps(func)
     def json_view_only(**kwargs):
@@ -80,4 +90,5 @@ def json_content_only(func):
         if not request.is_json:
             raise BackboneException(400, 'Method body must be a valid JSON')
         return json_return(func(**kwargs))
+
     return json_view_only

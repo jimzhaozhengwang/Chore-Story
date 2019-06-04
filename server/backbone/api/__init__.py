@@ -3,12 +3,12 @@ from datetime import timedelta, datetime
 
 from flask_login import login_required, current_user, logout_user
 
-
 from .. import db
-from ..views import api_bp
-from ..models import Parent, Child, Quest, QuestTimes, QuestCompletions
-from ..decorators import json_content_only, json_return, backbone_error_handle, parent_login_required, child_login_required
+from ..decorators import json_content_only, json_return, backbone_error_handle, parent_login_required, \
+    child_login_required
 from ..exceptions import BackboneException
+from ..models import Parent, Child, Quest, QuestTimes, QuestCompletions
+from ..views import api_bp
 
 
 def generate_prnt_resp(prnt):

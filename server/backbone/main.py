@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template
+from flask import render_template
 from flask_login import login_required, current_user
 
 from . import create_app
-from .views import main
 from .decorators import admin_login_required
+from .views import main
 
 
 @main.route('/')
@@ -22,6 +22,3 @@ def profile():
 def admin_example():
     return render_template('profile.html', name='admin ' + current_user.name)
 
-
-if __name__ == '__main__':
-    create_app().run(host='0.0.0.0', port=4000)

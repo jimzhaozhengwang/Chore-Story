@@ -2,7 +2,6 @@ from datetime import datetime
 from uuid import uuid4
 
 from flask import g
-from sqlalchemy import inspect
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import *
@@ -246,7 +245,7 @@ def add_quest(cid, title, description, reward, due, timestamps=None):
         {
          "cid": 1,
          "title": "Brush your teeth",
-         "description": "You're going on a quest to save the princess, brush your teeth so you don't embarass yourself.",
+         "description": "You're going on a quest to save the princess, brush your teeth.",
          "reward": 2,
          "timestamps": [86400],
          "due": 1559131200
@@ -264,7 +263,7 @@ def add_quest(cid, title, description, reward, due, timestamps=None):
         {
           "data": {
             "completed_on": "",
-            "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+            "description": "You're going on a quest to save the princess, brush your teeth.",
             "due": 1559131200.0,
             "id": 10,
             "next_occurrence": 1559131200.0,
@@ -319,7 +318,7 @@ def modify_quest(qid, title, description, reward, due, timestamps):
         {
          "cid": 1,
          "title": "Brush your teeth",
-         "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+         "description": "You're going on a quest to save the princess, brush your teeth.",
          "reward": 2,
          "timestamps": [86400],
          "due": 1559131200
@@ -337,7 +336,7 @@ def modify_quest(qid, title, description, reward, due, timestamps):
         {
           "data": {
             "completed_on": "",
-            "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+            "description": "You're going on a quest to save the princess, brush your teeth.",
             "due": 1559131200.0,
             "id": 10,
             "next_occurrence": 1559131200.0,

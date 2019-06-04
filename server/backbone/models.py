@@ -71,7 +71,7 @@ class Quest(db.Model):
     completions = db.relationship("QuestCompletions", cascade="all,delete")
 
     def __repr__(self):
-        return ("Recurring " if self.recurring else "") +\
+        return ("Recurring " if self.recurring else "") + \
                f"Quest {self.id}"
 
 
@@ -81,7 +81,7 @@ class QuestTimes(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
     owner = db.Column(db.Integer, db.ForeignKey(f'{quest_table}.id',
                                                 ondelete='CASCADE',
-                                                onupdate='CASCADE',))
+                                                onupdate='CASCADE', ))
     value = db.Column(db.Float, nullable=False)
 
 
@@ -91,7 +91,7 @@ class QuestCompletions(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)  # ID of completion
     owner = db.Column(db.Integer, db.ForeignKey(f'{quest_table}.id',
                                                 ondelete='CASCADE',
-                                                onupdate='CASCADE',))  # Quest's ID
+                                                onupdate='CASCADE', ))  # Quest's ID
     value = db.Column(db.TIMESTAMP, nullable=False)  # Which due date was completed
     ts = db.Column(db.TIMESTAMP, nullable=False)  # When was it completed
 

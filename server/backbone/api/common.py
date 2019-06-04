@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from . import *
 from sqlalchemy import inspect
+
+from . import *
 
 
 @api_bp.route('/logout', methods=['POST'])
@@ -134,7 +135,7 @@ def get_quest(qid, ts):
         {
          "data": {
            "completed_on": "",
-           "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+           "description": "You're going on a quest to save the princess, brush your teeth.",
            "due": 1559145600.0,
            "id": 1,
            "next_occurrence": 1559404800.0,

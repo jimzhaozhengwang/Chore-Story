@@ -1,8 +1,8 @@
+import click
 from flask import Flask, g
 from flask.sessions import SecureCookieSessionInterface
 from flask_login import LoginManager, user_loaded_from_request
 from flask_sqlalchemy import SQLAlchemy
-import click
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
@@ -78,11 +78,13 @@ def create_app():
 
     class CustomSessionInterface(SecureCookieSessionInterface):
         """Prevent creating session from API requests."""
+
         def save_session(self, *args, **kwargs):
             if g.get('login_via_request'):
                 return
             return super(CustomSessionInterface, self).save_session(*args,
                                                                     **kwargs)
+
     app.session_interface = CustomSessionInterface()
 
     return app
