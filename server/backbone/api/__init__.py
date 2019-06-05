@@ -27,8 +27,8 @@ def generate_prnt_resp(prnt):
 def generate_chd_resp(chd):
     """
     Generate a dictionary description of a Child object, used by for example /me
-    :param chd: a Parent object
-    :return: a dictionary of description of Parent object
+    :param chd: a Child object
+    :return: a dictionary of description of Child object
     """
     d = {}
     for e in ['level', 'name', 'id', 'xp']:
@@ -38,10 +38,10 @@ def generate_chd_resp(chd):
 
 def generate_qst_resp(qst, ts=datetime.utcnow()):
     """
-    Generate a dictionary description of a  object, used by for example /get_quest
-    :param qst: a Parent object
+    Generate a dictionary description of a Quest object, used by for example /get_quest
+    :param qst: a Quest object
     :param ts: a datetime object that we want to get next occurrence from
-    :return: a dictionary of description of Parent object
+    :return: a dictionary of description of Quest object
     """
     d = {}
     for e in ['title', 'description', 'reward', 'due', 'id', 'recurring']:
