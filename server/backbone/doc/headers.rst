@@ -8,9 +8,10 @@ then it needs the following header:
 
 .. code-block:: none
 
-    Authorization: <api_key>
+    Authorization: <parent_api_key>:<child_api_key>
 
-where ``api_key`` can be obtained from the ``/login`` endpoint.
+where one of the ``api_key`` should be obtained from the ``/login``, or ``/child_login`` endpoint.
+If both are included parent key will be used to try to login, otherwise only the given api_key will be used.
 
 If an endpoint has an **Example post body** in it's documentation then
 it needs the following header:
