@@ -21,9 +21,7 @@ def backbone_error_handle(func):
         try:
             return func(*args, **kwargs)
         except BackboneException as e:
-            return json.jsonify({'error': {'status': e.error_code,
-                                           'detail': e.message},
-                                 'data': None})
+            abort(e.error_code)
 
     return protected_view
 
