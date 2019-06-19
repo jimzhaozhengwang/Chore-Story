@@ -11,6 +11,8 @@ from ..models import Parent, Child, Quest, QuestTimes, QuestCompletions
 from ..views import api_bp
 
 
+ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif']
+
 def generate_prnt_resp(prnt):
     """
     Generate a dictionary description of a Parent object, used by for example /me
@@ -74,10 +76,16 @@ def is_qst_completed(qst, ts):
     return ts in [c.value for c in qst.completions]
 
 
+def allowed_file(filename):
+    """See if a is acceptable to be uploaded"""
+    filename, ext = filename.rsplit('.', 1)
+    return ext in ALLOWED_EXTENSIONS
+
+
 __all__ = ['db', 'Parent', 'Child', 'api_bp', 'generate_prnt_resp', 'generate_chd_resp',
            'login_required', 'current_user', 'logout_user', 'json_content_only', 'BackboneException',
            'parent_login_required', 'child_login_required', 'Quest', 'generate_qst_resp',
            'json_return', 'backbone_error_handle', 'QuestTimes', 'find_next_time', 'QuestCompletions',
-           'is_qst_completed']
+           'is_qst_completed', 'allowed_file']
 
 from . import child, parent, common

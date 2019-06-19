@@ -1,6 +1,9 @@
 from datetime import datetime
 
 from sqlalchemy import inspect
+from werkzeug.utils import secure_filename
+from flask import request, current_app as app
+import os
 
 from . import *
 
@@ -211,3 +214,39 @@ def modify_child(cid, name):
     child.name = name
     db.session.commit()
     return json_return(generate_chd_resp(child))
+
+
+@api_bp.route('/child/<int:cid>/picture', methods=['POST'])
+@login_required
+@backbone_error_handle
+def upload_child_picture(cid):
+    """
+    .. :quickref: Child; modify already existing child
+
+    Upload a picture for the currently logged in child, or one of the currently loged in parent's children.
+
+    **Login required, either Parent, or Child**
+
+    **Errors**:
+
+    404, Child not found - child doesn't exists, or permission denied
+
+    :param cid: id of child who's picture we're uploading
+    :return: whether the picture has been uploaded sucessfully
+    """
+    child = Child.query.filter_by(id=cid).first()
+    if (not child or
+            isinstance(inspect(current_user).object, Parent) and child not in current_user.children or
+            isinstance(inspect(current_user).object, Child) and child != current_user):
+        raise BackboneException(404, "Child not found")
+    if 'file' not in request.files:
+        return json_return(False)
+    file = request.files['file']
+    if file.filename == '':
+        return False
+    if file and allowed_file(file.filename):
+             filename = secure_filename(file.filename)
+             new_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename) 
+             file.save(new_file_path)
+             return json_return(os.path.isfile(new_file_path))
+    

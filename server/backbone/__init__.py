@@ -29,6 +29,8 @@ def create_app():
     app.config['SECRET_KEY'] = grab_secret_key()
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
+    app.config['UPLOAD_FOLDER'] = '/backbone/uploads'
 
     db.init_app(app)
 
