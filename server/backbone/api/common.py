@@ -7,8 +7,8 @@ from flask_login import current_user, logout_user
 from sqlalchemy import inspect
 from werkzeug.utils import secure_filename
 
-from .helpers import me_or_my_child, generate_chd_resp, generate_qst_resp, generate_prnt_resp, allowed_file, \
-    me_or_my_child_or_friend
+from .helpers import child_is_me_or_my_child, generate_chd_resp, generate_qst_resp, generate_prnt_resp, allowed_file, \
+    child_is_me_or_my_child_or_friend
 from .. import db
 from ..decorators import json_content_only, json_return, login_required, backbone_error_handle
 from ..exceptions import BackboneException
@@ -111,7 +111,7 @@ def get_child_info(cid):
     :return: description of currently logged in user
     """
     child = Child.query.filter_by(id=cid).first()
-    if not me_or_my_child_or_friend(child):
+    if not child_is_me_or_my_child_or_friend(child):
         raise BackboneException(404, "Child not found")
     return json_return(generate_chd_resp(child))
 
@@ -209,7 +209,7 @@ def modify_child(cid, name):
     :return: description of child after update
     """
     child = Child.query.filter_by(id=cid).first()
-    if not me_or_my_child(child):
+    if not child_is_me_or_my_child(child):
         raise BackboneException(404, "Child not found")
     child.name = name
     db.session.commit()
@@ -236,7 +236,7 @@ def upload_child_picture(cid):
     :return: whether the picture has been uploaded sucessfully
     """
     child = Child.query.filter_by(id=cid).first()
-    if not me_or_my_child(child):
+    if not child_is_me_or_my_child(child):
         raise BackboneException(404, "Child not found")
     if 'file' not in request.files:
         return json_return(False)
@@ -271,7 +271,7 @@ def show_child_picture(cid):
     :return: the picture itself if they exist
     """
     child = Child.query.filter_by(id=cid).first()
-    if not me_or_my_child_or_friend(child):
+    if not child_is_me_or_my_child_or_friend(child):
         raise BackboneException(404, "Child not found")
     looking_in = os.path.join(app.config['UPLOAD_FOLDER'], 'child_pics')
     candidate = filter(lambda e: e.startswith(str(cid) + '.'), listdir(looking_in))

@@ -55,7 +55,7 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
     return d
 
 
-def me_or_my_child(child_obj):
+def child_is_me_or_my_child(child_obj):
     """
     Checks whether current user is parent and owns child, or current user is that child itself
     :param child_obj: child object we want to check
@@ -66,13 +66,12 @@ def me_or_my_child(child_obj):
             isinstance(inspect(current_user).object, Child) and child_obj == current_user)
 
 
-def me_or_my_child_or_friend(child_obj):
+def child_is_me_or_my_child_or_friend(child_obj):
     """
     Same as ``me_or_my_child``, but also allows current user to be a friend of the child.
     :param child_obj: Child object we want to check
-    :return: whether current user is the child itself, parent of, or friend of them
-    """
-    return (me_or_my_child(child_obj) or
+    :return: whether current user is the child itself, parent of, or friend of them """
+    return (child_is_me_or_my_child(child_obj) or
             isinstance(inspect(current_user).object, Child) and child_obj in current_user.all_friends)
 
 
