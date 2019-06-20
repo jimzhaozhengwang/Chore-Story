@@ -1,5 +1,8 @@
 import itertools
 from datetime import timedelta, datetime
+from os.path import join
+
+from os import listdir
 
 from flask_login import current_user
 from sqlalchemy import inspect
@@ -87,7 +90,7 @@ def find_next_time(qst, time_now=datetime.utcnow()):
 
 
 def is_qst_completed(qst, ts):
-    """find if a quest was completed for the certain ts due time"""
+    """Find if a quest was completed for the certain ts due time"""
     if find_next_time(qst, ts) != ts:
         raise BackboneException(400, "Invalid due time")
     return ts in [c.value for c in qst.completions]
@@ -97,3 +100,12 @@ def allowed_file(filename):
     """See if a is acceptable to be uploaded"""
     filename, ext = filename.rsplit('.', 1)
     return ext in ALLOWED_EXTENSIONS
+
+
+def look_for_file(path, prefix):
+    """Check if there's a file that starts with prefix in path, if so return it's absolute path, otherwise None.
+    If there's more than one file that start with prefix then it will return one of their absolute paths."""
+    try:
+        return join(path, filter(lambda e: e.startswith(prefix), listdir(path)).__next__())
+    except StopIteration:
+        return None

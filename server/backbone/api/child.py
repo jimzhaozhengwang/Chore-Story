@@ -73,7 +73,7 @@ def add_friend(fid):
         raise BackboneException(404, "Child not found")
     current_user.added_friends.append(potential_friend)
     db.session.commit()
-    return potential_friend in current_user.all_friends
+    return json_return(potential_friend in current_user.all_friends)
 
 
 @api_bp.route('/friend', methods=['GET'])

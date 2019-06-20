@@ -48,17 +48,10 @@ def register(email, name, password):
     :param password: password of new user
     :return: whether user was registered
     """
-    user = Parent.query.filter_by(
-        email=email).first()  # if this returns a user, then the email already exists in database
-
-    if user:  # if a user is found, we want to redirect back to signup page so user can try again
+    if Parent.query.filter_by(email=email).first():
         raise BackboneException(409, "Email already used")
-
-    # create new user with the form data. Hash the password so plaintext version isn't saved.
     # noinspection PyArgumentList
     new_user = Parent(email=email, name=name, password=generate_password_hash(password))
-
-    # add the new user to the database
     db.session.add(new_user)
     db.session.commit()
     return Parent.query.filter_by(email=email).first() is not None
@@ -100,8 +93,6 @@ def login(email, password):
     """
     user = Parent.query.filter_by(email=email).first()
 
-    # check if user actually exists
-    # take the user supplied password, hash it, and compare it to the hashed password in database
     if not user or not check_password_hash(user.password, password):
         raise BackboneException(406, "Bad login details")
 
@@ -151,7 +142,6 @@ def add_child(name):
     :param name: name of child
     :return: a description of the new child
     """
-    # Generate child
     # noinspection PyArgumentList
     new_child = Child(level=1, xp=0, name=name)
     current_user.children.append(new_child)
@@ -223,8 +213,7 @@ def generate_child_login(cid):
     :return: new api_key of child
     """
     child = Child.query.filter_by(id=cid).first()
-    user = current_user
-    if child not in user.children:
+    if child not in current_user.children:
         raise BackboneException(404, "Child not found")
     new_api_key = str(uuid4())
     # make sure it's a unique api key
@@ -364,7 +353,7 @@ def modify_quest(qid, title, description, reward, due, timestamps):
     """
     old_quest = Quest.query.filter_by(id=qid).first()
     if not old_quest:
-        raise BackboneException(404, "Child not found")
+        raise BackboneException(404, "Quest not found")
     child = Child.query.filter_by(id=old_quest.owner).first()
     if child not in current_user.children:
         raise BackboneException(404, "Child not found")

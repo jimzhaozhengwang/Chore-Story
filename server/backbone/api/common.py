@@ -1,5 +1,4 @@
 from datetime import datetime
-from os import listdir
 
 import os
 from flask import request, current_app as app, send_file
@@ -8,7 +7,7 @@ from sqlalchemy import inspect
 from werkzeug.utils import secure_filename
 
 from .helpers import child_is_me_or_my_child, generate_chd_resp, generate_qst_resp, generate_prnt_resp, allowed_file, \
-    child_is_me_or_my_child_or_friend
+    child_is_me_or_my_child_or_friend, look_for_file
 from .. import db
 from ..decorators import json_content_only, json_return, login_required, backbone_error_handle
 from ..exceptions import BackboneException
@@ -159,12 +158,8 @@ def get_quest(qid, ts):
     else:
         ts = datetime.fromtimestamp(ts)
     quest = Quest.query.filter_by(id=qid).first()
-    if isinstance(inspect(current_user).object, Parent):
-        if quest.owner not in [c.id for c in current_user.children]:
-            raise BackboneException(404, "Quest not found")
-    elif isinstance(inspect(current_user).object, Child):
-        if quest not in current_user.quests:
-            raise BackboneException(404, "Quest not found")
+    if not child_is_me_or_my_child(Child.query.filter_by(id=quest.owner).first()):
+        raise BackboneException(404, "Quest not found")
     return json_return(generate_qst_resp(quest, ts))
 
 
@@ -233,21 +228,24 @@ def upload_child_picture(cid):
     404, Child not found - child doesn't exists, or permission denied
 
     :param cid: id of child who's picture we're uploading
-    :return: whether the picture has been uploaded sucessfully
+    :return: whether the picture has been uploaded successful
     """
     child = Child.query.filter_by(id=cid).first()
     if not child_is_me_or_my_child(child):
         raise BackboneException(404, "Child not found")
-    if 'file' not in request.files:
-        return json_return(False)
-    file = request.files['file']
-    if file.filename == '':
-        return json_return(False)
-    if file and allowed_file(file.filename):
-        ext = secure_filename(file.filename).rsplit('.', 1)[1]
-        new_file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'child_pics', str(cid) + '.' + ext)
+    file = request.files.get('file')
+    if file and file.filename != '' and allowed_file(file.filename):
+        looking_in = os.path.join(app.config['UPLOAD_FOLDER'], 'child_pics')
+        # Delete previous picture if exists
+        previous_file = look_for_file(looking_in, str(cid) + '.')
+        if previous_file:
+            os.remove(previous_file)
+        # Save new picture
+        _, ext = secure_filename(file.filename).rsplit('.', 1)
+        new_file_path = os.path.join(looking_in, str(cid) + '.' + ext)
         file.save(new_file_path)
         return json_return(os.path.isfile(new_file_path))
+    return json_return(False)
 
 
 @api_bp.route('/child/<int:cid>/picture', methods=['GET'])
@@ -273,12 +271,7 @@ def show_child_picture(cid):
     child = Child.query.filter_by(id=cid).first()
     if not child_is_me_or_my_child_or_friend(child):
         raise BackboneException(404, "Child not found")
-    looking_in = os.path.join(app.config['UPLOAD_FOLDER'], 'child_pics')
-    candidate = filter(lambda e: e.startswith(str(cid) + '.'), listdir(looking_in))
-    try:
-        filename = candidate.__next__()
-        _, ext = filename.rsplit('.', 1)
-        to_send = os.path.join(looking_in, filename)
-        return send_file(to_send, mimetype=f'image/{ext}')
-    except StopIteration:
+    file = look_for_file(os.path.join(app.config['UPLOAD_FOLDER'], 'child_pics'), str(cid) + '.')
+    if not file:
         raise BackboneException(405, "Picture not found")
+    return send_file(file)
