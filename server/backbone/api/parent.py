@@ -2,9 +2,15 @@ from datetime import datetime
 from uuid import uuid4
 
 from flask import g
+from flask_login import current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from . import *
+from .helpers import generate_qst_resp, generate_chd_resp
+from .. import db
+from ..decorators import backbone_error_handle, parent_login_required, json_return, json_content_only
+from ..exceptions import BackboneException
+from ..models import Child, Quest, Parent, QuestTimes
+from ..views import api_bp
 
 
 @api_bp.route('/register', methods=['POST'])
@@ -49,6 +55,7 @@ def register(email, name, password):
         raise BackboneException(409, "Email already used")
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
+    # noinspection PyArgumentList
     new_user = Parent(email=email, name=name, password=generate_password_hash(password))
 
     # add the new user to the database
@@ -145,6 +152,7 @@ def add_child(name):
     :return: a description of the new child
     """
     # Generate child
+    # noinspection PyArgumentList
     new_child = Child(level=1, xp=0, name=name)
     current_user.children.append(new_child)
     db.session.add(new_child)

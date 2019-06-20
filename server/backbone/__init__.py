@@ -2,10 +2,9 @@ import click
 from flask import Flask, g
 from flask.sessions import SecureCookieSessionInterface
 from flask_login import LoginManager, user_loaded_from_request
-from flask_sqlalchemy import SQLAlchemy
 
-# init SQLAlchemy so we can use it later in our models
-db = SQLAlchemy()
+from .db import db
+from . import api
 
 
 def grab_secret_key():
@@ -71,9 +70,10 @@ def create_app():
     app.register_blueprint(auth_blueprint)
 
     # blueprint for api calls
-    from .api import api_bp
+    from .views import api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
+    # noinspection PyUnusedLocal
     @user_loaded_from_request.connect
     def user_loaded_from_header(self, user=None):
         g.login_via_request = True

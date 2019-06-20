@@ -1,11 +1,19 @@
 from datetime import datetime
+from os import listdir
 
+import os
+from flask import request, current_app as app, send_file
+from flask_login import current_user, logout_user
 from sqlalchemy import inspect
 from werkzeug.utils import secure_filename
-from flask import request, current_app as app
-import os
 
-from . import *
+from .helpers import me_or_my_child, generate_chd_resp, generate_qst_resp, generate_prnt_resp, allowed_file, \
+    me_or_my_child_or_friend
+from .. import db
+from ..decorators import json_content_only, json_return, login_required, backbone_error_handle
+from ..exceptions import BackboneException
+from ..models import Child, Parent, Quest
+from ..views import api_bp
 
 
 @api_bp.route('/logout', methods=['POST'])
@@ -79,7 +87,7 @@ def get_child_info(cid):
     .. :quickref: User; return a description of a child
 
     Get info of child with id ``cid`` if they're either the currently logged in parent's child, or
-    if it is a friend of the currently logged in child user.
+    if it is a friend of the currently logged in child user, or the logged in child itself.
 
     **Login Required**
 
@@ -102,16 +110,10 @@ def get_child_info(cid):
 
     :return: description of currently logged in user
     """
-    if isinstance(inspect(current_user).object, Parent):
-        child = Child.query.filter_by(id=cid).first()
-        if not child or child not in current_user.children:
-            raise BackboneException(404, "Child not found")
-        return json_return(generate_chd_resp(child))
-    elif isinstance(inspect(current_user).object, Child):
-        friend = Child.query.filter_by(id=cid).first()
-        if not friend or friend not in current_user.all_friends:
-            raise BackboneException(404, "Child not found")
-        return json_return(generate_chd_resp(friend))
+    child = Child.query.filter_by(id=cid).first()
+    if not me_or_my_child_or_friend(child):
+        raise BackboneException(404, "Child not found")
+    return json_return(generate_chd_resp(child))
 
 
 @api_bp.route('/quest/<int:qid>', methods=['GET'], defaults={'ts': None})
@@ -207,9 +209,7 @@ def modify_child(cid, name):
     :return: description of child after update
     """
     child = Child.query.filter_by(id=cid).first()
-    if (not child or
-            isinstance(inspect(current_user).object, Parent) and child not in current_user.children or
-            isinstance(inspect(current_user).object, Child) and child != current_user):
+    if not me_or_my_child(child):
         raise BackboneException(404, "Child not found")
     child.name = name
     db.session.commit()
@@ -221,9 +221,10 @@ def modify_child(cid, name):
 @backbone_error_handle
 def upload_child_picture(cid):
     """
-    .. :quickref: Child; modify already existing child
+    .. :quickref: Child; upload picture for child
 
     Upload a picture for the currently logged in child, or one of the currently loged in parent's children.
+    If there was a picture previously uploaded, this will replace it.
 
     **Login required, either Parent, or Child**
 
@@ -235,18 +236,49 @@ def upload_child_picture(cid):
     :return: whether the picture has been uploaded sucessfully
     """
     child = Child.query.filter_by(id=cid).first()
-    if (not child or
-            isinstance(inspect(current_user).object, Parent) and child not in current_user.children or
-            isinstance(inspect(current_user).object, Child) and child != current_user):
+    if not me_or_my_child(child):
         raise BackboneException(404, "Child not found")
     if 'file' not in request.files:
         return json_return(False)
     file = request.files['file']
     if file.filename == '':
-        return False
+        return json_return(False)
     if file and allowed_file(file.filename):
-             filename = secure_filename(file.filename)
-             new_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename) 
-             file.save(new_file_path)
-             return json_return(os.path.isfile(new_file_path))
-    
+        ext = secure_filename(file.filename).rsplit('.', 1)[1]
+        new_file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'child_pics', str(cid) + '.' + ext)
+        file.save(new_file_path)
+        return json_return(os.path.isfile(new_file_path))
+
+
+@api_bp.route('/child/<int:cid>/picture', methods=['GET'])
+@login_required
+@backbone_error_handle
+def show_child_picture(cid):
+    """
+    .. :quickref: Child; return already existing child picture
+
+    Return the picture of a child in one of 3 cases: if the currently logged in child requests their own picture, if the
+    parent request it's child's picture, or if a friend of the child requests their photo.
+
+    **Login required, either Parent, or Child**
+
+    **Errors**:
+
+    404, Child not found - child doesn't exists, or permission denied
+    405, Picture not found - child doesn't have a picture
+
+    :param cid: id of child who's picture we're looking for
+    :return: the picture itself if they exist
+    """
+    child = Child.query.filter_by(id=cid).first()
+    if not me_or_my_child_or_friend(child):
+        raise BackboneException(404, "Child not found")
+    looking_in = os.path.join(app.config['UPLOAD_FOLDER'], 'child_pics')
+    candidate = filter(lambda e: e.startswith(str(cid) + '.'), listdir(looking_in))
+    try:
+        filename = candidate.__next__()
+        _, ext = filename.rsplit('.', 1)
+        to_send = os.path.join(looking_in, filename)
+        return send_file(to_send, mimetype=f'image/{ext}')
+    except StopIteration:
+        raise BackboneException(405, "Picture not found")
