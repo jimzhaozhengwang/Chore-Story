@@ -67,6 +67,11 @@ def me_or_my_child(child_obj):
 
 
 def me_or_my_child_or_friend(child_obj):
+    """
+    Same as ``me_or_my_child``, but also allows current user to be a friend of the child.
+    :param child_obj: Child object we want to check
+    :return: whether current user is the child itself, parent of, or friend of them
+    """
     return (me_or_my_child(child_obj) or
             isinstance(inspect(current_user).object, Child) and child_obj in current_user.all_friends)
 
