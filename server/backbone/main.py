@@ -1,7 +1,6 @@
 from flask import render_template
 from flask_login import login_required, current_user
 
-from . import create_app
 from .decorators import admin_login_required
 from .views import main
 
@@ -21,4 +20,3 @@ def profile():
 @admin_login_required
 def admin_example():
     return render_template('profile.html', name='admin ' + current_user.name)
-
