@@ -11,7 +11,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name="com.chorestory.app.MainActivity"
+            android:name=".app.ParentSignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".app.ParentLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".app.ParentLoginSignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".app.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

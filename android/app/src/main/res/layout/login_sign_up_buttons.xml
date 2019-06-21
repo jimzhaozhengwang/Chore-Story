@@ -1,0 +1,22 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        android:text="@string/login"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/sign_up_button"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/login_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:text="@string/sign_up"
+        android:textSize="40sp" />
+
+</merge>

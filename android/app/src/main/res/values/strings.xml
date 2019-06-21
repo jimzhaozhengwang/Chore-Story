@@ -3,4 +3,11 @@
     <string name="i_am_a">I am a</string>
     <string name="parent_guardian">Parent/Guardian</string>
     <string name="child">Child</string>
+    <string name="login">Login</string>
+    <string name="log_in"> Log In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="create_new_clan">create new clan</string>
+    <string name="join_existing_clan">join existing clan</string>
 </resources>
