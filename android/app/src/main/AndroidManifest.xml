@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
+            android:name=".app.ChildLoginSignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".app.ParentSignUpActivity"
             android:screenOrientation="portrait" />
         <activity

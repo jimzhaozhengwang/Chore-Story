@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
+import com.chorestory.app.ChildLoginSignUpActivity;
 import com.chorestory.app.MainActivity;
 import com.chorestory.app.ParentLoginActivity;
 import com.chorestory.app.ParentLoginSignUpActivity;
@@ -19,4 +20,6 @@ public interface AppComponent {
     void inject(ParentLoginActivity activity);
 
     void inject(ParentSignUpActivity activity);
+
+    void inject(ChildLoginSignUpActivity activity);
 }
