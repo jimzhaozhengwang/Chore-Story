@@ -29,7 +29,7 @@ public class ParentSignUpActivity extends ChoreStoryActivity {
             @Override
             public void onClick(View v) {
                 disableButtons();
-                // TODO: navigate to create new clan activity
+                navigateTo(CreateClanActivity.class);
             }
         });
 
@@ -37,7 +37,7 @@ public class ParentSignUpActivity extends ChoreStoryActivity {
             @Override
             public void onClick(View v) {
                 disableButtons();
-                // TODO: navigate to join existing clan activity
+                // TODO: open camera
             }
         });
     }

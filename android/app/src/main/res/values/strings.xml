@@ -8,6 +8,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="create_new_clan">create new clan</string>
-    <string name="join_existing_clan">join existing clan</string>
+    <string name="create_new_clan">Create new clan</string>
+    <string name="join_existing_clan">Join existing clan</string>
+    <string name="clan_name">Clan Name</string>
 </resources>
