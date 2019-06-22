@@ -16,7 +16,7 @@ public class ParentLoginActivity extends ChoreStoryActivity {
     private String password;
     private EditText usernameEditText;
     private EditText passwordEditText;
-//    private Toast toast;
+    //    private Toast toast;
     private Button logInButton;
 
     @Override

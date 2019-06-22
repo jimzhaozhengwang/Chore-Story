@@ -9,7 +9,6 @@ import android.widget.Button;
 import java.util.List;
 import java.util.Objects;
 
-
 abstract public class ChoreStoryActivity extends AppCompatActivity {
 
     List<Button> buttons;
