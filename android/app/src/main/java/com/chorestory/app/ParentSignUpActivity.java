@@ -1,18 +1,17 @@
 package com.chorestory.app;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.chorestory.R;
 
-public class ParentSignUpActivity extends AppCompatActivity {
+import java.util.Arrays;
+
+public class ParentSignUpActivity extends ChoreStoryActivity {
 
     private Button createNewClanButton;
     private Button joinExistingClanButton;
-    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +21,7 @@ public class ParentSignUpActivity extends AppCompatActivity {
 
         createNewClanButton = findViewById(R.id.create_new_clan_button);
         joinExistingClanButton = findViewById(R.id.join_existing_clan_button);
+        buttons = Arrays.asList(createNewClanButton, joinExistingClanButton);
 
         enableButtons();
 
@@ -40,22 +40,5 @@ public class ParentSignUpActivity extends AppCompatActivity {
                 // TODO: navigate to join existing clan activity
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        enableButtons();
-    }
-
-    // prevent users from spam clicking buttons
-    private void disableButtons() {
-        createNewClanButton.setEnabled(false);
-        joinExistingClanButton.setEnabled(false);
-    }
-
-    private void enableButtons() {
-        createNewClanButton.setEnabled(true);
-        joinExistingClanButton.setEnabled(true);
     }
 }
