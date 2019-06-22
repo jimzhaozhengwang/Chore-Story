@@ -1,11 +1,19 @@
 from datetime import datetime, timedelta
 
-from . import *
+from flask_login import current_user
+
+from .helpers import find_next_time, is_qst_completed, generate_qst_resp
+from .. import db
+from ..decorators import child_login_required, backbone_error_handle, json_return, json_content_only
+from ..exceptions import BackboneException
+from ..models import Child, Quest, QuestCompletions
+from ..views import api_bp
 
 
 def _until_next_level(current_level):
     # For now this is a constant 12 xp / level, but this
     #  function makes us able to change this on the fly
+    str(current_level)  # suppress warning about unused parameter
     return 12
 
 
@@ -65,7 +73,7 @@ def add_friend(fid):
         raise BackboneException(404, "Child not found")
     current_user.added_friends.append(potential_friend)
     db.session.commit()
-    return potential_friend in current_user.all_friends
+    return json_return(potential_friend in current_user.all_friends)
 
 
 @api_bp.route('/friend', methods=['GET'])
@@ -122,7 +130,7 @@ def complete_quest(qid, ts):
           "lvled_up": false,
           "quest": {
             "completed_on": "1559145134",
-            "description": "You're going on a quest to save the princess, brush your teeth so you don't embarass yourself.",
+            "description": "You're going on a quest, brush your teeth so you don't embarrass yourself.",
             "due": 1559145600.0,
             "id": 1,
             "next_occurrence": 1559404800.0,
@@ -216,6 +224,7 @@ def get_quests(ts, lookahead):
         }
 
     :param ts: timestamp that should be used to determine window start/end
+    :param lookahead: timestamp that should be used to determine size of the window
     :return: list of quest ids
     """
     # Get timestamp range
