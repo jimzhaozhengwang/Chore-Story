@@ -19,10 +19,10 @@ def generate_prnt_resp(prnt):
     :param prnt: a Parent object
     :return: a dictionary of description of Parent object
     """
-    d = {}
+    d = {'children': [c.id for c in prnt.children],
+         'clan_name': prnt.clan.name}
     for e in ['email', 'name', 'id']:
         d[e] = getattr(prnt, e)
-    d['children'] = [c.id for c in prnt.children]
     return d
 
 
@@ -32,7 +32,7 @@ def generate_chd_resp(chd):
     :param chd: a Child object
     :return: a dictionary of description of Child object
     """
-    d = {}
+    d = {'clan_name': chd.parents[0].clan.name}
     for e in ['level', 'name', 'id', 'xp']:
         d[e] = getattr(chd, e)
     return d

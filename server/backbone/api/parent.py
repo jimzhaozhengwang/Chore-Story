@@ -9,21 +9,25 @@ from .helpers import generate_qst_resp, generate_chd_resp
 from .. import db
 from ..decorators import backbone_error_handle, parent_login_required, json_return, json_content_only
 from ..exceptions import BackboneException
-from ..models import Child, Quest, Parent, QuestTimes
+from ..models import Child, Quest, Parent, QuestTimes, Clan
 from ..views import api_bp
 
 
-@api_bp.route('/register', methods=['POST'])
+@api_bp.route('/register', methods=['POST'], defaults={'cp_code': None})
+@api_bp.route('/register/<cp_code>', methods=['POST'], defaults={'clan_name': None})
 @json_content_only
-def register(email, name, password):
+def register(cp_code, email, name, password, clan_name):
     """
     .. :quickref: User; register a parent account
 
     Register a new account with ``email``, ``name`` and ``password``.
+    If ``cp_code`` is sent then corresponding parent's children are copied to new parent.
+    Note ``clan_name`` can be not excluded, if there is a ``cp_code``.
 
     **Errors**:
 
     409, Email already user - email is already in use by another user
+    410, Bad cp_code - invalid co_parent_code
 
     **Example post body**:
 
@@ -32,7 +36,8 @@ def register(email, name, password):
         {
         "email": "example@inter.net",
         "name": "backbone",
-        "password": "backbone"
+        "password": "backbone",
+        "clan_name": "clan_name"
         }
 
     **Example return**:
@@ -46,12 +51,25 @@ def register(email, name, password):
     :param email: email address of new user
     :param name: name of new user
     :param password: password of new user
+    :param cp_code: co parent code form an already existing parent
     :return: whether user was registered
     """
     if Parent.query.filter_by(email=email).first():
         raise BackboneException(409, "Email already used")
     # noinspection PyArgumentList
-    new_user = Parent(email=email, name=name, password=generate_password_hash(password))
+    new_user = Parent(email=email, name=name, password=generate_password_hash(password), clan_id=clan_name)
+    if cp_code:
+        other_parent = Parent.query.filter_by(cp_code=cp_code).first()
+        if not other_parent:
+            raise BackboneException(410, "Can't find co parent")
+        new_user.children = other_parent.children
+        new_user.clan_id = other_parent.clan_id
+        other_parent.co_parent_code = None
+    else:
+        new_clan = Clan(name=clan_name)
+        db.session.add(new_clan)
+        db.session.commit()
+        new_user.clan_id = new_clan.id
     db.session.add(new_user)
     db.session.commit()
     return Parent.query.filter_by(email=email).first() is not None
@@ -403,3 +421,33 @@ def delete_quest(qid):
     db.session.delete(quest)
     db.session.commit()
     return json_return(Quest.query.filter_by(id=qid).first() is None)
+
+
+@api_bp.route('/generate_cp_code', methods=['POST'])
+@parent_login_required
+@backbone_error_handle
+def add_co_parent():
+    """
+    .. :quickref: User; generate co-parent registration code
+
+    **Parent login required**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": "1256d5ab-5cad-4c03-b2b5-5e8163de6092"
+        }
+
+    :return: new co parent registration code to be used in the ``/api/register`` end-point.
+    """
+    # even though we did not authenticate by a header, let's skip adding cookie to the response
+    g.login_via_request = True
+    new_cp_code = str(uuid4())
+    # make sure it's a unique cp_code
+    while Parent.query.filter_by(cp_code=new_cp_code).first() is not None:
+        new_cp_code = str(uuid4())
+    current_user.cp_code = str(new_cp_code)
+    db.session.commit()
+    return json_return(new_cp_code)
