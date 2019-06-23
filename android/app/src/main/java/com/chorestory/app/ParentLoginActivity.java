@@ -67,14 +67,14 @@ public class ParentLoginActivity extends ChoreStoryActivity {
                 loginQuery.enqueue(new Callback<LoginResponse>() {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                        if (response.isSuccessful()) {
+                        if (response.isSuccessful() && response.body() != null && response.body().hasToken()) {
                             String token = response.body().getToken();
 
                             // TODO: Store the token properly here
-                            tokenHandler.setToken(token);
+                            tokenHandler.setParentToken(token);
 
                             // TODO: Navigate to profile page
-                        } else{
+                        } else {
                             // TODO: use Snackbar instead; move existing view up when Snackbar appears
                             toast = Toast.makeText(ParentLoginActivity.this,
                                     "Invalid username or password",
@@ -84,8 +84,13 @@ public class ParentLoginActivity extends ChoreStoryActivity {
                             logInButton.setEnabled(true);
                         }
                     }
+
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        toast = Toast.makeText(ParentLoginActivity.this,
+                                "Something went wrong!",
+                                Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 400);
                         toast.show();
                         logInButton.setEnabled(true);
                     }

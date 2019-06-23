@@ -34,9 +34,9 @@ public class NetModule {
     @Singleton
     RetrofitInterface provideRetrofit() {
         Retrofit retrofit = new retrofit2.Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
         final RetrofitInterface retrofitInterface = retrofit.create(RetrofitInterface.class);
         return retrofitInterface;

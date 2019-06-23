@@ -9,6 +9,10 @@ public class LoginResponse {
     @Expose
     private String token;
 
+    public Boolean hasToken() {
+        return (token != null && !token.isEmpty());
+    }
+
     public String getToken() {
         return token;
     }

@@ -2,16 +2,23 @@ package com.chorestory.helpers;
 
 public class TokenHandler {
 
-    private String authToken = null;
+    /**
+     * TOKEN SPEC:
+     * Authorization: <Parent token>:<Child token>
+     */
+    private String token = ":";
 
     // This will eventually be setup to pull from some storage system
     // Undecided ActivityManager/keystore
-    public void setToken(String token) {
-        this.authToken = token + ":";
+    public void setParentToken(String token) {
+        this.token = token + ":";
+    }
+    public void setChildToken(String token) {
+        this.token = ":" + token;
     }
 
     public String getToken() {
-        return this.authToken;
+        return this.token;
     }
 
 }

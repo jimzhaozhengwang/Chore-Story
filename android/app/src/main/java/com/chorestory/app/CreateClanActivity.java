@@ -69,14 +69,14 @@ public class CreateClanActivity extends ChoreStoryActivity {
                 registerQuery.enqueue(new Callback<LoginResponse>() {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                        if (response.isSuccessful()) {
+                        if (response.isSuccessful() && response.body() != null && response.body().hasToken()) {
                             String token = response.body().getToken();
 
                             // TODO: Store the token properly here
-                            tokenHandler.setToken(token);
+                            tokenHandler.setParentToken(token);
 
                             // TODO: Navigate to profile page
-                        } else{
+                        } else {
                             // TODO: use Snackbar instead; move existing view up when Snackbar appears
                             toast = Toast.makeText(CreateClanActivity.this,
                                     "Something went wrong!",
@@ -86,8 +86,13 @@ public class CreateClanActivity extends ChoreStoryActivity {
                             signUpButton.setEnabled(true);
                         }
                     }
+
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        toast = Toast.makeText(CreateClanActivity.this,
+                                "Something went wrong!",
+                                Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 400);
                         toast.show();
                         signUpButton.setEnabled(true);
                     }
