@@ -5,6 +5,7 @@
     android:id="@+id/parent_login_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".app.ParentLoginActivity">
 
     <EditText
@@ -16,6 +17,7 @@
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textPersonName"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:textSize="25sp" />
 
     <EditText
@@ -28,6 +30,7 @@
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:textSize="25sp" />
 
     <Button
@@ -36,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="@string/log_in"
+        android:background="@color/colorPrimaryDark"
         android:textSize="50sp" />
 
 </RelativeLayout>

@@ -4,26 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context="com.chorestory.app.MainActivity">
 
-    <TextView
-        android:id="@+id/chore_story"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:fontFamily="sans-serif-black"
-        android:text="@string/app_name"
-        android:textSize="65sp" />
+
 
     <ImageView
         android:id="@+id/logo_image"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_below="@id/chore_story"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:src="@mipmap/ic_launcher" /> <!--TODO: upload logo image-->
+        android:src="@drawable/logo_and_name" />
 
     <TextView
         android:id="@+id/i_am_a"
@@ -31,8 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/logo_image"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp"
         android:text="@string/i_am_a"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:textSize="30sp" />
 
     <!-- TODO: adjust fonts, colors, shapes and dimensions -->
@@ -49,6 +41,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:text="@string/parent_guardian"
+            android:background="@drawable/btn_round"
             android:textSize="25sp" />
 
         <Button
@@ -57,7 +50,8 @@
             android:layout_height="60dp"
             android:layout_below="@id/parent_guardian_button"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/btn_round"
             android:text="@string/child"
             android:textSize="25sp" />
     </RelativeLayout>
