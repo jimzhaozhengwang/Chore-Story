@@ -4,25 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".app.ParentSignUpActivity">
 
     <Button
         android:id="@+id/create_new_clan_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="360dp"
+        android:layout_height="80dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="250dp"
         android:text="@string/create_new_clan"
+        android:background="@drawable/btn_round"
         android:textSize="35sp" />
 
     <Button
         android:id="@+id/join_existing_clan_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="360dp"
+        android:layout_height="80dp"
         android:layout_below="@id/create_new_clan_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:text="@string/join_existing_clan"
+        android:background="@drawable/btn_round"
         android:textSize="35sp" />
 
 </RelativeLayout>
