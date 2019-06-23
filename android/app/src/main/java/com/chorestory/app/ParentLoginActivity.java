@@ -1,14 +1,27 @@
 package com.chorestory.app;
 
+import android.accounts.AccountManager;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 //import android.widget.Toast;
 
+import com.chorestory.helpers.TokenHandler;
+import com.chorestory.templates.LoginRequest;
+import com.chorestory.templates.LoginResponse;
+import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 
 import java.util.Collections;
+
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ParentLoginActivity extends ChoreStoryActivity {
 
@@ -16,8 +29,13 @@ public class ParentLoginActivity extends ChoreStoryActivity {
     private String password;
     private EditText usernameEditText;
     private EditText passwordEditText;
-    //    private Toast toast;
+    private Toast toast;
     private Button logInButton;
+
+    @Inject
+    RetrofitInterface retrofitInterface;
+    @Inject
+    TokenHandler tokenHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +50,9 @@ public class ParentLoginActivity extends ChoreStoryActivity {
 
         enableButtons();
 
+
+        AccountManager accountManager = AccountManager.get(this);
+
         logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,18 +61,35 @@ public class ParentLoginActivity extends ChoreStoryActivity {
                 username = usernameEditText.getText().toString();
                 password = passwordEditText.getText().toString();
 
-                // TODO: Authenticate user
+                LoginRequest loginRequest = new LoginRequest(username, password);
+                Call<LoginResponse> loginQuery = retrofitInterface.login(loginRequest);
 
-                // TODO: if authentication successful, navigate to app homepage
+                loginQuery.enqueue(new Callback<LoginResponse>() {
+                    @Override
+                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                        if (response.isSuccessful()) {
+                            String token = response.body().getToken();
 
-                // TODO: if authentication unsuccessful, enable loginButton, display toast
-                // TODO: use Snackbar instead; move existing view up when Snackbar appears
-//                toast = Toast.makeText(ParentLoginActivity.this,
-//                        "Invalid username or password",
-//                        Toast.LENGTH_SHORT);
-//                toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 400);
-//                toast.show();
-//                logInButton.setEnabled(true);
+                            // TODO: Store the token properly here
+                            tokenHandler.setToken(token);
+
+                            // TODO: Navigate to profile page
+                        } else{
+                            // TODO: use Snackbar instead; move existing view up when Snackbar appears
+                            toast = Toast.makeText(ParentLoginActivity.this,
+                                    "Invalid username or password",
+                                    Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 400);
+                            toast.show();
+                            logInButton.setEnabled(true);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        toast.show();
+                        logInButton.setEnabled(true);
+                    }
+                });
             }
         });
     }

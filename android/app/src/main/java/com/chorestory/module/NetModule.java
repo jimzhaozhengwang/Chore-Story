@@ -1,6 +1,7 @@
 package com.chorestory.module;
 
 
+import com.chorestory.Interface.RetrofitInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -10,9 +11,12 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class NetModule {
+
+    private static final String BASE_URL = "https://chore.cloudbox.markkeller.dev/api/";
 
     @Provides
     @Singleton
@@ -28,7 +32,13 @@ public class NetModule {
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit() {
-        return null;// TODO: return new Retrofit as needed
+    RetrofitInterface provideRetrofit() {
+        Retrofit retrofit = new retrofit2.Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
+        final RetrofitInterface retrofitInterface = retrofit.create(RetrofitInterface.class);
+        return retrofitInterface;
     }
 }

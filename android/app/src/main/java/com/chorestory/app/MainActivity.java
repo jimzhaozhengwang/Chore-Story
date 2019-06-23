@@ -8,7 +8,14 @@ import com.chorestory.R;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
+import okhttp3.OkHttpClient;
+
 public class MainActivity extends ChoreStoryActivity {
+
+    @Inject
+    OkHttpClient okHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -3,6 +3,7 @@ package com.chorestory.app;
 import android.app.Application;
 
 import com.chorestory.module.AppModule;
+import com.chorestory.module.AuthModule;
 import com.chorestory.module.DaggerAppComponent;
 import com.chorestory.module.AppComponent;
 import com.chorestory.module.NetModule;
@@ -22,6 +23,7 @@ public class App extends Application {
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .netModule(new NetModule())
+                .authModule(new AuthModule())
                 .build();
     }
 }
