@@ -3,6 +3,7 @@ from datetime import timedelta, datetime
 from os.path import join
 
 from os import listdir
+from uuid import uuid4
 
 from flask_login import current_user
 from sqlalchemy import inspect
@@ -19,10 +20,10 @@ def generate_prnt_resp(prnt):
     :param prnt: a Parent object
     :return: a dictionary of description of Parent object
     """
-    d = {}
+    d = {'children': [c.id for c in prnt.children],
+         'clan_name': prnt.clan.name}
     for e in ['email', 'name', 'id']:
         d[e] = getattr(prnt, e)
-    d['children'] = [c.id for c in prnt.children]
     return d
 
 
@@ -32,7 +33,7 @@ def generate_chd_resp(chd):
     :param chd: a Child object
     :return: a dictionary of description of Child object
     """
-    d = {}
+    d = {'clan_name': chd.parents[0].clan.name}
     for e in ['level', 'name', 'id', 'xp']:
         d[e] = getattr(chd, e)
     return d
@@ -109,3 +110,24 @@ def look_for_file(path, prefix):
         return join(path, filter(lambda e: e.startswith(prefix), listdir(path)).__next__())
     except StopIteration:
         return None
+
+
+def generate_unique_parent_api_key():
+    """Generate unique api key for parents specifically"""
+    # noinspection PyTypeChecker
+    return generate_unique_api_key_for(Parent)
+
+
+def generate_unique_child_api_key():
+    """Generate unique api key for parents specifically"""
+    # noinspection PyTypeChecker
+    return generate_unique_api_key_for(Child)
+
+
+def generate_unique_api_key_for(cls):
+    """Helper function, to make unique api_key for cls"""
+    new_api_key = str(uuid4())
+    # make sure it's a unique api key
+    while cls.query.filter_by(api_key=new_api_key).first() is not None:
+        new_api_key = str(uuid4())
+    return str(new_api_key)

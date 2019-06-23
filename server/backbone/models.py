@@ -8,6 +8,7 @@ child_table = 'children'
 quest_table = 'quests'
 quest_times_table = 'questTimes'
 quest_completions_table = 'questCompletions'
+clan_name_table = 'clanName'
 
 family_association = Table('parents-children', db.Model.metadata,
                            db.Column('parent_id', db.Integer, db.ForeignKey(f'{user_table}.id')),
@@ -25,6 +26,16 @@ friendship = Table('friendships', db.Model.metadata,
                    )
 
 
+class Clan(db.Model):
+    __tablename__ = clan_name_table
+
+    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(40), nullable=False)
+
+    def __repr__(self):
+        return f"Clan {self.name}"
+
+
 class Parent(UserMixin, db.Model):
     __tablename__ = user_table
 
@@ -35,6 +46,9 @@ class Parent(UserMixin, db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
     children = db.relationship('Child', secondary=family_association, backref="parents", cascade="all,delete")
+    cp_code = db.Column(db.String(37), default=None, unique=True)
+    clan_id = db.Column(db.Integer, db.ForeignKey(f'{clan_name_table}.id'))
+    clan = db.relationship("Clan")
 
     def __repr__(self):
         return f"Parent {self.name}"
