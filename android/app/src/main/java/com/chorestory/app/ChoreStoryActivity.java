@@ -33,7 +33,6 @@ abstract public class ChoreStoryActivity extends AppCompatActivity {
                 button.setEnabled(setTo);
             }
         }
-
     }
 
     protected void enableButtons() {
