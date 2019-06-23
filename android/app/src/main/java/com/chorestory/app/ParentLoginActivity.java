@@ -25,17 +25,17 @@ import retrofit2.Response;
 
 public class ParentLoginActivity extends ChoreStoryActivity {
 
+    @Inject
+    RetrofitInterface retrofitInterface;
+    @Inject
+    TokenHandler tokenHandler;
+
     private String username;
     private String password;
     private EditText usernameEditText;
     private EditText passwordEditText;
     private Toast toast;
     private Button logInButton;
-
-    @Inject
-    RetrofitInterface retrofitInterface;
-    @Inject
-    TokenHandler tokenHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

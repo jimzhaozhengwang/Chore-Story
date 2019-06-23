@@ -9,6 +9,9 @@ public class AccountResponse {
     private String data;
 
     public String getAccountData() {
+
+        // TODO: Work on writing a general de-serializer for these data responses
+
         return data;
     }
 }
