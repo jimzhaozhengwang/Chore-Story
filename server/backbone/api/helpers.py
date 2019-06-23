@@ -3,6 +3,7 @@ from datetime import timedelta, datetime
 from os.path import join
 
 from os import listdir
+from uuid import uuid4
 
 from flask_login import current_user
 from sqlalchemy import inspect
@@ -109,3 +110,24 @@ def look_for_file(path, prefix):
         return join(path, filter(lambda e: e.startswith(prefix), listdir(path)).__next__())
     except StopIteration:
         return None
+
+
+def generate_unique_parent_api_key():
+    """Generate unique api key for parents specifically"""
+    # noinspection PyTypeChecker
+    return generate_unique_api_key_for(Parent)
+
+
+def generate_unique_child_api_key():
+    """Generate unique api key for parents specifically"""
+    # noinspection PyTypeChecker
+    return generate_unique_api_key_for(Child)
+
+
+def generate_unique_api_key_for(cls):
+    """Helper function, to make unique api_key for cls"""
+    new_api_key = str(uuid4())
+    # make sure it's a unique api key
+    while cls.query.filter_by(api_key=new_api_key).first() is not None:
+        new_api_key = str(uuid4())
+    return str(new_api_key)

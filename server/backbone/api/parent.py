@@ -5,7 +5,7 @@ from flask import g
 from flask_login import current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .helpers import generate_qst_resp, generate_chd_resp
+from .helpers import generate_qst_resp, generate_chd_resp, generate_unique_parent_api_key, generate_unique_child_api_key
 from .. import db
 from ..decorators import backbone_error_handle, parent_login_required, json_return, json_content_only
 from ..exceptions import BackboneException
@@ -52,7 +52,8 @@ def register(cp_code, email, name, password, clan_name):
     :param name: name of new user
     :param password: password of new user
     :param cp_code: co parent code form an already existing parent
-    :return: whether user was registered
+    :param clan_name: name of the clan to be added to the database
+    :return: an api key for this user
     """
     if Parent.query.filter_by(email=email).first():
         raise BackboneException(409, "Email already used")
@@ -71,8 +72,9 @@ def register(cp_code, email, name, password, clan_name):
         db.session.commit()
         new_user.clan_id = new_clan.id
     db.session.add(new_user)
+    new_user.api_key = generate_unique_parent_api_key()
     db.session.commit()
-    return Parent.query.filter_by(email=email).first() is not None
+    return new_user.api_key
 
 
 @api_bp.route('/login', methods=['POST'])
@@ -116,13 +118,9 @@ def login(email, password):
 
     # even though we did not authenticate by a header, let's skip adding cookie to the response
     g.login_via_request = True
-    new_api_key = str(uuid4())
-    # make sure it's a unique api key
-    while Parent.query.filter_by(api_key=new_api_key).first() is not None:
-        new_api_key = str(uuid4())
-    user.api_key = str(new_api_key)
+    user.api_key = generate_unique_parent_api_key()
     db.session.commit()
-    return new_api_key
+    return user.api_key
 
 
 @api_bp.route('/child', methods=['POST'])
@@ -233,13 +231,9 @@ def generate_child_login(cid):
     child = Child.query.filter_by(id=cid).first()
     if child not in current_user.children:
         raise BackboneException(404, "Child not found")
-    new_api_key = str(uuid4())
-    # make sure it's a unique api key
-    while Child.query.filter_by(api_key=new_api_key).first() is not None:
-        new_api_key = str(uuid4())
-    child.api_key = new_api_key
+    child.api_key = generate_unique_child_api_key()
     db.session.commit()
-    return json_return(new_api_key)
+    return json_return(child.api_key)
 
 
 @api_bp.route('/quest', methods=['POST'])
