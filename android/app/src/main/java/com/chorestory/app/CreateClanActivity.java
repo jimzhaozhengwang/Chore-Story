@@ -10,8 +10,7 @@ import android.widget.Toast;
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.helpers.TokenHandler;
-import com.chorestory.templates.LoginRequest;
-import com.chorestory.templates.LoginResponse;
+import com.chorestory.templates.SingleStringResponse;
 import com.chorestory.templates.RegisterRequest;
 
 import java.util.Collections;
@@ -64,13 +63,13 @@ public class CreateClanActivity extends ChoreStoryActivity {
                 password = passwordEditText.getText().toString();
 
                 RegisterRequest registerRequest = new RegisterRequest(clanName, username, password);
-                Call<LoginResponse> registerQuery = retrofitInterface.register(registerRequest);
+                Call<SingleStringResponse> registerQuery = retrofitInterface.register(registerRequest);
 
-                registerQuery.enqueue(new Callback<LoginResponse>() {
+                registerQuery.enqueue(new Callback<SingleStringResponse>() {
                     @Override
-                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                        if (response.isSuccessful() && response.body() != null && response.body().hasToken()) {
-                            String token = response.body().getToken();
+                    public void onResponse(Call<SingleStringResponse> call, Response<SingleStringResponse> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                            String token = response.body().getResponse();
 
                             // TODO: Store the token properly here
                             tokenHandler.setParentToken(token);
@@ -88,7 +87,7 @@ public class CreateClanActivity extends ChoreStoryActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    public void onFailure(Call<SingleStringResponse> call, Throwable t) {
                         toast = Toast.makeText(CreateClanActivity.this,
                                 "Something went wrong!",
                                 Toast.LENGTH_LONG);
