@@ -1,28 +1,18 @@
 package com.chorestory.templates;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class ChildResponse {
 
-    @SerializedName("data")
-    @Expose
-    private data data;
+    private Data data;
 
-    public ChildResponse.data getData() {
+    public Data getData() {
         return data;
     }
 
-    class data {
-        @SerializedName("clan_name")
+    public class Data {
         private String clan_name;
-        @SerializedName("id")
         private int id;
-        @SerializedName("level")
         private int level;
-        @SerializedName("name")
         private String name;
-        @SerializedName("xp")
         private int xp;
 
         public String getClan_name() {
