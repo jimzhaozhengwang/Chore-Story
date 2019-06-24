@@ -74,7 +74,12 @@ public class CreateClanActivity extends ChoreStoryActivity {
                             // TODO: Store the token properly here
                             tokenHandler.setParentToken(token);
 
-                            // TODO: Navigate to profile page
+                            // TODO: verification
+                //  if successful register new clan & user, else display snackbar/toast
+
+                navigateTo(ParentHomeActivity.class,
+                        getResources().getString(R.string.clan_name),
+                        clanName);
                         } else {
                             // TODO: use Snackbar instead; move existing view up when Snackbar appears
                             toast = Toast.makeText(CreateClanActivity.this,

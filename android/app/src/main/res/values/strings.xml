@@ -11,4 +11,5 @@
     <string name="create_new_clan">Create new clan</string>
     <string name="join_existing_clan">Join existing clan</string>
     <string name="clan_name">Clan Name</string>
+    <string name="add_a_clan_member">Add a clan member</string>
 </resources>
