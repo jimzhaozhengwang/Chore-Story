@@ -2,7 +2,6 @@ package com.chorestory.app;
 
 import android.accounts.AccountManager;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 //import android.widget.Toast;
 
 import com.chorestory.helpers.TokenHandler;
+import com.chorestory.helpers.Toaster;
 import com.chorestory.templates.LoginRequest;
 import com.chorestory.templates.SingleStringResponse;
 import com.chorestory.Interface.RetrofitInterface;
@@ -76,23 +76,15 @@ public class ParentLoginActivity extends ChoreStoryActivity {
                             // TODO: Navigate to profile page
                         } else {
                             // TODO: use Snackbar instead; move existing view up when Snackbar appears
-                            toast = Toast.makeText(ParentLoginActivity.this,
-                                    "Invalid username or password",
-                                    Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 400);
-                            toast.show();
-                            logInButton.setEnabled(true);
+                            Toaster.lets_get_this_toast(ParentLoginActivity.this, "Invalid username or password");
+                            enableButtons();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<SingleStringResponse> call, Throwable t) {
-                        toast = Toast.makeText(ParentLoginActivity.this,
-                                "Something went wrong!",
-                                Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 400);
-                        toast.show();
-                        logInButton.setEnabled(true);
+                        Toaster.lets_get_this_toast(ParentLoginActivity.this, "Something went wrong!");
+                        enableButtons();
                     }
                 });
             }
