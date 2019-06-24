@@ -26,22 +26,22 @@ public class ParentRecyclerViewItem {
 
     private static int[] retrieveImages() { // TODO: get images
         return new int[]{
-                R.drawable.ic_launcher_foreground,
-                R.drawable.ic_launcher_foreground,
-                R.drawable.ic_launcher_foreground,
-                R.drawable.ic_launcher_foreground,
-                R.drawable.ic_launcher_foreground,
-                R.drawable.ic_launcher_foreground};
+                R.drawable.king_color,
+                R.drawable.queen_color,
+                R.drawable.king_color,
+                R.drawable.queen_color,
+                R.drawable.king_color,
+                R.drawable.queen_color};
     }
 
     private static String[] retrieveNames() { // TODO: get names
         return new String[]{
-                "Parent 1",
-                "Guardian 1",
-                "Parent 2",
-                "Guardian 2",
-                "Guardian 3",
-                "Guardian 4"
+                "David",
+                "Diane",
+                "Iulian",
+                "Marianne",
+                "Bob",
+                "Emily"
         };
     }
 

@@ -35,40 +35,40 @@ public class ChildRecyclerViewItem {
 
     private static int[] retrieveImages() { // TODO: retrieve images
         return new int[]{
-                R.drawable.ic_launcher_foreground,
-                R.drawable.ic_launcher_foreground,
-                R.drawable.ic_launcher_foreground,
-                R.drawable.ic_launcher_foreground,
-                R.drawable.ic_launcher_foreground,
-                R.drawable.ic_launcher_foreground};
+                R.drawable.joker_color,
+                R.drawable.soldier_color,
+                R.drawable.joker_color,
+                R.drawable.kight_color,
+                R.drawable.soldier_color,
+                R.drawable.kight_color};
     }
 
     private static String[] retrieveNames() { // TODO: retrieve names
         return new String[]{
-                "Child 1",
-                "Child 2",
-                "Child 3",
-                "Child 4",
-                "Child 5",
-                "Child 6"
+                "Christian",
+                "Mark",
+                "Jim",
+                "Isabelle",
+                "Minnie",
+                "Amanda"
         };
     }
 
     private static int[] retrieveLevels() { // TODO: retrieve levels
         return new int[]{
-                4, 1, 10, 2, 4, 9
+                10, 9, 4, 4, 2, 1
         };
     }
 
     private static int[] retrieveExps() { // TODO: retrieve exps
         return new int[]{
-                400, 12, 10021, 200, 442, 3919
+                1021, 919, 442, 400, 200, 12
         };
     }
 
     private static int[] retrieveQuests() {
         return new int[]{
-                40, 1, 200, 20, 42, 100
+                200, 100, 42, 40, 20, 1
         };
     }
 
