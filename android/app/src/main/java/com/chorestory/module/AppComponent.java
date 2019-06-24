@@ -12,7 +12,7 @@ import com.chorestory.app.ParentLoginSignUpActivity;
 import com.chorestory.app.ParentSignUpActivity;
 
 @Singleton
-@Component(modules = {AppModule.class, NetModule.class})
+@Component(modules = {AppModule.class, NetModule.class, AuthModule.class})
 public interface AppComponent {
     void inject(MainActivity activity);
 

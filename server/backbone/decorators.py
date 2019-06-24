@@ -83,7 +83,7 @@ def json_content_only(func):
     def json_view_only(**kwargs):
         args = inspect.getfullargspec(func)[0]
         kwargs.update(extract_params(request.json, args))
-        if list(kwargs.keys()) != args:
+        if sorted(list(kwargs.keys())) != sorted(args):
             raise BackboneException(400, "Invalid input")
         if not request.is_json:
             raise BackboneException(400, 'Method body must be a valid JSON')
