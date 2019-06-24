@@ -41,7 +41,7 @@ public class ChildRecyclerViewAdapter extends RecyclerView.Adapter<ChildRecycler
         myViewHolder.childExpTextView.setText(exp);
 
         String quest;
-        if (currentItem.getQuest() == 0) {
+        if (currentItem.getQuest() == 1) {
             quest = currentItem.getQuest() + " Quest Completed";
         } else {
             quest = currentItem.getQuest() + " Quests Completed";
