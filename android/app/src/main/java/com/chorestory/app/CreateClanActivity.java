@@ -46,6 +46,10 @@ public class CreateClanActivity extends ChoreStoryActivity {
 
                 // TODO: verification
                 //  if successful register new clan & user, else display snackbar/toast
+
+                navigateTo(ParentHomeActivity.class,
+                        getResources().getString(R.string.clan_name),
+                        clanName);
             }
         });
     }

@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
+            android:name=".app.ParentHomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".app.CreateClanActivity"
             android:screenOrientation="portrait" />
         <activity

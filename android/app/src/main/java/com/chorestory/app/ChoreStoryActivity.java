@@ -43,6 +43,12 @@ abstract public class ChoreStoryActivity extends AppCompatActivity {
         setButtons(false);
     }
 
+    protected void navigateTo(Class<?> cls, String key, String value) {
+        Intent intent = new Intent(this, cls);
+        intent.putExtra(key, value);
+        startActivity(intent);
+    }
+
     protected void navigateTo(Class<?> cls) {
         startActivity(new Intent(this, cls));
     }

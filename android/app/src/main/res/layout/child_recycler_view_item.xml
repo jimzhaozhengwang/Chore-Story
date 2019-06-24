@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/child_image_view"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <TextView
+        android:id="@+id/child_name_text_view"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/child_image_view"
+        android:layout="@id/child_image_view" />
+
+    <TextView
+        android:id="@+id/child_level_text_view"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/child_name_text_view"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/child_image_view"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/child_exp_text_view"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/child_name_text_view"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/child_level_text_view"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/child_quest_text_view"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/child_level_text_view"
+        android:layout_marginTop="5dp" />
+
+</RelativeLayout>
