@@ -45,7 +45,7 @@ def register(cp_code, email, name, password, clan_name):
     .. code-block:: json
 
         {
-        "data": null
+          "data": "1c728327-aad5-42c2-9593-756871542fe2"
         }
 
     :param email: email address of new user
@@ -148,9 +148,10 @@ def add_child(name):
 
         {
           "data": {
-            "id": 2,
-            "level": 1,
-            "name": "Jim",
+            "clan_name": "Marky Mark",
+            "id": 1,
+            "level": 69,
+            "name": "Amanda",
             "xp": 0
           }
         }
