@@ -50,9 +50,9 @@ public class ParentHomeActivity extends ChoreStoryActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         // TODO: change icons
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_launcher_foreground);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_launcher_foreground);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_launcher_foreground);
-        tabLayout.getTabAt(3).setIcon(R.drawable.ic_launcher_foreground);
+        tabLayout.getTabAt(0).setIcon(R.drawable.castle_color);
+        tabLayout.getTabAt(1).setIcon(R.drawable.plus_bw);
+        tabLayout.getTabAt(2).setIcon(R.drawable.sword_bw);
+        tabLayout.getTabAt(3).setIcon(R.drawable.knight_bw);
     }
 }
