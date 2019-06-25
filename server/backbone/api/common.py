@@ -59,10 +59,16 @@ def me():
 
         {
           "data": {
-            "children": [1, 2],
+            "children": [
+              {
+                "id": 1,
+                "name": "child"
+              }
+            ],
+            "clan_name": "makyy mark",
             "email": "markooo.keller@gmail.com",
             "id": 1,
-            "name": "mark",
+            "name": "Mark",
             "type": "parent"
           }
         }
@@ -100,9 +106,16 @@ def get_child_info(cid):
 
         {
           "data": {
-            "id": 2,
+            "clan_name": "makyy mark",
+            "id": 1,
             "level": 1,
-            "name": "Jim",
+            "name": "child",
+            "parents": [
+              {
+                "id": 1,
+                "name": "Mark"
+              }
+            ],
             "xp": 0
           }
         }
@@ -192,9 +205,16 @@ def modify_child(cid, name):
 
         {
           "data": {
-            "id": 2,
+            "clan_name": "makyy mark",
+            "id": 1,
             "level": 1,
             "name": "Jim",
+            "parents": [
+              {
+                "id": 1,
+                "name": "Mark"
+              }
+            ],
             "xp": 0
           }
         }
@@ -294,11 +314,19 @@ def get_clan():
 
         {
           "data": {
-            "children": [],
+            "children": [
+              {
+                "id": 1,
+                "name": "child"
+              }
+            ],
             "id": 1,
-            "name": "Marky Mark",
+            "name": "marky mark",
             "parents": [
-              1
+              {
+                "id": 1,
+                "name": "Mark"
+              }
             ]
           }
         }

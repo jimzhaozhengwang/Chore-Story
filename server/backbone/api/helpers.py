@@ -20,7 +20,7 @@ def generate_prnt_resp(prnt):
     :param prnt: a Parent object
     :return: a dictionary of description of Parent object
     """
-    d = {'children': [c.id for c in prnt.clan.children],
+    d = {'children': [{"id": p.id, "name": p.name} for p in prnt.clan.children],
          'clan_name': prnt.clan.name}
     for e in ['email', 'name', 'id']:
         d[e] = getattr(prnt, e)
@@ -34,7 +34,7 @@ def generate_chd_resp(chd):
     :return: a dictionary of description of Child object
     """
     d = {'clan_name': chd.clan.name,
-         'parents': [p.id for p in chd.clan.parents]}
+         'parents': [{"id": p.id, "name": p.name} for p in chd.clan.parents]}
     for e in ['level', 'name', 'id', 'xp']:
         d[e] = getattr(chd, e)
     return d
@@ -66,8 +66,8 @@ def generate_clan_resp(clan):
     :param clan: clan object
     :return: a dictionary of description of Clan object
     """
-    d = {"parents": [p.id for p in clan.parents],
-         "children": [p.id for p in clan.children]}
+    d = {"parents": [{"id": p.id, "name": p.name} for p in clan.parents],
+         "children": [{"id": c.id, "name": c.name} for c in clan.children]}
     for e in ['id', 'name']:
         d[e] = getattr(clan, e)
     return d
