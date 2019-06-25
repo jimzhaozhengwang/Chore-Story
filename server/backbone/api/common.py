@@ -7,7 +7,7 @@ from sqlalchemy import inspect
 from werkzeug.utils import secure_filename
 
 from .helpers import child_is_me_or_my_child, generate_chd_resp, generate_qst_resp, generate_prnt_resp, allowed_file, \
-    child_is_me_or_my_child_or_friend, look_for_file
+    child_is_me_or_my_child_or_friend, look_for_file, generate_clan_resp
 from .. import db
 from ..decorators import json_content_only, json_return, login_required, backbone_error_handle
 from ..exceptions import BackboneException
@@ -275,3 +275,34 @@ def show_child_picture(cid):
     if not file:
         raise BackboneException(405, "Picture not found")
     return send_file(file)
+
+
+@api_bp.route('/clan', methods=['GET'])
+@login_required
+@backbone_error_handle
+def get_clan():
+    """
+    .. :quickref: Clan; return a description of logged in user's clan
+
+    Get a description of current user's clan.
+
+    **Login required, either Parent, or Child**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": {
+            "children": [],
+            "id": 1,
+            "name": "Marky Mark",
+            "parents": [
+              1
+            ]
+          }
+        }
+
+    :return: description of currently logged in user
+    """
+    return json_return(generate_clan_resp(current_user.clan))

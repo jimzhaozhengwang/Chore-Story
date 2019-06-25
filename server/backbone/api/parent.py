@@ -445,3 +445,37 @@ def add_co_parent():
     current_user.cp_code = str(new_cp_code)
     db.session.commit()
     return json_return(new_cp_code)
+
+
+@api_bp.route('/clan', methods=['POST'])
+@parent_login_required
+@json_content_only
+def modify_clan(name):
+    """
+    .. :quickref: Clan; modify clan of logged in user
+
+    Modify current user's clan.
+
+    **Login required, either Parent, or Child**
+
+    **Example post body**:
+
+    .. code-block:: json
+
+        {
+         "name": "new name"
+        }
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": true
+        }
+
+    :return: Whether clan name was modified.
+    """
+    current_user.clan.name = name
+    db.session.commit()
+    return current_user.clan.name == name

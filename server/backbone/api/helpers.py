@@ -60,6 +60,19 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
     return d
 
 
+def generate_clan_resp(clan):
+    """
+    Generate a dictionary description of a Quest object, used by for example /get_quest
+    :param clan: clan object
+    :return: a dictionary of description of Clan object
+    """
+    d = {"parents": [p.id for p in clan.parents],
+         "children": [p.id for p in clan.children]}
+    for e in ['id', 'name']:
+        d[e] = getattr(clan, e)
+    return d
+
+
 def child_is_my_child(child_obj):
     """Checks whether child is a child of the logged in parent"""
     return child_obj and isinstance(inspect(current_user).object, Parent) and child_obj in current_user.clan.children
