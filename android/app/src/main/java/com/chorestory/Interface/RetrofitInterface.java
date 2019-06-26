@@ -1,12 +1,11 @@
 package com.chorestory.Interface;
 
-import android.accounts.Account;
-
+import com.chorestory.templates.AccountResponse;
 import com.chorestory.templates.ChildRequest;
 import com.chorestory.templates.ChildResponse;
 import com.chorestory.templates.FriendsResponse;
 import com.chorestory.templates.LoginRequest;
-import com.chorestory.templates.SingleStringResponse;
+import com.chorestory.templates.SingleResponse;
 import com.chorestory.templates.RegisterRequest;
 
 import retrofit2.Call;
@@ -20,18 +19,18 @@ public interface RetrofitInterface {
 
     @Headers("Content-Type: application/json")
     @POST("register")
-    Call<SingleStringResponse> register(
+    Call<SingleResponse<String>> register(
             @Body RegisterRequest registerRequest
     );
 
     @Headers("Content-Type: application/json")
     @POST("login")
-    Call<SingleStringResponse> login(
+    Call<SingleResponse<String>> login(
             @Body LoginRequest loginRequest
     );
 
     @GET("me")
-    Call<Account> me(
+    Call<AccountResponse> me(
             @Header("Authorization") String auth
     );
 

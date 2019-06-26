@@ -1,41 +1,37 @@
 package com.chorestory.templates;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class AccountResponse {
-    @SerializedName("data")
-    @Expose
-    private data data;
 
-    public AccountResponse.data getData() {
+    private Data data;
+
+    public Data getData() {
         return data;
     }
 
-    class data {
-        @SerializedName("children")
+    public class Data {
         List<Integer> children;
-        @SerializedName("email")
         String email;
-        @SerializedName("id")
         Integer id;
-        @SerializedName("name")
         String name;
-        @SerializedName("type")
+        String clanName;
         String type;
+
+        public Integer getId() {
+            return id;
+        }
 
         public List<Integer> getChildren() {
             return children;
         }
 
-        public String getEmail() {
-            return email;
+        public String getClanName() {
+            return clanName;
         }
 
-        public Integer getId() {
-            return id;
+        public String getEmail() {
+            return email;
         }
 
         public String getName() {
