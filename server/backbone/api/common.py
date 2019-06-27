@@ -7,7 +7,7 @@ from sqlalchemy import inspect
 from werkzeug.utils import secure_filename
 
 from .helpers import child_is_me_or_my_child, generate_chd_resp, generate_qst_resp, generate_prnt_resp, allowed_file, \
-    child_is_me_or_my_child_or_friend, look_for_file
+    child_is_me_or_my_child_or_friend, look_for_file, generate_clan_resp
 from .. import db
 from ..decorators import json_content_only, json_return, login_required, backbone_error_handle
 from ..exceptions import BackboneException
@@ -59,10 +59,16 @@ def me():
 
         {
           "data": {
-            "children": [1, 2],
+            "children": [
+              {
+                "id": 1,
+                "name": "child"
+              }
+            ],
+            "clan_name": "makyy mark",
             "email": "markooo.keller@gmail.com",
             "id": 1,
-            "name": "mark",
+            "name": "Mark",
             "type": "parent"
           }
         }
@@ -100,9 +106,16 @@ def get_child_info(cid):
 
         {
           "data": {
-            "id": 2,
+            "clan_name": "makyy mark",
+            "id": 1,
             "level": 1,
-            "name": "Jim",
+            "name": "child",
+            "parents": [
+              {
+                "id": 1,
+                "name": "Mark"
+              }
+            ],
             "xp": 0
           }
         }
@@ -192,9 +205,16 @@ def modify_child(cid, name):
 
         {
           "data": {
-            "id": 2,
+            "clan_name": "makyy mark",
+            "id": 1,
             "level": 1,
             "name": "Jim",
+            "parents": [
+              {
+                "id": 1,
+                "name": "Mark"
+              }
+            ],
             "xp": 0
           }
         }
@@ -275,3 +295,42 @@ def show_child_picture(cid):
     if not file:
         raise BackboneException(405, "Picture not found")
     return send_file(file)
+
+
+@api_bp.route('/clan', methods=['GET'])
+@login_required
+@backbone_error_handle
+def get_clan():
+    """
+    .. :quickref: Clan; return a description of logged in user's clan
+
+    Get a description of current user's clan.
+
+    **Login required, either Parent, or Child**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": {
+            "children": [
+              {
+                "id": 1,
+                "name": "child"
+              }
+            ],
+            "id": 1,
+            "name": "marky mark",
+            "parents": [
+              {
+                "id": 1,
+                "name": "Mark"
+              }
+            ]
+          }
+        }
+
+    :return: description of currently logged in user
+    """
+    return json_return(generate_clan_resp(current_user.clan))

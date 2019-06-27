@@ -8,13 +8,8 @@ child_table = 'children'
 quest_table = 'quests'
 quest_times_table = 'questTimes'
 quest_completions_table = 'questCompletions'
-clan_name_table = 'clanName'
+clan_table = 'clans'
 
-family_association = Table('parents-children', db.Model.metadata,
-                           db.Column('parent_id', db.Integer, db.ForeignKey(f'{user_table}.id')),
-                           db.Column('child_id', db.Integer, db.ForeignKey(f'{child_table}.id',
-                                                                           ondelete='CASCADE',
-                                                                           onupdate='CASCADE')))
 
 friendship = Table('friendships', db.Model.metadata,
                    db.Column('friend_a_id', db.Integer, db.ForeignKey(f'{user_table}.id',
@@ -27,13 +22,15 @@ friendship = Table('friendships', db.Model.metadata,
 
 
 class Clan(db.Model):
-    __tablename__ = clan_name_table
+    __tablename__ = clan_table
 
     id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
     name = db.Column(db.String(40), nullable=False)
+    parents = db.relationship('Parent', back_populates='clan')
+    children = db.relationship('Child', back_populates='clan')
 
     def __repr__(self):
-        return f"Clan {self.name}"
+        return f'Clan {self.name}'
 
 
 class Parent(UserMixin, db.Model):
@@ -45,13 +42,12 @@ class Parent(UserMixin, db.Model):
     name = db.Column(db.String(1000), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
-    children = db.relationship('Child', secondary=family_association, backref="parents", cascade="all,delete")
     cp_code = db.Column(db.String(37), default=None, unique=True)
-    clan_id = db.Column(db.Integer, db.ForeignKey(f'{clan_name_table}.id'))
-    clan = db.relationship("Clan")
+    clan_id = db.Column(db.Integer, db.ForeignKey(f'{clan_table}.id'))
+    clan = db.relationship('Clan', back_populates='parents')
 
     def __repr__(self):
-        return f"Parent {self.name}"
+        return f'Parent {self.name}'
 
 
 class Child(UserMixin, db.Model):
@@ -62,13 +58,15 @@ class Child(UserMixin, db.Model):
     level = db.Column(db.Integer)
     xp = db.Column(db.Integer)
     name = db.Column(db.String(1000), nullable=False)
-    added_friends = db.relationship("Child", secondary=friendship,
+    added_friends = db.relationship('Child', secondary=friendship,
                                     primaryjoin=(id == friendship.c.friend_a_id),
                                     secondaryjoin=(id == friendship.c.friend_b_id))
-    quests = db.relationship('Quest', cascade="all,delete")
+    quests = db.relationship('Quest', cascade='all,delete')
+    clan_id = db.Column(db.Integer, db.ForeignKey(f'{clan_table}.id'))
+    clan = db.relationship('Clan', back_populates='children')
 
     def __repr__(self):
-        return f"Child {self.name}"
+        return f'Child {self.name}'
 
 
 class Quest(db.Model):
@@ -81,12 +79,12 @@ class Quest(db.Model):
     owner = db.Column(db.Integer, db.ForeignKey(f'{child_table}.id'))
     due = db.Column(db.TIMESTAMP, nullable=False)
     recurring = db.Column(db.Boolean, default=False, nullable=False)
-    timestamps = db.relationship("QuestTimes", cascade="all,delete")
-    completions = db.relationship("QuestCompletions", cascade="all,delete")
+    timestamps = db.relationship('QuestTimes', cascade='all,delete')
+    completions = db.relationship('QuestCompletions', cascade='all,delete')
 
     def __repr__(self):
-        return ("Recurring " if self.recurring else "") + \
-               f"Quest {self.id}"
+        return ('Recurring ' if self.recurring else '') + \
+               f'Quest {self.id}'
 
 
 class QuestTimes(db.Model):

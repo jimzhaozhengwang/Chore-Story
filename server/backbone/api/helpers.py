@@ -20,7 +20,7 @@ def generate_prnt_resp(prnt):
     :param prnt: a Parent object
     :return: a dictionary of description of Parent object
     """
-    d = {'children': [c.id for c in prnt.children],
+    d = {'children': [{"id": p.id, "name": p.name} for p in prnt.clan.children],
          'clan_name': prnt.clan.name}
     for e in ['email', 'name', 'id']:
         d[e] = getattr(prnt, e)
@@ -33,7 +33,8 @@ def generate_chd_resp(chd):
     :param chd: a Child object
     :return: a dictionary of description of Child object
     """
-    d = {'clan_name': chd.parents[0].clan.name}
+    d = {'clan_name': chd.clan.name,
+         'parents': [{"id": p.id, "name": p.name} for p in chd.clan.parents]}
     for e in ['level', 'name', 'id', 'xp']:
         d[e] = getattr(chd, e)
     return d
@@ -59,15 +60,41 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
     return d
 
 
+def generate_clan_resp(clan):
+    """
+    Generate a dictionary description of a Quest object, used by for example /get_quest
+    :param clan: clan object
+    :return: a dictionary of description of Clan object
+    """
+    d = {"parents": [{"id": p.id, "name": p.name} for p in clan.parents],
+         "children": [{"id": c.id, "name": c.name} for c in clan.children]}
+    for e in ['id', 'name']:
+        d[e] = getattr(clan, e)
+    return d
+
+
+def child_is_my_child(child_obj):
+    """Checks whether child is a child of the logged in parent"""
+    return child_obj and isinstance(inspect(current_user).object, Parent) and child_obj in current_user.clan.children
+
+
+def child_is_me(child_obj):
+    """Checks whether child is currently logged in user"""
+    return child_obj and isinstance(inspect(current_user).object, Child) and child_obj == current_user
+
+
+def child_is_my_friend(child_obj):
+    """Checks whether child is currently logged in child's friend"""
+    return child_obj and isinstance(inspect(current_user).object, Child) and child_obj in current_user.all_friends
+
+
 def child_is_me_or_my_child(child_obj):
     """
     Checks whether current user is parent and owns child, or current user is that child itself
     :param child_obj: child object we want to check
     :return: whether it is current user, or it's child
     """
-    return (child_obj or
-            isinstance(inspect(current_user).object, Parent) and child_obj in current_user.children or
-            isinstance(inspect(current_user).object, Child) and child_obj == current_user)
+    return child_is_me(child_obj) or child_is_my_child(child_obj)
 
 
 def child_is_me_or_my_child_or_friend(child_obj):
@@ -75,8 +102,16 @@ def child_is_me_or_my_child_or_friend(child_obj):
     Same as ``me_or_my_child``, but also allows current user to be a friend of the child.
     :param child_obj: Child object we want to check
     :return: whether current user is the child itself, parent of, or friend of them """
-    return (child_is_me_or_my_child(child_obj) or
-            isinstance(inspect(current_user).object, Child) and child_obj in current_user.all_friends)
+    return child_is_me_or_my_child(child_obj) or child_is_my_friend(child_obj)
+
+
+def child_is_me_or_my_friend(child_obj):
+    """
+    Check whether child supplied is currently logged in child, or one if it's friends.
+    :param child_obj: a Child object we want to check
+    :return: whether the logged in child, or their friend
+    """
+    return child_is_me(child_obj) or child_is_my_friend(child_obj)
 
 
 def find_next_time(qst, time_now=datetime.utcnow()):
