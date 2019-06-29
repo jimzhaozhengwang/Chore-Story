@@ -13,10 +13,22 @@ import com.chorestory.fragment.ParentQuestsFragment;
 
 public class ParentHomeActivity extends ChoreStoryActivity {
 
-    private final String CLAN = "clan";
+    private final String CLAN = "Clan";
     private final String ADD = "Add";
     private final String QUEST = "Quests";
     private final String PROFILE = "Profile";
+    private final int[] tabSelectedIcons = {
+            R.drawable.castle_color,
+            R.drawable.plus_color,
+            R.drawable.sword_color,
+            R.drawable.knight_color
+    };
+    private final int[] tabsUnselectedIcons = {
+            R.drawable.castle_bw,
+            R.drawable.plus_bw,
+            R.drawable.sword_bw,
+            R.drawable.knight_bw
+    };
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -49,10 +61,24 @@ public class ParentHomeActivity extends ChoreStoryActivity {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        // TODO: change icons
-        tabLayout.getTabAt(0).setIcon(R.drawable.castle_color);
-        tabLayout.getTabAt(1).setIcon(R.drawable.plus_bw);
-        tabLayout.getTabAt(2).setIcon(R.drawable.sword_bw);
-        tabLayout.getTabAt(3).setIcon(R.drawable.knight_bw);
+        // Set default icons
+        tabLayout.getTabAt(0).setIcon(tabSelectedIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabsUnselectedIcons[1]);
+        tabLayout.getTabAt(2).setIcon(tabsUnselectedIcons[2]);
+        tabLayout.getTabAt(3).setIcon(tabsUnselectedIcons[3]);
+        // Update icon on tab selected
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tab.setIcon(tabSelectedIcons[tab.getPosition()]);
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.setIcon(tabsUnselectedIcons[tab.getPosition()]);
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
     }
 }
+

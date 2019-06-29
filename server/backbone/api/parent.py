@@ -5,7 +5,8 @@ from flask import g
 from flask_login import current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .helpers import generate_qst_resp, generate_chd_resp, generate_unique_parent_api_key, generate_unique_child_api_key
+from .helpers import generate_qst_resp, generate_chd_resp, generate_unique_parent_api_key, \
+    generate_unique_child_api_key, child_is_my_child
 from .. import db
 from ..decorators import backbone_error_handle, parent_login_required, json_return, json_content_only
 from ..exceptions import BackboneException
@@ -63,7 +64,6 @@ def register(cp_code, email, name, password, clan_name):
         other_parent = Parent.query.filter_by(cp_code=cp_code).first()
         if not other_parent:
             raise BackboneException(410, "Can't find co parent")
-        new_user.children = other_parent.children
         new_user.clan_id = other_parent.clan_id
         other_parent.co_parent_code = None
     else:
@@ -160,8 +160,7 @@ def add_child(name):
     :return: a description of the new child
     """
     # noinspection PyArgumentList
-    new_child = Child(level=1, xp=0, name=name)
-    current_user.children.append(new_child)
+    new_child = Child(level=1, xp=0, name=name, clan_id=current_user.clan_id)
     db.session.add(new_child)
     db.session.commit()
     return generate_chd_resp(new_child)
@@ -194,7 +193,7 @@ def delete_child(cid):
     :return: whether child was deleted
     """
     child = Child.query.filter_by(id=cid).first()
-    if not child or child not in current_user.children:
+    if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
     db.session.delete(child)
     db.session.commit()
@@ -230,7 +229,7 @@ def generate_child_login(cid):
     :return: new api_key of child
     """
     child = Child.query.filter_by(id=cid).first()
-    if child not in current_user.children:
+    if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
     child.api_key = generate_unique_child_api_key()
     db.session.commit()
@@ -292,7 +291,7 @@ def add_quest(cid, title, description, reward, due, timestamps=None):
     :return: description of the new quest
     """
     child = Child.query.filter_by(id=cid).first()
-    if child not in current_user.children:
+    if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
     due = datetime.utcfromtimestamp(int(due))
     timestamps = [QuestTimes(value=ts) for ts in timestamps]
@@ -368,7 +367,7 @@ def modify_quest(qid, title, description, reward, due, timestamps):
     if not old_quest:
         raise BackboneException(404, "Quest not found")
     child = Child.query.filter_by(id=old_quest.owner).first()
-    if child not in current_user.children:
+    if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
     old_quest.title = title
     old_quest.description = description
@@ -446,3 +445,37 @@ def add_co_parent():
     current_user.cp_code = str(new_cp_code)
     db.session.commit()
     return json_return(new_cp_code)
+
+
+@api_bp.route('/clan', methods=['POST'])
+@parent_login_required
+@json_content_only
+def modify_clan(name):
+    """
+    .. :quickref: Clan; modify clan of logged in user
+
+    Modify current user's clan.
+
+    **Login required, either Parent, or Child**
+
+    **Example post body**:
+
+    .. code-block:: json
+
+        {
+         "name": "new name"
+        }
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": true
+        }
+
+    :return: Whether clan name was modified.
+    """
+    current_user.clan.name = name
+    db.session.commit()
+    return current_user.clan.name == name

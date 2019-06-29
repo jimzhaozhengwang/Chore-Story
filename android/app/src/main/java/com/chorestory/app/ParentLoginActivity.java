@@ -10,8 +10,9 @@ import android.widget.Toast;
 
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.helpers.Toaster;
+import com.chorestory.templates.AccountResponse;
 import com.chorestory.templates.LoginRequest;
-import com.chorestory.templates.SingleStringResponse;
+import com.chorestory.templates.SingleResponse;
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 
@@ -62,28 +63,45 @@ public class ParentLoginActivity extends ChoreStoryActivity {
                 password = passwordEditText.getText().toString();
 
                 LoginRequest loginRequest = new LoginRequest(username, password);
-                Call<SingleStringResponse> loginQuery = retrofitInterface.login(loginRequest);
+                Call<SingleResponse<String>> loginQuery = retrofitInterface.login(loginRequest);
 
-                loginQuery.enqueue(new Callback<SingleStringResponse>() {
+                loginQuery.enqueue(new Callback<SingleResponse<String>>() {
                     @Override
-                    public void onResponse(Call<SingleStringResponse> call, Response<SingleStringResponse> response) {
+                    public void onResponse(Call<SingleResponse<String>> call, Response<SingleResponse<String>> response) {
                         if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
-                            String token = response.body().getResponse();
+                            String token = response.body().getData();
 
                             // TODO: Store the token properly here
                             tokenHandler.setParentToken(token);
 
-                            // TODO: Navigate to profile page
+                            Call<AccountResponse> accountQuery = retrofitInterface.me(tokenHandler.getToken());
+
+                            accountQuery.enqueue(new Callback<AccountResponse>() {
+                                @Override
+                                public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
+                                    // TODO: Navigate to profile page
+                                    navigateTo(ParentHomeActivity.class,
+                                            getResources().getString(R.string.clan_name),
+                                            response.body().getData().getClanName());
+                                }
+
+                                @Override
+                                public void onFailure(Call<AccountResponse> call, Throwable t) {
+                                    Toaster.showToast(ParentLoginActivity.this, "Sign-in with token failed.");
+                                    enableButtons();
+                                }
+                            });
+
                         } else {
                             // TODO: use Snackbar instead; move existing view up when Snackbar appears
-                            Toaster.lets_get_this_toast(ParentLoginActivity.this, "Invalid username or password");
+                            Toaster.showToast(ParentLoginActivity.this, "Invalid username or password");
                             enableButtons();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<SingleStringResponse> call, Throwable t) {
-                        Toaster.lets_get_this_toast(ParentLoginActivity.this, "Something went wrong!");
+                    public void onFailure(Call<SingleResponse<String>> call, Throwable t) {
+                        Toaster.showToast(ParentLoginActivity.this, "Something went wrong!");
                         enableButtons();
                     }
                 });
