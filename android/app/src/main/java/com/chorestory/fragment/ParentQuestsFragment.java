@@ -47,4 +47,3 @@ public class ParentQuestsFragment extends Fragment {
         viewPager.setAdapter(adapter);
     }
 }
-
