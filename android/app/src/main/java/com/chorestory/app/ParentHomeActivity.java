@@ -21,7 +21,7 @@ public class ParentHomeActivity extends ChoreStoryActivity {
             R.drawable.castle_color,
             R.drawable.plus_color,
             R.drawable.sword_color,
-            R.drawable.kight_color
+            R.drawable.knight_color
     };
     private final int[] tabsUnselectedIcons = {
             R.drawable.castle_bw,
