@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 
 import com.chorestory.R;
 
-public class ParentQuestsTodoFragment extends Fragment {
+public class ParentQuestsUpcomingFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_parent_quests_todo, container, false);
+        View view =  inflater.inflate(R.layout.fragment_parent_quests_upcoming, container, false);
 
         return view;
     }

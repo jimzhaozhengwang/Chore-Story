@@ -7,8 +7,6 @@ android:orientation="vertical">
 
 <android.support.design.widget.TabLayout
     android:id="@+id/result_tabs"
-    app:tabTextColor="#aaaaaa"
-    app:tabSelectedTextColor="#444444"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:tabGravity="fill"
@@ -19,9 +17,5 @@ android:orientation="vertical">
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
 </LinearLayout>
-
-
-    <!--android:background="#ffffff"-->
-    <!--app:tabIndicatorColor="#ffffff"-->
-
