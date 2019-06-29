@@ -6,7 +6,7 @@ import android.support.v4.view.ViewPager;
 
 import com.chorestory.R;
 import com.chorestory.adapter.ParentHomeAdapter;
-import com.chorestory.fragment.ParentAddFragment;
+import com.chorestory.fragment.ParentCreateFragment;
 import com.chorestory.fragment.ParentClanFragment;
 import com.chorestory.fragment.ParentProfileFragment;
 import com.chorestory.fragment.ParentQuestsFragment;
@@ -14,7 +14,7 @@ import com.chorestory.fragment.ParentQuestsFragment;
 public class ParentHomeActivity extends ChoreStoryActivity {
 
     private final String CLAN = "clan";
-    private final String ADD = "Add";
+    private final String CREATE = "Create";
     private final String QUEST = "Quests";
     private final String PROFILE = "Profile";
 
@@ -42,7 +42,7 @@ public class ParentHomeActivity extends ChoreStoryActivity {
         parentClanFragment.setArguments(bundle);
         adapter.addFragment(parentClanFragment, CLAN);
 
-        adapter.addFragment(new ParentAddFragment(), ADD);
+        adapter.addFragment(new ParentCreateFragment(), CREATE);
         adapter.addFragment(new ParentQuestsFragment(), QUEST);
         adapter.addFragment(new ParentProfileFragment(), PROFILE);
 
