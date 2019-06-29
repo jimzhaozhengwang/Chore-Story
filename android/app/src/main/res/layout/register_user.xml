@@ -12,6 +12,7 @@
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textPersonName"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:textSize="25sp" />
 
     <EditText
@@ -24,6 +25,7 @@
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:textSize="25sp" />
 
     <!--TODO: add avatar -->
@@ -34,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="@string/sign_up"
-        android:textSize="50sp" />
+        android:textSize="50sp"
+        android:background="@color/colorPrimaryDark" />
 
 </RelativeLayout>
