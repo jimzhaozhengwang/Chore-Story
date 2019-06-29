@@ -24,18 +24,25 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/child_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="match_parent"
         android:layout_below="@+id/parent_recycler_view"
         android:layout_marginTop="10dp"
         android:scrollbars="vertical" />
 
-    <!-- TODO: convert to image button -->
-    <Button
-        android:id="@+id/add_clan_member_button"
+
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/child_recycler_view"
-        android:text="@string/add_a_clan_member"
-        android:textSize="30sp" />
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_clan_member_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="15dp"
+            android:src="@mipmap/ic_launcher" /> <!-- TODO: change icon -->
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </RelativeLayout>

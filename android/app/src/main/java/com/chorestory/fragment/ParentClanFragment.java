@@ -3,13 +3,13 @@ package com.chorestory.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.chorestory.R;
@@ -28,7 +28,7 @@ public class ParentClanFragment extends Fragment {
     private RecyclerView childRecyclerView;
     private RecyclerView.Adapter childAdapter;
     private RecyclerView.LayoutManager childLayoutManager;
-    private Button addClanMemberButton;
+    private FloatingActionButton addClanMemberFab;
 
     @Nullable
     @Override
@@ -59,8 +59,8 @@ public class ParentClanFragment extends Fragment {
         childAdapter = new ChildRecyclerViewAdapter(ChildRecyclerViewItem.getData());
         childRecyclerView.setAdapter(childAdapter);
 
-        addClanMemberButton = view.findViewById(R.id.add_clan_member_button);
-        addClanMemberButton.setOnClickListener(new View.OnClickListener() {
+        addClanMemberFab = view.findViewById(R.id.add_clan_member_fab);
+        addClanMemberFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: add a new member, disable button
