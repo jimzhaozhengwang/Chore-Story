@@ -38,9 +38,9 @@ public class ChildRecyclerViewItem {
                 R.drawable.joker_color,
                 R.drawable.soldier_color,
                 R.drawable.joker_color,
-                R.drawable.kight_color,
+                R.drawable.knight_color,
                 R.drawable.soldier_color,
-                R.drawable.kight_color};
+                R.drawable.knight_color};
     }
 
     private static String[] retrieveNames() { // TODO: retrieve names
