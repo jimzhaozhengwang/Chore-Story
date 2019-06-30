@@ -12,4 +12,12 @@
     <string name="join_existing_clan">Join existing clan</string>
     <string name="clan_name">Clan Name</string>
     <string name="add_a_clan_member">Add a clan member</string>
+    <string name="clan">Clan</string>
+    <string name="name">Name</string>
+    <string name="members">Members</string>
+    <string name="add_a_member">Add a member</string>
+    <string name="leave_clan">Leave clan</string>
+    <string name="account">Account</string>
+    <string name="email">Email</string>
+    <string name="change_password">Change password</string>
 </resources>
