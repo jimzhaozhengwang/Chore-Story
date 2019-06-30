@@ -41,9 +41,12 @@ public class ParentProfileFragment extends Fragment {
         parentNameTextView.setText("David");
         clanNameTextView.setText("CS449");
 
+        enableButtons();
+
         addMemberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                disableButtons();
                 // TODO: add a member, camera QR code?
             }
         });
@@ -51,6 +54,7 @@ public class ParentProfileFragment extends Fragment {
         leaveClanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                disableButtons();
                 // TODO: determine appropriate behaviour
             }
         });
@@ -60,9 +64,28 @@ public class ParentProfileFragment extends Fragment {
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                disableButtons();
                 // TODO: change user password
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        enableButtons();
+    }
+
+    private void enableButtons() {
+        addMemberButton.setEnabled(true);
+        leaveClanButton.setEnabled(true);
+        changePasswordButton.setEnabled(true);
+    }
+
+    private void disableButtons() {
+        addMemberButton.setEnabled(false);
+        leaveClanButton.setEnabled(false);
+        changePasswordButton.setEnabled(false);
     }
 }
