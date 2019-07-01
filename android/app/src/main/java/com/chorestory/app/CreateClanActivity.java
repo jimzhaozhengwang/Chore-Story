@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
+import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.templates.SingleResponse;
 import com.chorestory.templates.RegisterRequest;
@@ -62,45 +63,42 @@ public class CreateClanActivity extends ChoreStoryActivity {
                 username = usernameEditText.getText().toString();
                 password = passwordEditText.getText().toString();
 
-                RegisterRequest registerRequest = new RegisterRequest(clanName, username, password);
-                Call<SingleResponse<String>> registerQuery = retrofitInterface.register(registerRequest);
+                if (clanName.isEmpty() || username.isEmpty() || password.isEmpty()) {
+                    enableButtons();
+                    Toaster.showToast(getApplicationContext(), "Missing sign up information!");
+                } else {
+                    RegisterRequest registerRequest = new RegisterRequest(clanName, username, password);
+                    Call<SingleResponse<String>> registerQuery = retrofitInterface.register(registerRequest);
 
-                registerQuery.enqueue(new Callback<SingleResponse<String>>() {
-                    @Override
-                    public void onResponse(Call<SingleResponse<String>> call, Response<SingleResponse<String>> response) {
-                        if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
-                            String token = response.body().getData();
+                    registerQuery.enqueue(new Callback<SingleResponse<String>>() {
+                        @Override
+                        public void onResponse(Call<SingleResponse<String>> call, Response<SingleResponse<String>> response) {
+                            if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                                String token = response.body().getData();
 
-                            // TODO: Store the token properly here
-                            tokenHandler.setParentToken(token);
+                                // TODO: Store the token properly here
+                                tokenHandler.setParentToken(token);
 
-                            // TODO: verification
-                            //  if successful register new clan & user, else display snackbar/toast
+                                // TODO: verification
+                                //  if successful register new clan & user, else display snackbar/toast
 
-                            navigateTo(ParentHomeActivity.class,
-                                    getResources().getString(R.string.clan_name),
-                                    clanName);
-                        } else {
-                            // TODO: use Snackbar instead; move existing view up when Snackbar appears
-                            toast = Toast.makeText(CreateClanActivity.this,
-                                    "Something went wrong!",
-                                    Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 400);
-                            toast.show();
-                            signUpButton.setEnabled(true);
+                                navigateTo(ParentHomeActivity.class,
+                                        getResources().getString(R.string.clan_name),
+                                        clanName);
+                            } else {
+                                // TODO: use Snackbar instead; move existing view up when Snackbar appears
+                                Toaster.showToast(getApplicationContext(), "Something went wrong!");
+                                enableButtons();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<SingleResponse<String>> call, Throwable t) {
-                        toast = Toast.makeText(CreateClanActivity.this,
-                                "Something went wrong!",
-                                Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 400);
-                        toast.show();
-                        signUpButton.setEnabled(true);
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<SingleResponse<String>> call, Throwable t) {
+                            Toaster.showToast(getApplicationContext(), "Something went wrong!");
+                            enableButtons();
+                        }
+                    });
+                }
             }
         });
     }

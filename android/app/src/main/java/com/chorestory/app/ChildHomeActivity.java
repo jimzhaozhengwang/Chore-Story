@@ -5,27 +5,29 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
 import com.chorestory.R;
-import com.chorestory.adapter.ParentHomeAdapter;
-import com.chorestory.fragment.ParentAddFragment;
-import com.chorestory.fragment.ParentClanFragment;
-import com.chorestory.fragment.ParentProfileFragment;
-import com.chorestory.fragment.ParentQuestsFragment;
+import com.chorestory.adapter.ChildHomeAdapter;
+import com.chorestory.fragment.ChildClanFragment;
+import com.chorestory.fragment.ChildFriendsFragment;
+import com.chorestory.fragment.ChildProfileFragment;
+import com.chorestory.fragment.ChildQuestsFragment;
 
-public class ParentHomeActivity extends ChoreStoryActivity {
+public class ChildHomeActivity extends ChoreStoryActivity {
 
     private final String CLAN = "Clan";
-    private final String ADD = "Add";
+    private final String FRIENDS = "Friends";
     private final String QUESTS = "Quests";
     private final String PROFILE = "Profile";
+
     private final int[] tabSelectedIcons = {
             R.drawable.castle_color,
-            R.drawable.plus_color,
+            R.drawable.friends_color,
             R.drawable.sword_color,
             R.drawable.knight_color
     };
+
     private final int[] tabsUnselectedIcons = {
             R.drawable.castle_bw,
-            R.drawable.plus_bw,
+            R.drawable.friends_bw,
             R.drawable.sword_bw,
             R.drawable.knight_bw
     };
@@ -33,30 +35,23 @@ public class ParentHomeActivity extends ChoreStoryActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-    private ParentHomeAdapter adapter;
+    private ChildHomeAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
-        setContentView(R.layout.activity_parent_home);
+        setContentView(R.layout.activity_child_home);
 
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);
 
-        adapter = new ParentHomeAdapter(getSupportFragmentManager());
+        adapter = new ChildHomeAdapter(getSupportFragmentManager());
 
-        final String CLAN_NAME = getResources().getString(R.string.clan_name);
-
-        Bundle bundle = new Bundle();
-        bundle.putString(CLAN_NAME, getIntent().getStringExtra(CLAN_NAME));
-        ParentClanFragment parentClanFragment = new ParentClanFragment();
-        parentClanFragment.setArguments(bundle);
-        adapter.addFragment(parentClanFragment, CLAN);
-
-        adapter.addFragment(new ParentAddFragment(), ADD);
-        adapter.addFragment(new ParentQuestsFragment(), QUESTS);
-        adapter.addFragment(new ParentProfileFragment(), PROFILE);
+        adapter.addFragment(new ChildClanFragment(), CLAN);
+        adapter.addFragment(new ChildFriendsFragment(), FRIENDS);
+        adapter.addFragment(new ChildQuestsFragment(), QUESTS);
+        adapter.addFragment(new ChildProfileFragment(), PROFILE);
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -84,4 +79,3 @@ public class ParentHomeActivity extends ChoreStoryActivity {
         });
     }
 }
-

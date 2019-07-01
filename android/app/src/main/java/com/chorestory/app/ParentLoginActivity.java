@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-//import android.widget.Toast;
 
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.helpers.Toaster;
@@ -35,7 +33,6 @@ public class ParentLoginActivity extends ChoreStoryActivity {
     private String password;
     private EditText usernameEditText;
     private EditText passwordEditText;
-    private Toast toast;
     private Button logInButton;
 
     @Override

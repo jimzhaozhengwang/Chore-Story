@@ -4,6 +4,8 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
+import com.chorestory.app.ChildHomeActivity;
+import com.chorestory.app.ChildJoinClanActivity;
 import com.chorestory.app.CreateClanActivity;
 import com.chorestory.app.MainActivity;
 import com.chorestory.app.ParentHomeActivity;
@@ -25,4 +27,8 @@ public interface AppComponent {
     void inject(CreateClanActivity activity);
 
     void inject(ParentHomeActivity activity);
+
+    void inject(ChildJoinClanActivity activity);
+
+    void inject(ChildHomeActivity activity);
 }

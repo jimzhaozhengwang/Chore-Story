@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textPersonName"
@@ -21,6 +22,7 @@
         android:layout_below="@id/username_edit_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
@@ -33,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="@string/sign_up"
         android:textSize="50sp" />
 
