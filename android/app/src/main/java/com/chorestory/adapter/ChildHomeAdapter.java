@@ -13,10 +13,18 @@ public class ChildHomeAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> fragmentList;
     private List<String> fragmentTitleList;
 
-    public ChildHomeAdapter(FragmentManager fm) {
-        super(fm);
+    public ChildHomeAdapter(FragmentManager fragmentManager) {
+        super(fragmentManager);
         fragmentList = new ArrayList<>();
         fragmentTitleList = new ArrayList<>();
+    }
+
+    public ChildHomeAdapter(FragmentManager fragmentManager,
+                            List<Fragment> fragmentList,
+                            List<String> fragmentTitleList) {
+        super(fragmentManager);
+        this.fragmentList = fragmentList;
+        this.fragmentTitleList = fragmentTitleList;
     }
 
     public void addFragment(Fragment fragment, String fragmentTitle) {

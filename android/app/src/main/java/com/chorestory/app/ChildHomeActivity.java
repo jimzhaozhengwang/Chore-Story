@@ -2,6 +2,7 @@ package com.chorestory.app;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
 import com.chorestory.R;
@@ -10,6 +11,9 @@ import com.chorestory.fragment.ChildClanFragment;
 import com.chorestory.fragment.ChildFriendsFragment;
 import com.chorestory.fragment.ChildProfileFragment;
 import com.chorestory.fragment.ChildQuestsFragment;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ChildHomeActivity extends ChoreStoryActivity {
 
@@ -46,12 +50,16 @@ public class ChildHomeActivity extends ChoreStoryActivity {
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);
 
-        adapter = new ChildHomeAdapter(getSupportFragmentManager());
+        List<Fragment> fragmentList = Arrays.asList(new ChildClanFragment(),
+                new ChildFriendsFragment(),
+                new ChildQuestsFragment(),
+                new ChildProfileFragment());
 
-        adapter.addFragment(new ChildClanFragment(), CLAN);
-        adapter.addFragment(new ChildFriendsFragment(), FRIENDS);
-        adapter.addFragment(new ChildQuestsFragment(), QUESTS);
-        adapter.addFragment(new ChildProfileFragment(), PROFILE);
+        List<String> fragmentTitleList = Arrays.asList(CLAN, FRIENDS, QUESTS, PROFILE);
+
+        adapter = new ChildHomeAdapter(getSupportFragmentManager(),
+                fragmentList,
+                fragmentTitleList);
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);

@@ -47,7 +47,7 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
 
                 if (username.isEmpty()) {
                     enableButtons();
-                    Toaster.showToast(getApplicationContext(), "Missing sign up information!");
+                    Toaster.showToast(getApplicationContext(), "Missing username information!");
                 } else {
                     // TODO: create child account
                     navigateTo(ChildHomeActivity.class);

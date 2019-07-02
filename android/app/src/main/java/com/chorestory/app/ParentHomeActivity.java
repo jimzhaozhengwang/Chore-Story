@@ -2,6 +2,7 @@ package com.chorestory.app;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
 import com.chorestory.R;
@@ -10,6 +11,9 @@ import com.chorestory.fragment.ParentAddFragment;
 import com.chorestory.fragment.ParentClanFragment;
 import com.chorestory.fragment.ParentProfileFragment;
 import com.chorestory.fragment.ParentQuestsFragment;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ParentHomeActivity extends ChoreStoryActivity {
 
@@ -44,19 +48,24 @@ public class ParentHomeActivity extends ChoreStoryActivity {
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);
 
-        adapter = new ParentHomeAdapter(getSupportFragmentManager());
-
         final String CLAN_NAME = getResources().getString(R.string.clan_name);
 
         Bundle bundle = new Bundle();
         bundle.putString(CLAN_NAME, getIntent().getStringExtra(CLAN_NAME));
         ParentClanFragment parentClanFragment = new ParentClanFragment();
         parentClanFragment.setArguments(bundle);
-        adapter.addFragment(parentClanFragment, CLAN);
 
-        adapter.addFragment(new ParentAddFragment(), ADD);
-        adapter.addFragment(new ParentQuestsFragment(), QUESTS);
-        adapter.addFragment(new ParentProfileFragment(), PROFILE);
+        List<Fragment> fragmentList = Arrays.asList(parentClanFragment,
+                new ParentAddFragment(),
+                new ParentQuestsFragment(),
+                new ParentProfileFragment());
+
+        List<String> fragmentTitleList = Arrays.asList(CLAN, ADD, QUESTS, PROFILE);
+
+        adapter = new ParentHomeAdapter(getSupportFragmentManager(),
+                fragmentList,
+                fragmentTitleList);
+
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
