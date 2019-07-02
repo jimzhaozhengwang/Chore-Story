@@ -13,6 +13,7 @@
     <string name="clan_name">Clan Name</string>
     <string name="add_a_clan_member">Add a clan member</string>
     <string name="new_quest">New Quest</string>
+    <string name="select_a_child">Select a child</string>
     <string name="select_a_quest">Select a quest</string>
     <string name="select_date">Select Date</string>
     <string name="select_time">Select Time</string>
@@ -20,6 +21,7 @@
     <string name="mandatory">Mandatory</string>
     <string name="description">Description</string>
 
+    <!-- TODO: remove once it is added to the server -->
     <string-array name="quest_array">
         <item>Select a quest</item>
         <item>Dusting</item>
@@ -46,6 +48,12 @@
         <item>Winterize the house</item>
         <item>Clean garage</item>
         <item>Prune trees and shrubs</item>
+    </string-array>
+
+    <!-- TODO: remove this; fetch instead -->
+    <string-array name="child_array">
+        <item>Select a child</item>
+        <item>Child 1</item>
     </string-array>
 
     <string-array name="recurrence_array">

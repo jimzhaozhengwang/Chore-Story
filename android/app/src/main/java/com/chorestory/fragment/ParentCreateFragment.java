@@ -3,8 +3,6 @@ package com.chorestory.fragment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
@@ -22,12 +20,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.chorestory.R;
-import com.chorestory.helpers.Toaster;
+import com.chorestory.helpers.QuestCreationHandler;
 
 import java.util.Calendar;
 
 public class ParentCreateFragment extends Fragment {
 
+    private Spinner childSpinner;
     private Spinner questSpinner;
     private TextView expTextView;
     private TextView dateTextView;
@@ -39,6 +38,7 @@ public class ParentCreateFragment extends Fragment {
     private EditText descriptionEditText;
     private FloatingActionButton createQuestFab;
 
+    private String child;
     private String questType;
     private int exp;
     private int mYear;
@@ -50,11 +50,11 @@ public class ParentCreateFragment extends Fragment {
     private boolean mandatory;
     private String description;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_create, container, false);
 
+        child = null;
         questType = null;
         exp = -1;
         mYear = -1;
@@ -64,6 +64,8 @@ public class ParentCreateFragment extends Fragment {
         mMinute = -1;
         recurrenceType = null;
         description = null;
+
+        childSpinner = view.findViewById(R.id.child_spinner);
 
         questSpinner = view.findViewById(R.id.quest_spinner);
 
@@ -85,6 +87,25 @@ public class ParentCreateFragment extends Fragment {
         descriptionEditText = view.findViewById(R.id.description_edit_text);
 
         createQuestFab = view.findViewById(R.id.create_quest_fab);
+
+        // TODO: fetch children and replace child_array with children
+        ArrayAdapter<CharSequence> childSpinnerAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.child_array, R.layout.spinner_item);
+
+        childSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        childSpinner.setAdapter(childSpinnerAdapter);
+
+        childSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                child = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                child = null;
+            }
+        });
 
         ArrayAdapter<CharSequence> questSpinnerAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.quest_array, R.layout.spinner_item);
@@ -199,19 +220,20 @@ public class ParentCreateFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 disableButtons();
-                if (questType == null ||
-                        exp < 0 ||
-                        mYear < 0 ||
-                        mMonth < 0 ||
-                        mDay < 0 ||
-                        mHour < 0 ||
-                        mMinute < 0 ||
-                        recurrenceType == null ||
-                        questType.equals(getString(R.string.select_a_quest))) {
-                    // TODO: think of message; make it a string resource
-                    Toaster.showToast(getActivity(), "Invalid Quest");
+                if (!QuestCreationHandler.canCreateQuest(getActivity(),
+                        child,
+                        questType,
+                        exp,
+                        mYear,
+                        mMonth,
+                        mDay,
+                        mHour,
+                        mMinute,
+                        recurrenceType)) {
+                    enableButtons();
                 } else {
                     // TODO: create quest, pass the following info
+                    // String child;
 //                    String questType;
 //                    int exp;
 //                    int mYear;
@@ -223,7 +245,6 @@ public class ParentCreateFragment extends Fragment {
 //                    boolean mandatory;
 //                    @Nullable String description;
                 }
-                enableButtons();
             }
         });
 
@@ -238,6 +259,7 @@ public class ParentCreateFragment extends Fragment {
         enableButtons();
     }
 
+    // TODO: create ChoreStoryFragment as super class
     private void disableButtons() {
         selectDateButton.setEnabled(false);
         selectTimeButton.setEnabled(false);
