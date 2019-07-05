@@ -20,6 +20,14 @@
     <string name="does_not_repeat">Does not repeat</string>
     <string name="mandatory">Mandatory</string>
     <string name="description">Description</string>
+    <string name="clan">Clan</string>
+    <string name="name">Name</string>
+    <string name="members">Members</string>
+    <string name="add_a_member">Add a member</string>
+    <string name="leave_clan">Leave clan</string>
+    <string name="account">Account</string>
+    <string name="email">Email</string>
+    <string name="change_password">Change password</string>
 
     <!-- TODO: remove once it is added to the server -->
     <string-array name="quest_array">
