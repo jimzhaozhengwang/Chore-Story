@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="@drawable/border"
     android:clickable="true"
     android:focusable="true">
 
@@ -10,7 +10,8 @@
         android:id="@+id/parent_image_view"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp" />
 
     <TextView
         android:id="@+id/parent_name_text_view"
@@ -18,7 +19,7 @@
         android:layout_height="50dp"
         android:layout_below="@id/parent_image_view"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textSize="20sp" />
 
 </RelativeLayout>
