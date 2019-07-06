@@ -9,10 +9,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textPersonName"
-        android:backgroundTint="@color/colorPrimaryDark"
         android:textSize="25sp" />
 
     <EditText
@@ -22,10 +22,10 @@
         android:layout_below="@id/username_edit_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:backgroundTint="@color/colorPrimaryDark"
         android:textSize="25sp" />
 
     <!--TODO: add avatar -->
@@ -35,8 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark"
         android:text="@string/sign_up"
-        android:textSize="50sp"
-        android:background="@color/colorPrimaryDark" />
+        android:textSize="50sp" />
 
 </RelativeLayout>
