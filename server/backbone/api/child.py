@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from flask_login import current_user
 
-from .helpers import find_next_time, is_qst_completed, generate_qst_resp
+from .helpers import find_next_time, is_qst_completed, generate_qst_resp, get_childs_quest_with_window
 from .. import db
 from ..decorators import child_login_required, backbone_error_handle, json_return, json_content_only
 from ..exceptions import BackboneException
@@ -200,11 +200,11 @@ def get_all_quests():
     return json_return([q.id for q in current_user.quests])
 
 
-@api_bp.route('/quest/<float:ts>', methods=['GET'], defaults={'lookahead': 86400.0})
-@api_bp.route('/quest/<float:ts>/<float:lookahead>', methods=['GET'])
+@api_bp.route('/quest/<float:start>', methods=['GET'], defaults={'lookahead': 86400.0})
+@api_bp.route('/quest/<float:start>/<float:lookahead>', methods=['GET'])
 @child_login_required
 @backbone_error_handle
-def get_quests(ts, lookahead):
+def get_quests(start, lookahead):
     """
     .. :quickref: Quest; get quests within look around window from ts
 
@@ -223,19 +223,8 @@ def get_quests(ts, lookahead):
           ]
         }
 
-    :param ts: timestamp that should be used to determine window start/end
+    :param start: timestamp that should be used to determine window start/end
     :param lookahead: timestamp that should be used to determine size of the window
     :return: list of quest ids
     """
-    # Get timestamp range
-    start = datetime.utcfromtimestamp(ts)
-    end = start + timedelta(seconds=lookahead)
-
-    # Get one time quests in window
-    one_time_relevants = [q.id for q in current_user.quests if not q.recurring and start <= q.due <= end]
-
-    # Get reoccurring time quests in window
-    recurring_relevants = [q.id for q in current_user.quests if q.recurring and
-                           start <= find_next_time(q, start) <= end]
-
-    return json_return(one_time_relevants + recurring_relevants)
+    return json_return(get_childs_quest_with_window(start, lookahead))
