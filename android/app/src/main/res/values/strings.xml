@@ -12,6 +12,14 @@
     <string name="join_existing_clan">Join existing clan</string>
     <string name="clan_name">Clan Name</string>
     <string name="add_a_clan_member">Add a clan member</string>
+    <string name="new_quest">New Quest</string>
+    <string name="select_a_child">Select a child</string>
+    <string name="select_a_quest">Select a quest</string>
+    <string name="select_date">Select Date</string>
+    <string name="select_time">Select Time</string>
+    <string name="does_not_repeat">Does not repeat</string>
+    <string name="mandatory">Mandatory</string>
+    <string name="description">Description</string>
     <string name="clan">Clan</string>
     <string name="name">Name</string>
     <string name="members">Members</string>
@@ -20,4 +28,47 @@
     <string name="account">Account</string>
     <string name="email">Email</string>
     <string name="change_password">Change password</string>
+
+    <!-- TODO: remove once it is added to the server -->
+    <string-array name="quest_array">
+        <item>Select a quest</item>
+        <item>Dusting</item>
+        <item>Sweeping</item>
+        <item>Vacuuming</item>
+        <item>Washing dishes</item>
+        <item>Feeding pets</item>
+        <item>Doing laundry</item>
+        <item>Preparing meals</item>
+        <item>Cleaning bathrooms</item>
+        <item>Washing bedding</item>
+        <item>Mopping floors</item>
+        <item>Watering plants</item>
+        <item>Mowing the lawn</item>
+        <item>Weeding the garden</item>
+        <item>Taking out the trash</item>
+        <item>Wash the car</item>
+        <item>Washing windows</item>
+        <item>Bathing pets</item>
+        <item>Clean refrigerator</item>
+        <item>Clean blinds</item>
+        <item>Vacuum curtains</item>
+        <item>Shampooing the carpets</item>
+        <item>Winterize the house</item>
+        <item>Clean garage</item>
+        <item>Prune trees and shrubs</item>
+    </string-array>
+
+    <!-- TODO: remove this; fetch instead -->
+    <string-array name="child_array">
+        <item>Select a child</item>
+        <item>Child 1</item>
+    </string-array>
+
+    <string-array name="recurrence_array">
+        <item>Does not repeat</item>
+        <item>Repeats daily</item>
+        <item>Repeats weekly</item>
+        <item>Repeats monthly</item>
+        <item>Repeats yearly</item>
+    </string-array>
 </resources>
