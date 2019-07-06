@@ -11,15 +11,10 @@ public class ParentQuestsAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> fragmentList;
     private List<String> fragmentTitleList;
 
-    public ParentQuestsAdapter(FragmentManager fragmentManager) {
+    public ParentQuestsAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList, List<String> fragmentTitleList) {
         super(fragmentManager);
-        fragmentList = new ArrayList<>();
-        fragmentTitleList = new ArrayList<>();
-    }
-
-    public void addFragment(Fragment fragment, String title) {
-        fragmentList.add(fragment);
-        fragmentTitleList.add(title);
+        this.fragmentList = fragmentList;
+        this.fragmentTitleList = fragmentTitleList;
     }
 
     @Override
