@@ -15,7 +15,7 @@ public class AccountResponse {
         String email;
         Integer id;
         String name;
-        String clanName;
+        String clan_name;
         String type;
 
         public Integer getId() {
@@ -27,7 +27,7 @@ public class AccountResponse {
         }
 
         public String getClanName() {
-            return clanName;
+            return clan_name;
         }
 
         public String getEmail() {

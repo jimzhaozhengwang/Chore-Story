@@ -1,6 +1,7 @@
 package com.chorestory.app;
 
 import android.accounts.AccountManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -71,10 +72,11 @@ public class ParentLoginActivity extends ChoreStoryActivity {
                         if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
                             String token = response.body().getData();
 
-                            // TODO: Store the token properly here
-                            tokenHandler.setParentToken(token);
+                            Context ctx = getApplicationContext();
 
-                            Call<AccountResponse> accountQuery = retrofitInterface.me(tokenHandler.getToken());
+                            tokenHandler.setParentToken(token, ctx);
+
+                            Call<AccountResponse> accountQuery = retrofitInterface.me(tokenHandler.getToken(ctx));
 
                             accountQuery.enqueue(new Callback<AccountResponse>() {
                                 @Override
