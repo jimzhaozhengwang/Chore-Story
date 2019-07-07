@@ -192,10 +192,10 @@ def _until_next_level(current_level):
     return 12
 
 
-def award_xp_to_child(child, xp):
+def award_xp_to_child(child, exp):
     """Helper function to award xp to a child, allows leveling up multiple levels by completing 1 quest.
     Returns whether the child leveled up."""
-    child.xp += xp
+    child.xp += exp
     to_reach = _until_next_level(child.level)
     if child.xp >= to_reach:
         while child.xp >= to_reach:
