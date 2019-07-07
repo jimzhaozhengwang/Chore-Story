@@ -180,7 +180,7 @@ def get_quest(qid, ts):
 @api_bp.route('/child/<int:cid>', methods=['POST'])
 @login_required
 @backbone_error_handle
-def modify_child(cid, name):
+def modify_child(cid, name, username):
     """
     .. :quickref: Child; modify already existing child
 
@@ -228,6 +228,7 @@ def modify_child(cid, name):
     if not child_is_me_or_my_child(child):
         raise BackboneException(404, "Child not found")
     child.name = name
+    child.username = username
     db.session.commit()
     return json_return(generate_chd_resp(child))
 
