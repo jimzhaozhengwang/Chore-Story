@@ -6,11 +6,11 @@ from flask_login import current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .helpers import generate_qst_resp, generate_chd_resp, generate_unique_parent_api_key, \
-    generate_unique_child_api_key, child_is_my_child, get_childs_quest_with_window
+    generate_unique_child_api_key, child_is_my_child, find_next_time, award_xp_to_child, get_childs_quest_with_window
 from .. import db
 from ..decorators import backbone_error_handle, parent_login_required, json_return, json_content_only
 from ..exceptions import BackboneException
-from ..models import Child, Quest, Parent, QuestTimes, Clan
+from ..models import Child, Quest, Parent, QuestTimes, Clan, QuestVerifications
 from ..views import api_bp
 
 
@@ -239,7 +239,7 @@ def generate_child_login(cid):
 @api_bp.route('/quest', methods=['POST'])
 @parent_login_required
 @json_content_only
-def add_quest(cid, title, description, reward, due, timestamps=None):
+def add_quest(cid, title, description, reward, due, needs_verification, timestamps=None):
     """
     .. :quickref: Quest; add a quest to an own child
 
@@ -257,7 +257,8 @@ def add_quest(cid, title, description, reward, due, timestamps=None):
          "description": "You're going on a quest to save the princess, brush your teeth.",
          "reward": 2,
          "timestamps": [86400],
-         "due": 1559131200
+         "due": 1559131200,
+         "needs_verification": true
         }
 
     **Errors**:
@@ -271,14 +272,19 @@ def add_quest(cid, title, description, reward, due, timestamps=None):
 
         {
           "data": {
-            "completed_on": "",
-            "description": "You're going on a quest to save the princess, brush your teeth.",
-            "due": 1559131200.0,
-            "id": 10,
-            "next_occurrence": 1559131200.0,
-            "recurring": true,
-            "reward": 2,
-            "title": "Brush your teeth"
+            "completed_now": false,
+            "lvled_up": false,
+            "qst": {
+              "completed_on": "Sat, 06 Jul 2019 21:11:35 GMT",
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1559250000.0,
+              "id": 1,
+              "needs_verification": true,
+              "recurring": false,
+              "reward": 12,
+              "title": "This is the initial quest",
+              "verified_on": null
+            }
           }
         }
 
@@ -287,6 +293,7 @@ def add_quest(cid, title, description, reward, due, timestamps=None):
     :param description: description of quest
     :param reward: number of exp points to reward child for completing quest
     :param due: first, or only completion timestamp
+    :param needs_verification: whether this quest needs verification
     :param timestamps: a list of timestamps, for quest to be done by those intervals
     :return: description of the new quest
     """
@@ -300,7 +307,8 @@ def add_quest(cid, title, description, reward, due, timestamps=None):
                       reward=reward,
                       due=due,
                       recurring=len(timestamps) != 0,
-                      timestamps=timestamps)
+                      timestamps=timestamps,
+                      needs_verification=needs_verification)
     child.quests.append(new_quest)
     for ts in timestamps:
         db.session.add(ts)
@@ -312,7 +320,7 @@ def add_quest(cid, title, description, reward, due, timestamps=None):
 @api_bp.route('/quest/<int:qid>', methods=['POST'])
 @parent_login_required
 @json_content_only
-def modify_quest(qid, title, description, reward, due, timestamps):
+def modify_quest(qid, title, description, reward, due, timestamps, needs_verification):
     """
     .. :quickref: User; modify a quest of an own child
 
@@ -329,6 +337,7 @@ def modify_quest(qid, title, description, reward, due, timestamps):
          "title": "Brush your teeth",
          "description": "You're going on a quest to save the princess, brush your teeth.",
          "reward": 2,
+         "needs_verification": false,
          "timestamps": [86400],
          "due": 1559131200
         }
@@ -344,14 +353,19 @@ def modify_quest(qid, title, description, reward, due, timestamps):
 
         {
           "data": {
-            "completed_on": "",
-            "description": "You're going on a quest to save the princess, brush your teeth.",
-            "due": 1559131200.0,
-            "id": 10,
-            "next_occurrence": 1559131200.0,
-            "recurring": true,
-            "reward": 2,
-            "title": "Brush your teeth"
+            "completed_now": false,
+            "lvled_up": false,
+            "qst": {
+              "completed_on": "Sat, 06 Jul 2019 21:11:35 GMT",
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1559250000.0,
+              "id": 1,
+              "needs_verification": true,
+              "recurring": false,
+              "reward": 12,
+              "title": "This is the initial quest",
+              "verified_on": null
+            }
           }
         }
 
@@ -360,6 +374,7 @@ def modify_quest(qid, title, description, reward, due, timestamps):
     :param description: description of quest
     :param reward: number of exp points to reward child for completing quest
     :param due: first, or only completion timestamp
+    :param needs_verification: whether this quest needs verification
     :param timestamps: a list of timestamps, for quest to be done by those intervals
     :return: description of the updated quest
     """
@@ -373,6 +388,7 @@ def modify_quest(qid, title, description, reward, due, timestamps):
     old_quest.description = description
     old_quest.reward = reward
     old_quest.due = datetime.utcfromtimestamp(due)
+    old_quest.needs_verification = needs_verification
     for ots in old_quest.timestamps:
         db.session.delete(ots)
     old_quest.timestamps = [QuestTimes(value=ts) for ts in timestamps]
@@ -514,7 +530,7 @@ def get_child_quests(cid):
 @api_bp.route('/child/<int:cid>/quest/<float:start>/<float:lookahead>', methods=['GET'])
 @parent_login_required
 @backbone_error_handle
-def get_child_quests(cid, start, lookahead):
+def get_child_quests_window(cid, start, lookahead):
     """
     .. :quickref: Quest; get a child's quests within look around window
 
@@ -542,3 +558,70 @@ def get_child_quests(cid, start, lookahead):
     if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
     return json_return(get_childs_quest_with_window(start, lookahead))
+
+
+@api_bp.route('/quest/<int:qid>/verify', methods=['POST'], defaults={'ts': None})
+@api_bp.route('/quest/<int:qid>/<float:ts>/verify', methods=['POST'])
+@parent_login_required
+@backbone_error_handle
+def verify_quest_completion(qid, ts):
+    """
+    .. :quickref: quest; verify a quest completion
+
+    Verify a quest that has been completed.
+
+    **Parent login required**
+
+    **errors**:
+
+    404, quest not found - quest does not exists, or not currently logged in child's
+
+    **example return**:
+
+    .. code-block:: json
+
+        {
+          "data": {
+            "lvled_up": true,
+            "qst": {
+              "completed_on": "Sat, 06 Jul 2019 21:30:53 GMT",
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1559250000.0,
+              "id": 2,
+              "needs_verification": true,
+              "recurring": false,
+              "reward": 12,
+              "title": "This is the initial quest",
+              "verified_on": "Sat, 06 Jul 2019 21:34:36 GMT"
+            },
+            "verified_now": true
+          }
+        }
+
+    :param qid: id of quest to be completed
+    :param ts: timestamp the quest needs to be completed by
+    :return: quest description with ``lvled_up`` and ``completed_now`` filds added
+    """
+    quest = Quest.query.filter_by(id=qid).first()
+    quest_owner = Child.query.filter_by(id=quest.owner).first()
+    if not child_is_my_child(quest_owner):
+        raise BackboneException(404, "Quest not found")
+    if not ts:
+        ts = find_next_time(quest)
+    else:
+        ts = datetime.fromtimestamp(ts)
+    previous_verification = QuestVerifications.query.filter_by(id=qid, value=ts).first()
+    verified_now = previous_verification is None
+    lvl_up = False
+    if verified_now:
+        # Not already verified
+        quest_verification = QuestVerifications(value=ts, ts=datetime.utcnow())
+        quest.verifications.append(quest_verification)
+        lvl_up = award_xp_to_child(quest_owner, quest.reward)
+        db.session.commit()
+    resp = {
+        'verified_now': verified_now,
+        'lvled_up': lvl_up,
+        'qst': generate_qst_resp(quest, ts)
+    }
+    return json_return(resp)

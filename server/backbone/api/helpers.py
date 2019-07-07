@@ -9,7 +9,7 @@ from flask_login import current_user
 from sqlalchemy import inspect
 
 from ..exceptions import BackboneException
-from ..models import Parent, Child
+from ..models import Parent, Child, QuestVerifications
 
 ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif']
 
@@ -48,7 +48,7 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
     :return: a dictionary of description of Quest object
     """
     d = {}
-    for e in ['title', 'description', 'reward', 'due', 'id', 'recurring']:
+    for e in ['title', 'description', 'reward', 'due', 'id', 'recurring', 'needs_verification']:
         d[e] = getattr(qst, e)
     # Add extra values that we don't store in database
     looking_for = find_next_time(qst, ts) if qst.recurring else qst.due
@@ -57,6 +57,8 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
         d['next_occurrence'] = datetime.timestamp(looking_for)
     filtered_completions = list(filter(lambda c: c.value == looking_for, qst.completions))
     d['completed_on'] = filtered_completions[0].ts if len(filtered_completions) == 1 else None
+    filtered_verifications = list(filter(lambda c: c.value == looking_for, qst.verifications))
+    d['verified_on'] = filtered_verifications[0].ts if len(filtered_verifications) == 1 else None
     return d
 
 
@@ -181,3 +183,24 @@ def get_childs_quest_with_window(start, lookahead):
                            start <= find_next_time(q, start) <= end]
 
     return one_time_relevants + recurring_relevants
+
+
+def _until_next_level(current_level):
+    # For now this is a constant 12 xp / level, but this
+    #  function makes us able to change this on the fly
+    str(current_level)  # suppress warning about unused parameter
+    return 12
+
+
+def award_xp_to_child(child, exp):
+    """Helper function to award xp to a child, allows leveling up multiple levels by completing 1 quest.
+    Returns whether the child leveled up."""
+    child.xp += exp
+    to_reach = _until_next_level(child.level)
+    if child.xp >= to_reach:
+        while child.xp >= to_reach:
+            child.level += 1
+            child.xp -= to_reach
+            to_reach = _until_next_level(child.level)
+        return True
+    return False
