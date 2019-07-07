@@ -131,7 +131,7 @@ def complete_quest(qid, ts):
               "recurring": false,
               "reward": 12,
               "title": "This is the initial quest",
-              "verified": false
+              "verified_on": null
             }
           }
         }

@@ -530,7 +530,7 @@ def get_child_quests(cid):
 @api_bp.route('/child/<int:cid>/quest/<float:start>/<float:lookahead>', methods=['GET'])
 @parent_login_required
 @backbone_error_handle
-def get_child_quests(cid, start, lookahead):
+def get_child_quests_window(cid, start, lookahead):
     """
     .. :quickref: Quest; get a child's quests within look around window
 
