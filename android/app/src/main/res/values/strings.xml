@@ -28,6 +28,10 @@
     <string name="account">Account</string>
     <string name="email">Email</string>
     <string name="change_password">Change password</string>
+    <string name="overdue_quests">Overdue Quests</string>
+    <string name="upcoming_quests">Upcoming Quests</string>
+    <string name="pending_quests">Pending Quests</string>
+    <string name="completed_quests">Completed Quests</string>
 
     <!-- TODO: remove once it is added to the server -->
     <string-array name="quest_array">
