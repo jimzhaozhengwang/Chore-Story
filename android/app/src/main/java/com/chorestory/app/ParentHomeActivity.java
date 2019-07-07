@@ -7,7 +7,7 @@ import android.support.v4.view.ViewPager;
 
 import com.chorestory.R;
 import com.chorestory.adapter.ParentHomeAdapter;
-import com.chorestory.fragment.ParentAddFragment;
+import com.chorestory.fragment.ParentCreateFragment;
 import com.chorestory.fragment.ParentClanFragment;
 import com.chorestory.fragment.ParentProfileFragment;
 import com.chorestory.fragment.ParentQuestsFragment;
@@ -18,7 +18,7 @@ import java.util.List;
 public class ParentHomeActivity extends ChoreStoryActivity {
 
     private final String CLAN = "Clan";
-    private final String ADD = "Add";
+    private final String CREATE = "Create";
     private final String QUESTS = "Quests";
     private final String PROFILE = "Profile";
     private final int[] tabSelectedIcons = {
@@ -56,11 +56,11 @@ public class ParentHomeActivity extends ChoreStoryActivity {
         parentClanFragment.setArguments(bundle);
 
         List<Fragment> fragmentList = Arrays.asList(parentClanFragment,
-                new ParentAddFragment(),
+                new ParentCreateFragment(),
                 new ParentQuestsFragment(),
                 new ParentProfileFragment());
 
-        List<String> fragmentTitleList = Arrays.asList(CLAN, ADD, QUESTS, PROFILE);
+        List<String> fragmentTitleList = Arrays.asList(CLAN, CREATE, QUESTS, PROFILE);
 
         adapter = new ParentHomeAdapter(getSupportFragmentManager(),
                 fragmentList,

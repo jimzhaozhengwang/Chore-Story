@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .helpers import generate_qst_resp, generate_chd_resp, generate_unique_parent_api_key, \
-    generate_unique_child_api_key, child_is_my_child
+    generate_unique_child_api_key, child_is_my_child, get_childs_quest_with_window
 from .. import db
 from ..decorators import backbone_error_handle, parent_login_required, json_return, json_content_only
 from ..exceptions import BackboneException
@@ -479,3 +479,66 @@ def modify_clan(name):
     current_user.clan.name = name
     db.session.commit()
     return current_user.clan.name == name
+
+
+@api_bp.route('/child/<int:cid>/quest', methods=['GET'])
+@parent_login_required
+@backbone_error_handle
+def get_child_quests(cid):
+    """
+    .. :quickref: Quest; get all quests of a child
+
+    Returns the list of a child's quests' ids.
+
+    **Parent login required**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": [
+            1
+          ]
+        }
+
+    :return: Whether clan name was modified.
+    """
+    child = Child.query.filter_by(id=cid).first()
+    if not child_is_my_child(child):
+        raise BackboneException(404, "Child not found")
+    return json_return([q.id for q in child.quests])
+
+
+@api_bp.route('/child/<int:cid>/quest/<float:start>', methods=['GET'], defaults={'lookahead': 86400.0})
+@api_bp.route('/child/<int:cid>/quest/<float:start>/<float:lookahead>', methods=['GET'])
+@parent_login_required
+@backbone_error_handle
+def get_child_quests(cid, start, lookahead):
+    """
+    .. :quickref: Quest; get a child's quests within look around window
+
+    Get ids of quests due in the range [start, start + 24 hrs], if ``ts`` is not supplied, current time is used.
+
+    **Parent login required**
+
+    **Example Return**:
+
+    .. code-block:: json
+
+        {
+          "data": [
+            1,
+            2
+          ]
+        }
+
+    :param cid: id of child
+    :param start: timestamp that should be used to determine window start/end
+    :param lookahead: timestamp that should be used to determine size of the window
+    :return: list of quest ids
+    """
+    child = Child.query.filter_by(id=cid).first()
+    if not child_is_my_child(child):
+        raise BackboneException(404, "Child not found")
+    return json_return(get_childs_quest_with_window(start, lookahead))
