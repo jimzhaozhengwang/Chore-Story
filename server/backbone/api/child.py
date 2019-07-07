@@ -36,14 +36,14 @@ def until_next_level(current_level):
     return json_return(_until_next_level(current_level))
 
 
-@api_bp.route('/friend/<int:fid>', methods=['POST'])
+@api_bp.route('/friend/<username>', methods=['POST'])
 @child_login_required
 @json_content_only
-def add_friend(fid):
+def add_friend(username):
     """
     .. :quickref: Friend; add a friend
 
-    Add a friend to currently logged in child account.
+    Add a friend to currently logged in child account based on their username.
 
     **Child login required**
 
@@ -56,13 +56,13 @@ def add_friend(fid):
     .. code-block:: json
 
         {
-        "data": null
+        "data": true
         }
 
-    :param fid: child id of friend
+    :param username: user name of child
     :return: whether friend was added
     """
-    potential_friend = Child.query.filter_by(id=fid).first()
+    potential_friend = Child.query.filter_by(username=username).first()
     if not potential_friend:
         raise BackboneException(404, "Child not found")
     current_user.added_friends.append(potential_friend)

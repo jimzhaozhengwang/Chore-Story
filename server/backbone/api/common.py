@@ -106,10 +106,11 @@ def get_child_info(cid):
 
         {
           "data": {
-            "clan_name": "makyy mark",
+            "clan_name": "marky mark",
             "id": 1,
             "level": 1,
             "name": "child",
+            "username": "c123"
             "parents": [
               {
                 "id": 1,
