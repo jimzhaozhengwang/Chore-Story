@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Completed Quests!" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</android.support.constraint.ConstraintLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/completed_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/completed_quests"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="15dp"
+                android:textSize="25sp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/completed_quests_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/completed_text_view"
+                android:layout_marginTop="10dp"
+                android:scrollbars="horizontal" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
