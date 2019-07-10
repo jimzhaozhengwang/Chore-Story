@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/overdue_text_view"
                 android:layout_marginTop="10dp"
-                android:scrollbars="horizontal" />
+                android:scrollbars="vertical" />
 
             <TextView
                 android:id="@+id/upcoming_text_view"
