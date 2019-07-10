@@ -20,17 +20,20 @@ public class QuestRecyclerViewItem {
         List<QuestRecyclerViewItem> dataList = new ArrayList<>();
         // TODO: fetch quests using QuestCompletion
         for (int i = 0; i < 2; ++i) {
-            QuestRecyclerViewItem item = new QuestRecyclerViewItem();
-            item.name = "Sweep the floor";
-            item.imageId = R.drawable.broom;
-            item.exp = 30;
-            item.owner = "Isabelle";
-            item.description = "sweep it for 10 hours plz";
-            item.mandatory = true;
-            item.dueDate = 5;
+            QuestRecyclerViewItem item = new QuestRecyclerViewItem("Sweep the floor", R.drawable.broom, 30, "Isabelle", "sweep it for 10 hours plz", true, 5);
             dataList.add(item);
         }
         return dataList;
+    }
+
+    QuestRecyclerViewItem(String name, int imageId, int exp, String owner, String description, boolean mandatory, int dueDate) {
+        this.name = name;
+        this.imageId = imageId;
+        this.exp = exp;
+        this.owner = owner;
+        this.description = description;
+        this.mandatory = mandatory;
+        this.dueDate = dueDate;
     }
 
     public String getName() {
@@ -45,12 +48,20 @@ public class QuestRecyclerViewItem {
         return exp;
     }
 
-    public String getOwner() { return owner; }
+    public String getOwner() {
+        return owner;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public boolean getMandatory() { return mandatory; }
+    public boolean getMandatory() {
+        return mandatory;
+    }
 
-    public int getDueDate() { return dueDate; }
+    public int getDueDate() {
+        return dueDate;
+    }
 
 }
