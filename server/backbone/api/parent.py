@@ -126,7 +126,7 @@ def login(email, password):
 @api_bp.route('/child', methods=['POST'])
 @parent_login_required
 @json_content_only
-def add_child(name):
+def add_child(name, username):
     """
     .. :quickref: Child; add a child account
 
@@ -140,6 +140,7 @@ def add_child(name):
 
         {
         "name": "Jim",
+        "username": "beastmaster69"
         }
 
     **Example return**:
@@ -150,8 +151,9 @@ def add_child(name):
           "data": {
             "clan_name": "Marky Mark",
             "id": 1,
-            "level": 69,
-            "name": "Amanda",
+            "level": 42,
+            "name": "Jim",
+            "username": "beastmaster69",
             "xp": 0
           }
         }
@@ -160,7 +162,7 @@ def add_child(name):
     :return: a description of the new child
     """
     # noinspection PyArgumentList
-    new_child = Child(level=1, xp=0, name=name, clan_id=current_user.clan_id)
+    new_child = Child(level=1, xp=0, name=name, username=username, clan_id=current_user.clan_id)
     db.session.add(new_child)
     db.session.commit()
     return generate_chd_resp(new_child)

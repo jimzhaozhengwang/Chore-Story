@@ -58,7 +58,8 @@ class Child(UserMixin, db.Model):
     api_key = db.Column(db.String(37), default=None, unique=True)
     level = db.Column(db.Integer)
     xp = db.Column(db.Integer)
-    name = db.Column(db.String(1000), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(100), nullable=False)
     added_friends = db.relationship('Child', secondary=friendship,
                                     primaryjoin=(id == friendship.c.friend_a_id),
                                     secondaryjoin=(id == friendship.c.friend_b_id))

@@ -35,7 +35,7 @@ def generate_chd_resp(chd):
     """
     d = {'clan_name': chd.clan.name,
          'parents': [{"id": p.id, "name": p.name} for p in chd.clan.parents]}
-    for e in ['level', 'name', 'id', 'xp']:
+    for e in ['level', 'name', 'id', 'xp', 'username']:
         d[e] = getattr(chd, e)
     return d
 
