@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.chorestory.R;
 import com.chorestory.adapter.QuestRecyclerViewAdapter;
+import com.chorestory.app.ChoreStoryActivity;
 import com.chorestory.model.QuestRecyclerViewItem;
 import com.chorestory.module.QuestCompletion;
 
@@ -31,7 +32,7 @@ public class ParentQuestsUpcomingFragment extends Fragment {
         overdueQuestsLayoutManager = new LinearLayoutManager(getActivity());
         overdueQuestsRecyclerView.setLayoutManager(overdueQuestsLayoutManager);
 
-        overdueQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(QuestCompletion.OVERDUE));
+        overdueQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(QuestCompletion.OVERDUE), (ChoreStoryActivity) getActivity());
         overdueQuestsRecyclerView.setAdapter(overdueQuestsAdapter);
 
         // Upcoming Quests
@@ -39,7 +40,7 @@ public class ParentQuestsUpcomingFragment extends Fragment {
         upcomingQuestsLayoutManager = new LinearLayoutManager(getActivity());
         upcomingQuestsRecyclerView.setLayoutManager(upcomingQuestsLayoutManager);
 
-        upcomingQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(QuestCompletion.UPCOMING));
+        upcomingQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(QuestCompletion.UPCOMING), (ChoreStoryActivity) getActivity());
         upcomingQuestsRecyclerView.setAdapter(upcomingQuestsAdapter);
 
         return view;

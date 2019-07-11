@@ -1,5 +1,6 @@
 package com.chorestory.adapter;
 
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chorestory.R;
+import com.chorestory.app.ChoreStoryActivity;
 import com.chorestory.model.QuestRecyclerViewItem;
 
 import java.util.List;
@@ -15,9 +17,11 @@ import java.util.List;
 public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecyclerViewAdapter.MyViewHolder> {
 
     private List<QuestRecyclerViewItem> itemList;
+    private ChoreStoryActivity activity;
 
-    public QuestRecyclerViewAdapter(List<QuestRecyclerViewItem> itemList) {
+    public QuestRecyclerViewAdapter(List<QuestRecyclerViewItem> itemList, ChoreStoryActivity activity) {
         this.itemList = itemList;
+        this.activity = activity;
     }
 
     @Override
@@ -40,9 +44,9 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
         // Quest mandatory/optional
         String mandatory;
         if (currentItem.getMandatory()) {
-            mandatory = "Mandatory";
+            mandatory = activity.getString(R.string.mandatory);
         } else {
-            mandatory = "Optional";
+            mandatory = activity.getString(R.string.optional);
         }
         myViewHolder.questMandatoryTextView.setText(mandatory);
         // Quest Exp

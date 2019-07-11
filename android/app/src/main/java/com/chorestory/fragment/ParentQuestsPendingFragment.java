@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.chorestory.R;
 import com.chorestory.adapter.QuestRecyclerViewAdapter;
+import com.chorestory.app.ChoreStoryActivity;
 import com.chorestory.model.QuestRecyclerViewItem;
 import com.chorestory.module.QuestCompletion;
 
@@ -28,7 +29,7 @@ public class ParentQuestsPendingFragment extends Fragment {
         pendingQuestsLayoutManager = new LinearLayoutManager(getActivity());
         pendingQuestsRecyclerView.setLayoutManager(pendingQuestsLayoutManager);
 
-        pendingQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(QuestCompletion.PENDING));
+        pendingQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(QuestCompletion.PENDING), (ChoreStoryActivity) getActivity());
         pendingQuestsRecyclerView.setAdapter(pendingQuestsAdapter);
 
         return view;
