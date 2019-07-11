@@ -22,7 +22,7 @@ public class ParentQuestsPendingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_parent_quests_pending, container, false);
+        View view = inflater.inflate(R.layout.fragment_parent_quests_pending, container, false);
 
         // Pending Quests
         pendingQuestsRecyclerView = view.findViewById(R.id.pending_quests_recycler_view);

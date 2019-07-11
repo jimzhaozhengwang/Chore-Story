@@ -1,6 +1,5 @@
 package com.chorestory.adapter;
 
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
