@@ -9,22 +9,18 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.chorestory.R;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import static android.support.constraint.Constraints.TAG;
-
 public class NotificationService extends FirebaseMessagingService {
 
-    // Only called by Firebase when app in foreground
+    private final String TAG = getClass().getName();
+
+    // Only called when app in foreground
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-
-        System.out.println("onMessageReceived");
-        System.out.println(FirebaseInstanceId.getInstance().getInstanceId());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
@@ -40,7 +36,7 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     private void showNotification(String title, String body, int notificationId, String channelId) {
-        System.out.println("showNotification");
+        Log.d(TAG, "Notification title:" + title + ", Notification body: " + body);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
         builder.setContentTitle(title);
         builder.setContentText(body);
@@ -54,11 +50,10 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     public void createNotificationChannel(Context context, String channelId) {
-        System.out.println("createNotificationChannel");
+        Log.d(TAG, "creating notification channel: " + channelId);
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            System.out.println("Build.VERSION.SDK_INT >= Build.VERSION_CODES.O, creating channel");
             CharSequence name = "notification_channel";
             String description = "notification_channel_description";
             int importance = NotificationManager.IMPORTANCE_HIGH;
@@ -78,13 +73,12 @@ public class NotificationService extends FirebaseMessagingService {
      */
     @Override
     public void onNewToken(String token) {
-        System.out.println("onNewToken, new token:");
-        System.out.println(token);
         Log.d(TAG, "Refreshed token: " + token);
-        // TODO: send new token to server
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // Instance ID token to your app server.
-        //sendRegistrationToServer(token);
+        sendRegistrationToServer(token);
+    }
+
+    // TODO: send token to server
+    public void sendRegistrationToServer(String token) {
+        Log.d(TAG, "Sending token to server: " + token);
     }
 }
