@@ -12,7 +12,6 @@ import com.chorestory.R;
 
 public class ChildFriendsFragment extends Fragment {
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_child_friends, container, false);

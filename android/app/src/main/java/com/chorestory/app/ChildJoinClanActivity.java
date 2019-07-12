@@ -14,11 +14,16 @@ import java.util.Collections;
 public class ChildJoinClanActivity extends ChoreStoryActivity {
 
     private TextView welcomeTextView;
-    private EditText usernameEditText;
-    private EditText passwordEditText;
-    private Button signUpButton;
 
     private String username;
+    private String name;
+
+    private EditText emailEditText;
+    private EditText clanNameEditText;
+    private EditText usernameEditText;
+    private EditText nameEditText;
+    private EditText passwordEditText;
+    private Button signUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +34,15 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
         welcomeTextView = findViewById(R.id.welcome_text_view);
         welcomeTextView.setText("Welcome to the CS449 Clan!"); // TODO: fetch clan name
 
+        emailEditText = findViewById(R.id.email_edit_text);
+        emailEditText.setVisibility(View.GONE);
+
+        clanNameEditText = findViewById(R.id.clan_name_edit_text);
+        clanNameEditText.setVisibility(View.GONE);
+
         usernameEditText = findViewById(R.id.username_edit_text);
+
+        nameEditText = findViewById(R.id.name_edit_text);
 
         passwordEditText = findViewById(R.id.password_edit_text);
         passwordEditText.setVisibility(TextView.GONE);
@@ -44,10 +57,12 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
                 hideKeyBoard();
                 disableButtons();
                 username = usernameEditText.getText().toString();
+                name = nameEditText.getText().toString();
 
-                if (username.isEmpty()) {
+                if (username.isEmpty() || name.isEmpty()) {
                     enableButtons();
-                    Toaster.showToast(getApplicationContext(), "Missing username information!");
+                    // TODO: think of message
+                    Toaster.showToast(getApplicationContext(), "Missing sign up information!");
                 } else {
                     // TODO: create child account
                     navigateTo(ChildHomeActivity.class);

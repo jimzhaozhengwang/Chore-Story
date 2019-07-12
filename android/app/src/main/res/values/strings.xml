@@ -28,6 +28,10 @@
     <string name="account">Account</string>
     <string name="email">Email</string>
     <string name="change_password">Change password</string>
+    <string name="friends">Friends</string>
+    <string name="quests">Quests</string>
+    <string name="profile">Profile</string>
+    <string name="create">Create</string>
 
     <!-- TODO: remove once it is added to the server -->
     <string-array name="quest_array">

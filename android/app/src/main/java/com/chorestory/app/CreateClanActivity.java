@@ -1,18 +1,16 @@
 package com.chorestory.app;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
-import com.chorestory.templates.SingleResponse;
 import com.chorestory.templates.RegisterRequest;
+import com.chorestory.templates.SingleResponse;
 
 import java.util.Collections;
 
@@ -29,15 +27,17 @@ public class CreateClanActivity extends ChoreStoryActivity {
     @Inject
     TokenHandler tokenHandler;
 
+    private String email;
     private String clanName;
-    private String username;
+    private String name;
     private String password;
 
+    private EditText emailEditText;
     private EditText clanNameEditText;
     private EditText usernameEditText;
+    private EditText nameEditText;
     private EditText passwordEditText;
     private Button signUpButton;
-    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +45,15 @@ public class CreateClanActivity extends ChoreStoryActivity {
         App.getAppComponent().inject(this);
         setContentView(R.layout.activity_create_clan);
 
+        emailEditText = findViewById(R.id.email_edit_text);
+
         clanNameEditText = findViewById(R.id.clan_name_edit_text);
+
         usernameEditText = findViewById(R.id.username_edit_text);
+        usernameEditText.setVisibility(View.GONE);
+
+        nameEditText = findViewById(R.id.name_edit_text);
+
         passwordEditText = findViewById(R.id.password_edit_text);
 
         signUpButton = findViewById(R.id.sign_up_button);
@@ -59,15 +66,16 @@ public class CreateClanActivity extends ChoreStoryActivity {
             public void onClick(View v) {
                 hideKeyBoard();
                 disableButtons();
+                email = emailEditText.getText().toString();
                 clanName = clanNameEditText.getText().toString();
-                username = usernameEditText.getText().toString();
+                name = nameEditText.getText().toString();
                 password = passwordEditText.getText().toString();
 
-                if (clanName.isEmpty() || username.isEmpty() || password.isEmpty()) {
+                if (email.isEmpty() || clanName.isEmpty() || name.isEmpty() || password.isEmpty()) {
                     enableButtons();
                     Toaster.showToast(getApplicationContext(), "Missing sign up information!");
                 } else {
-                    RegisterRequest registerRequest = new RegisterRequest(clanName, username, password);
+                    RegisterRequest registerRequest = new RegisterRequest(email, clanName, name, password);
                     Call<SingleResponse<String>> registerQuery = retrofitInterface.register(registerRequest);
 
                     registerQuery.enqueue(new Callback<SingleResponse<String>>() {

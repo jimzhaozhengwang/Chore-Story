@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
 import com.chorestory.R;
-import com.chorestory.adapter.ParentHomeAdapter;
+import com.chorestory.adapter.HomeAdapter;
 import com.chorestory.fragment.ParentCreateFragment;
 import com.chorestory.fragment.ParentClanFragment;
 import com.chorestory.fragment.ParentProfileFragment;
@@ -17,10 +17,6 @@ import java.util.List;
 
 public class ParentHomeActivity extends ChoreStoryActivity {
 
-    private final String CLAN = "Clan";
-    private final String CREATE = "Create";
-    private final String QUESTS = "Quests";
-    private final String PROFILE = "Profile";
     private final int[] tabSelectedIcons = {
             R.drawable.castle_color,
             R.drawable.plus_color,
@@ -37,7 +33,7 @@ public class ParentHomeActivity extends ChoreStoryActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-    private ParentHomeAdapter adapter;
+    private HomeAdapter homeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +56,17 @@ public class ParentHomeActivity extends ChoreStoryActivity {
                 new ParentQuestsFragment(),
                 new ParentProfileFragment());
 
-        List<String> fragmentTitleList = Arrays.asList(CLAN, CREATE, QUESTS, PROFILE);
+        List<String> fragmentTitleList = Arrays.asList(getString(R.string.clan),
+                getString(R.string.create),
+                getString(R.string.quests),
+                getString(R.string.profile));
 
-        adapter = new ParentHomeAdapter(getSupportFragmentManager(),
+        homeAdapter = new HomeAdapter(getSupportFragmentManager(),
                 fragmentList,
                 fragmentTitleList);
 
 
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(homeAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
         // Set default icons
@@ -93,4 +92,3 @@ public class ParentHomeActivity extends ChoreStoryActivity {
         });
     }
 }
-

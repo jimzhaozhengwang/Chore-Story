@@ -30,7 +30,6 @@ public class ParentClanFragment extends Fragment {
     private RecyclerView.LayoutManager childLayoutManager;
     private FloatingActionButton addClanMemberFab;
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_clan, container, false);

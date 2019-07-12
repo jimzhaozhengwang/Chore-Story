@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
 import com.chorestory.R;
-import com.chorestory.adapter.ChildHomeAdapter;
+import com.chorestory.adapter.HomeAdapter;
 import com.chorestory.fragment.ChildClanFragment;
 import com.chorestory.fragment.ChildFriendsFragment;
 import com.chorestory.fragment.ChildProfileFragment;
@@ -16,11 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ChildHomeActivity extends ChoreStoryActivity {
-
-    private final String CLAN = "Clan";
-    private final String FRIENDS = "Friends";
-    private final String QUESTS = "Quests";
-    private final String PROFILE = "Profile";
 
     private final int[] tabSelectedIcons = {
             R.drawable.castle_color,
@@ -39,7 +34,7 @@ public class ChildHomeActivity extends ChoreStoryActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-    private ChildHomeAdapter adapter;
+    private HomeAdapter homeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +50,16 @@ public class ChildHomeActivity extends ChoreStoryActivity {
                 new ChildQuestsFragment(),
                 new ChildProfileFragment());
 
-        List<String> fragmentTitleList = Arrays.asList(CLAN, FRIENDS, QUESTS, PROFILE);
+        List<String> fragmentTitleList = Arrays.asList(getString(R.string.clan),
+                getString(R.string.friends),
+                getString(R.string.quests),
+                getString(R.string.profile));
 
-        adapter = new ChildHomeAdapter(getSupportFragmentManager(),
+        homeAdapter = new HomeAdapter(getSupportFragmentManager(),
                 fragmentList,
                 fragmentTitleList);
 
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(homeAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
         // Set default icons
