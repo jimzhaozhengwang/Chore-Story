@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class TokenHandler  {
 
-    private String preferencesKey = "token";
+    private final String PREFERENCES_KEY = "token";
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -16,19 +16,21 @@ public class TokenHandler  {
      */
 
     public void setParentToken(String token, Context context) {
+        if (token == null) {
+            token = "";
+        }
         storeToken(token + ":", context);
     }
     public void setChildToken(String token, Context context) {
+        if (token == null) {
+            token = "";
+        }
         storeToken(":" + token, context);
     }
 
     public String getToken(Context context) {
         createPreferencesObject(context);
-        String foundToken = this.preferences.getString(preferencesKey, null);
-        if (foundToken == null) {
-            foundToken = "";
-        }
-        return foundToken;
+        return this.preferences.getString(PREFERENCES_KEY, "");
     }
 
     public boolean isParentToken(String token) {
@@ -38,7 +40,7 @@ public class TokenHandler  {
     private void storeToken(String token, Context context) {
         createPreferencesObject(context);
 
-        this.editor.putString(preferencesKey, token);
+        this.editor.putString(PREFERENCES_KEY, token);
 
         this.editor.commit();
     }
