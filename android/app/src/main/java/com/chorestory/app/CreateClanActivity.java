@@ -85,7 +85,7 @@ public class CreateClanActivity extends ChoreStoryActivity {
                                 String token = response.body().getData();
 
                                 // TODO: Store the token properly here
-                                tokenHandler.setParentToken(token);
+                                tokenHandler.setParentToken(token, getApplicationContext());
 
                                 // TODO: verification
                                 //  if successful register new clan & user, else display snackbar/toast

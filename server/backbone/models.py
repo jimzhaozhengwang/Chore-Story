@@ -9,6 +9,7 @@ quest_table = 'quests'
 quest_times_table = 'questTimes'
 quest_completions_table = 'questCompletions'
 clan_table = 'clans'
+quest_verification_table = 'questVerifications'
 
 
 friendship = Table('friendships', db.Model.metadata,
@@ -57,7 +58,8 @@ class Child(UserMixin, db.Model):
     api_key = db.Column(db.String(37), default=None, unique=True)
     level = db.Column(db.Integer)
     xp = db.Column(db.Integer)
-    name = db.Column(db.String(1000), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(100), nullable=False)
     added_friends = db.relationship('Child', secondary=friendship,
                                     primaryjoin=(id == friendship.c.friend_a_id),
                                     secondaryjoin=(id == friendship.c.friend_b_id))
@@ -81,6 +83,8 @@ class Quest(db.Model):
     recurring = db.Column(db.Boolean, default=False, nullable=False)
     timestamps = db.relationship('QuestTimes', cascade='all,delete')
     completions = db.relationship('QuestCompletions', cascade='all,delete')
+    needs_verification = db.Column(db.Boolean, default=False, nullable=False)
+    verifications = db.relationship('QuestVerifications', cascade='all,delete')
 
     def __repr__(self):
         return ('Recurring ' if self.recurring else '') + \
@@ -95,6 +99,17 @@ class QuestTimes(db.Model):
                                                 ondelete='CASCADE',
                                                 onupdate='CASCADE', ))
     value = db.Column(db.Float, nullable=False)
+
+
+class QuestVerifications(db.Model):
+    __tablename__ = quest_verification_table
+
+    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)  # ID of completion
+    owner = db.Column(db.Integer, db.ForeignKey(f'{quest_table}.id',
+                                                ondelete='CASCADE',
+                                                onupdate='CASCADE', ))  # Quest's ID
+    value = db.Column(db.TIMESTAMP, nullable=False)  # Which due date is verified
+    ts = db.Column(db.TIMESTAMP, nullable=False)  # When was it verified
 
 
 class QuestCompletions(db.Model):

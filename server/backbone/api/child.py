@@ -2,19 +2,13 @@ from datetime import datetime, timedelta
 
 from flask_login import current_user
 
-from .helpers import find_next_time, is_qst_completed, generate_qst_resp, get_childs_quest_with_window
+from .helpers import find_next_time, is_qst_completed, generate_qst_resp, award_xp_to_child, _until_next_level,\
+    get_childs_quest_with_window
 from .. import db
 from ..decorators import child_login_required, backbone_error_handle, json_return, json_content_only
 from ..exceptions import BackboneException
 from ..models import Child, Quest, QuestCompletions
 from ..views import api_bp
-
-
-def _until_next_level(current_level):
-    # For now this is a constant 12 xp / level, but this
-    #  function makes us able to change this on the fly
-    str(current_level)  # suppress warning about unused parameter
-    return 12
 
 
 @api_bp.route('/lvlup/<int:current_level>', methods=['GET'])
@@ -42,14 +36,14 @@ def until_next_level(current_level):
     return json_return(_until_next_level(current_level))
 
 
-@api_bp.route('/friend/<int:fid>', methods=['POST'])
+@api_bp.route('/friend/<username>', methods=['POST'])
 @child_login_required
 @json_content_only
-def add_friend(fid):
+def add_friend(username):
     """
     .. :quickref: Friend; add a friend
 
-    Add a friend to currently logged in child account.
+    Add a friend to currently logged in child account based on their username.
 
     **Child login required**
 
@@ -62,13 +56,13 @@ def add_friend(fid):
     .. code-block:: json
 
         {
-        "data": null
+        "data": true
         }
 
-    :param fid: child id of friend
+    :param username: user name of child
     :return: whether friend was added
     """
-    potential_friend = Child.query.filter_by(id=fid).first()
+    potential_friend = Child.query.filter_by(username=username).first()
     if not potential_friend:
         raise BackboneException(404, "Child not found")
     current_user.added_friends.append(potential_friend)
@@ -116,29 +110,30 @@ def complete_quest(qid, ts):
 
     **Child login required**
 
-    **Errors**:
+    **errors**:
 
-    404, Quest not found - quest does not exists, or not currently logged in child's
+    404, quest not found - quest does not exists, or not currently logged in child's
 
-    **Example Return**:
+    **example return**:
 
     .. code-block:: json
 
         {
-         "data": {
-          "completed_now": true,
-          "lvled_up": false,
-          "quest": {
-            "completed_on": "1559145134",
-            "description": "You're going on a quest, brush your teeth so you don't embarrass yourself.",
-            "due": 1559145600.0,
-            "id": 1,
-            "next_occurrence": 1559404800.0,
-            "recurring": true,
-            "reward": 12,
-            "title": "Brush your teeth",
+          "data": {
+            "completed_now": true,
+            "lvled_up": false,
+            "qst": {
+              "completed_on": "Sat, 06 Jul 2019 21:11:35 GMT",
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1559250000.0,
+              "id": 1,
+              "needs_verification": true,
+              "recurring": false,
+              "reward": 12,
+              "title": "This is the initial quest",
+              "verified_on": null
+            }
           }
-         }
         }
 
     :param qid: id of quest to be completed
@@ -157,13 +152,8 @@ def complete_quest(qid, ts):
     if completed_now:
         quest_completion = QuestCompletions(value=ts, ts=datetime.utcnow())
         quest.completions.append(quest_completion)
-        db.session.add(quest_completion)
-        current_user.xp += quest.reward
-        to_reach = _until_next_level(current_user.level)
-        if current_user.xp >= to_reach:
-            lvl_up = True
-            current_user.level += 1
-            current_user.xp -= to_reach
+        if not quest.needs_verification:
+            lvl_up = award_xp_to_child(current_user, quest.award)
         db.session.commit()
     resp = {
         'completed_now': completed_now,
