@@ -30,6 +30,10 @@
             android:name=".app.ParentLoginSignUpActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".app.ParentQuestDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
             android:name=".app.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

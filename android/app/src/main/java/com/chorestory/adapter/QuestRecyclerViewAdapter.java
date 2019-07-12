@@ -3,15 +3,18 @@ package com.chorestory.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chorestory.R;
 import com.chorestory.app.ChoreStoryActivity;
+import com.chorestory.app.ParentQuestDetailsActivity;
 import com.chorestory.model.QuestRecyclerViewItem;
 
 import java.util.List;
+
 
 public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecyclerViewAdapter.MyViewHolder> {
 
@@ -25,8 +28,16 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new MyViewHolder(LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.quest_recycler_view_item, viewGroup, false));
+        View view = LayoutInflater.from(viewGroup.getContext()).
+                inflate(R.layout.quest_recycler_view_item, viewGroup, false);
+
+        view.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                activity.navigateTo(ParentQuestDetailsActivity.class);
+            }
+        });
+
+        return new MyViewHolder(view);
     }
 
     @Override
