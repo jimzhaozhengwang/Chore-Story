@@ -1,5 +1,7 @@
 package com.chorestory.templates;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class AccountResponse {
@@ -15,6 +17,7 @@ public class AccountResponse {
         String email;
         Integer id;
         String name;
+        @SerializedName("clan_name")
         String clanName;
         String type;
 
