@@ -1,5 +1,7 @@
 package com.chorestory.templates;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ChildResponse {
 
     private Data data;
@@ -9,14 +11,15 @@ public class ChildResponse {
     }
 
     public class Data {
-        private String clan_name;
+        @SerializedName("clan_name")
+        private String clanName;
         private int id;
         private int level;
         private String name;
         private int xp;
 
-        public String getClan_name() {
-            return clan_name;
+        public String getClanName() {
+            return clanName;
         }
 
         public int getId() {
