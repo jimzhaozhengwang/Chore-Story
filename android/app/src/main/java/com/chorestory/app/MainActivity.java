@@ -46,7 +46,7 @@ public class MainActivity extends ChoreStoryActivity {
 
                     @Override
                     public void onFailure(Call<AccountResponse> call, Throwable t) {
-                        Toaster.showToast(MainActivity.this, "Sign-in with token failed.");
+                        Toaster.showToast(MainActivity.this, "Internal error occurred.");
                         enableButtons();
                     }
                 });
