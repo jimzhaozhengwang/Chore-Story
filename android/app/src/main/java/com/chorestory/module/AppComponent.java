@@ -9,6 +9,7 @@ import com.chorestory.app.MainActivity;
 import com.chorestory.app.ParentHomeActivity;
 import com.chorestory.app.ParentLoginActivity;
 import com.chorestory.app.ParentLoginSignUpActivity;
+import com.chorestory.app.ParentQuestDetailsActivity;
 import com.chorestory.app.ParentSignUpActivity;
 
 @Singleton
@@ -25,4 +26,6 @@ public interface AppComponent {
     void inject(CreateClanActivity activity);
 
     void inject(ParentHomeActivity activity);
+
+    void inject(ParentQuestDetailsActivity activity);
 }
