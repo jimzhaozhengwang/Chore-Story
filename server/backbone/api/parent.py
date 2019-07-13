@@ -15,7 +15,7 @@ from ..views import api_bp
 
 
 @api_bp.route('/register', methods=['POST'], defaults={'cp_code': None})
-@api_bp.route('/register/<cp_code>', methods=['POST'], defaults={'clan_name': None})
+@api_bp.route('/register/<string:cp_code>', methods=['POST'], defaults={'clan_name': None})
 @json_content_only
 def register(cp_code, email, name, password, clan_name):
     """
@@ -125,47 +125,33 @@ def login(email, password):
 
 @api_bp.route('/child', methods=['POST'])
 @parent_login_required
-@json_content_only
-def add_child(name, username):
+@backbone_error_handle
+def add_child():
     """
     .. :quickref: Child; add a child account
 
     Creates a new child account associated with current parent account.
+    Note: only one of these can be registered at a time.
 
     **Parent login required**
-
-    **Example post body**:
-
-    .. code-block:: json
-
-        {
-        "name": "Jim",
-        "username": "beastmaster69"
-        }
 
     **Example return**:
 
     .. code-block:: json
 
         {
-          "data": {
-            "clan_name": "Marky Mark",
-            "id": 1,
-            "level": 42,
-            "name": "Jim",
-            "username": "beastmaster69",
-            "xp": 0
-          }
+          "data": "1fbb1906-c79c-4db4-a701-a059440ab543"
         }
 
-    :param name: name of child
     :return: a description of the new child
     """
-    # noinspection PyArgumentList
-    new_child = Child(level=1, xp=0, name=name, username=username, clan_id=current_user.clan_id)
-    db.session.add(new_child)
+    new_ch_code = str(uuid4())
+    # make sure it's a unique cp_code
+    while Parent.query.filter_by(ch_code=new_ch_code).first() is not None:
+        new_ch_code = str(uuid4())
+    current_user.ch_code = str(new_ch_code)
     db.session.commit()
-    return generate_chd_resp(new_child)
+    return json_return(new_ch_code)
 
 
 @api_bp.route('/child/<int:cid>/delete', methods=['POST'])
@@ -202,7 +188,7 @@ def delete_child(cid):
     return json_return(Child.query.filter_by(id=cid).first() is None)
 
 
-@api_bp.route('/child_login/<int:cid>', methods=['GET'])
+@api_bp.route('/child/<int:cid>/login', methods=['GET'])
 @parent_login_required
 @backbone_error_handle
 def generate_child_login(cid):
@@ -238,7 +224,7 @@ def generate_child_login(cid):
     return json_return(child.api_key)
 
 
-@api_bp.route('/quest', methods=['POST'])
+@api_bp.route('/child/<int:cid>/quest', methods=['POST'])
 @parent_login_required
 @json_content_only
 def add_quest(cid, title, description, reward, due, needs_verification, timestamps=None):
@@ -254,7 +240,6 @@ def add_quest(cid, title, description, reward, due, needs_verification, timestam
     .. code-block:: json
 
         {
-         "cid": 1,
          "title": "Brush your teeth",
          "description": "You're going on a quest to save the princess, brush your teeth.",
          "reward": 2,
@@ -435,7 +420,7 @@ def delete_quest(qid):
     return json_return(Quest.query.filter_by(id=qid).first() is None)
 
 
-@api_bp.route('/generate_cp_code', methods=['POST'])
+@api_bp.route('/parent', methods=['POST'])
 @parent_login_required
 @backbone_error_handle
 def add_co_parent():
@@ -454,8 +439,6 @@ def add_co_parent():
 
     :return: new co parent registration code to be used in the ``/api/register`` end-point.
     """
-    # even though we did not authenticate by a header, let's skip adding cookie to the response
-    g.login_via_request = True
     new_cp_code = str(uuid4())
     # make sure it's a unique cp_code
     while Parent.query.filter_by(cp_code=new_cp_code).first() is not None:
@@ -506,7 +489,7 @@ def get_child_quests(cid):
     """
     .. :quickref: Quest; get all quests of a child
 
-    Returns the list of a child's quests' ids.
+    Returns the list of a child's quests.
 
     **Parent login required**
 
@@ -516,7 +499,17 @@ def get_child_quests(cid):
 
         {
           "data": [
-            1
+            {
+              "completed_on": null,
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1559250000.0,
+              "id": 1,
+              "needs_verification": true,
+              "recurring": false,
+              "reward": 99,
+              "title": "This is the initial quest",
+              "verified_on": null
+            }
           ]
         }
 
@@ -525,7 +518,7 @@ def get_child_quests(cid):
     child = Child.query.filter_by(id=cid).first()
     if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
-    return json_return([q.id for q in child.quests])
+    return json_return([generate_qst_resp(q) for q in child.quests])
 
 
 @api_bp.route('/child/<int:cid>/quest/<float:start>', methods=['GET'], defaults={'lookahead': 86400.0})
@@ -546,8 +539,17 @@ def get_child_quests_window(cid, start, lookahead):
 
         {
           "data": [
-            1,
-            2
+            {
+              "completed_on": null,
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1559250000.0,
+              "id": 1,
+              "needs_verification": true,
+              "recurring": false,
+              "reward": 99,
+              "title": "This is the initial quest",
+              "verified_on": null
+            }
           ]
         }
 
@@ -559,7 +561,8 @@ def get_child_quests_window(cid, start, lookahead):
     child = Child.query.filter_by(id=cid).first()
     if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
-    return json_return(get_childs_quest_with_window(start, lookahead))
+    quests = get_childs_quest_with_window(start, lookahead)
+    return json_return([generate_qst_resp(q) for q in quests])
 
 
 @api_bp.route('/quest/<int:qid>/verify', methods=['POST'], defaults={'ts': None})

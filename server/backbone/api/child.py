@@ -1,13 +1,14 @@
 from datetime import datetime, timedelta
 
+from flask import g
 from flask_login import current_user
 
-from .helpers import find_next_time, is_qst_completed, generate_qst_resp, award_xp_to_child, _until_next_level,\
-    get_childs_quest_with_window
+from .helpers import find_next_time, is_qst_completed, generate_qst_resp, award_xp_to_child, _until_next_level, \
+    get_childs_quest_with_window, generate_unique_child_api_key
 from .. import db
 from ..decorators import child_login_required, backbone_error_handle, json_return, json_content_only
 from ..exceptions import BackboneException
-from ..models import Child, Quest, QuestCompletions
+from ..models import Child, Quest, QuestCompletions, Parent
 from ..views import api_bp
 
 
@@ -187,7 +188,7 @@ def get_all_quests():
 
     :return: list of the quests ids of current child
     """
-    return json_return([q.id for q in current_user.quests])
+    return json_return([generate_qst_resp(q) for q in current_user.quests])
 
 
 @api_bp.route('/quest/<float:start>', methods=['GET'], defaults={'lookahead': 86400.0})
@@ -208,8 +209,17 @@ def get_quests(start, lookahead):
 
         {
           "data": [
-            1,
-            2
+            {
+              "completed_on": null,
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1559250000.0,
+              "id": 1,
+              "needs_verification": true,
+              "recurring": false,
+              "reward": 99,
+              "title": "This is the initial quest",
+              "verified_on": null
+            }
           ]
         }
 
@@ -217,4 +227,62 @@ def get_quests(start, lookahead):
     :param lookahead: timestamp that should be used to determine size of the window
     :return: list of quest ids
     """
-    return json_return(get_childs_quest_with_window(start, lookahead))
+    quests = get_childs_quest_with_window(start, lookahead)
+    return json_return([generate_qst_resp(q) for q in quests])
+
+
+@api_bp.route('/child/<string:ch_code>', methods=['POST'])
+@json_content_only
+def child_register(ch_code, name, username):
+    """
+    .. :quickref: Child; register a child account
+
+    Registers a new child account associated with parent account who's child code is supplied..
+
+    **Errors**:
+
+    409, Username is already taken - username is already in use by another child
+    404, Invalid ch_code - invalid ch_code
+
+    **Example post body**:
+
+    .. code-block:: json
+
+        {
+        "name": "Jim",
+        "username": "beastmaster69"
+        }
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": {
+            "clan_name": "Marky Mark",
+            "id": 1,
+            "level": 42,
+            "name": "Jim",
+            "username": "beastmaster69",
+            "xp": 0
+          }
+        }
+
+    :param name: name of child
+    :param username: username of child
+    :return: a description of the new child
+    """
+    # even though we did not authenticate by a header, let's skip adding cookie to the response
+    g.login_via_request = True
+    parent = Parent.query.filter_by(ch_code=ch_code).first()
+    if not parent:
+        raise BackboneException(404, "Invalid ch_code")
+    conflict_username = Child.query.filter_by(username=username).first()
+    if conflict_username:
+        raise BackboneException(409, "Username is already taken")
+    # noinspection PyArgumentList
+    new_child = Child(level=1, xp=0, name=name, username=username, clan_id=parent.clan_id)
+    new_child.api_key = generate_unique_child_api_key()
+    db.session.add(new_child)
+    db.session.commit()
+    return new_child.api_key

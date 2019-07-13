@@ -176,10 +176,10 @@ def get_childs_quest_with_window(start, lookahead):
     end = start + timedelta(seconds=lookahead)
 
     # Get one time quests in window
-    one_time_relevants = [q.id for q in current_user.quests if not q.recurring and start <= q.due <= end]
+    one_time_relevants = [q for q in current_user.quests if not q.recurring and start <= q.due <= end]
 
     # Get reoccurring time quests in window
-    recurring_relevants = [q.id for q in current_user.quests if q.recurring and
+    recurring_relevants = [q for q in current_user.quests if q.recurring and
                            start <= find_next_time(q, start) <= end]
 
     return one_time_relevants + recurring_relevants
