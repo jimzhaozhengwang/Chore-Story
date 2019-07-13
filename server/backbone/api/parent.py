@@ -561,7 +561,7 @@ def get_child_quests_window(cid, start, lookahead):
     child = Child.query.filter_by(id=cid).first()
     if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
-    quests = get_childs_quest_with_window(start, lookahead)
+    quests = get_childs_quest_with_window(child, start, lookahead)
     return json_return([generate_qst_resp(q) for q in quests])
 
 
@@ -605,7 +605,7 @@ def verify_quest_completion(qid, ts):
 
     :param qid: id of quest to be completed
     :param ts: timestamp the quest needs to be completed by
-    :return: quest description with ``lvled_up`` and ``completed_now`` filds added
+    :return: quest description with ``lvled_up`` and ``completed_now`` fields added
     """
     quest = Quest.query.filter_by(id=qid).first()
     quest_owner = Child.query.filter_by(id=quest.owner).first()
@@ -630,3 +630,50 @@ def verify_quest_completion(qid, ts):
         'qst': generate_qst_resp(quest, ts)
     }
     return json_return(resp)
+
+
+@api_bp.route('/child_quest/<float:start>', methods=['GET'], defaults={'lookahead': 86400.0})
+@api_bp.route('/child_quest/<float:start>/<float:lookahead>', methods=['GET'])
+@parent_login_required
+@backbone_error_handle
+def get_all_quests_in_window(start, lookahead):
+    """
+    .. :quickref: quest; get all children's quests in window
+
+    Verify a quest that has been completed.
+
+    **Parent login required**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": [
+            {
+              "completed_on": null,
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1563008544.0,
+              "id": 1,
+              "needs_verification": true,
+              "owner": {
+                "id": 1,
+                "name": "Amanda"
+              },
+              "recurring": false,
+              "reward": 99,
+              "title": "This is the initial quest",
+              "verified_on": null
+            }
+          ]
+        }
+
+    :param ts: timestamp the quest needs to be completed by
+    :param lookahead: length of lookahead window in seconds
+    :return: list of quest description with ``lvled_up``, ``completed_now`` fields and owner info added
+    """
+    all_quests = []
+    for child in current_user.clan.children:
+        all_quests.extend([{'owner': {'id': child.id, 'name': child.name},
+                            **generate_qst_resp(q)} for q in get_childs_quest_with_window(child, start, lookahead)])
+    return json_return(all_quests)

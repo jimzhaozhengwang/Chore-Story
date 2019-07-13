@@ -227,7 +227,7 @@ def get_quests(start, lookahead):
     :param lookahead: timestamp that should be used to determine size of the window
     :return: list of quest ids
     """
-    quests = get_childs_quest_with_window(start, lookahead)
+    quests = get_childs_quest_with_window(current_user, start, lookahead)
     return json_return([generate_qst_resp(q) for q in quests])
 
 
