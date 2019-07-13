@@ -198,6 +198,7 @@ def modify_child(cid, name, username):
 
         {
           "name": "Jim"
+          "username": "beastmaster69"
         }
 
     **Example return**:
@@ -207,6 +208,7 @@ def modify_child(cid, name, username):
         {
           "data": {
             "clan_name": "makyy mark",
+            "username": "beastmaster69",
             "id": 1,
             "level": 1,
             "name": "Jim",
