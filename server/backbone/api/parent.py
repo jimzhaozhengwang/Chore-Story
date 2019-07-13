@@ -646,7 +646,8 @@ def get_all_quests_in_window(start, lookahead):
     """
     .. :quickref: quest; get all children's quests in window
 
-    Verify a quest that has been completed.
+    Get all children's quests information in a window with the added information of the
+    owner of the quest (id and name).
 
     **Parent login required**
 
