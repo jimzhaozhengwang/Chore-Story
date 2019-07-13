@@ -336,3 +336,31 @@ def get_clan():
     :return: description of currently logged in user
     """
     return json_return(generate_clan_resp(current_user.clan))
+
+
+@api_bp.route('/me/registration_id', methods=['POST'])
+@login_required
+@json_content_only
+def save_registration_number(registration_id):
+    """
+    .. :quickref: User; save registration id
+
+    Save firebase registration number for notifications.
+
+    **Login required, either Parent, or Child**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": {
+            true
+          }
+        }
+
+    :return: whether the saved registration id was changes succesfully
+    """
+    current_user.registration_id = registration_id
+    db.session.commit()
+    return current_user.registration_id == registration_id
