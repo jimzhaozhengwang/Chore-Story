@@ -5,7 +5,7 @@ from flask import g
 from flask_login import current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .helpers import generate_qst_resp, generate_chd_resp, generate_unique_parent_api_key, \
+from .helpers import generate_qst_resp, generate_unique_parent_api_key, \
     generate_unique_child_api_key, child_is_my_child, find_next_time, award_xp_to_child, get_childs_quest_with_window
 from .. import db
 from ..decorators import backbone_error_handle, parent_login_required, json_return, json_content_only
@@ -17,11 +17,11 @@ from ..views import api_bp
 @api_bp.route('/register', methods=['POST'], defaults={'cp_code': None})
 @api_bp.route('/register/<string:cp_code>', methods=['POST'], defaults={'clan_name': None})
 @json_content_only
-def register(cp_code, email, name, password, clan_name):
+def register(cp_code, email, name, password, clan_name, picture):
     """
     .. :quickref: User; register a parent account
 
-    Register a new account with ``email``, ``name`` and ``password``.
+    Register a new account with ``email``, ``name``, ``picture`` and ``password``.
     If ``cp_code`` is sent then corresponding parent's children are copied to new parent.
     Note ``clan_name`` can be not excluded, if there is a ``cp_code``.
 
@@ -38,7 +38,8 @@ def register(cp_code, email, name, password, clan_name):
         "email": "example@inter.net",
         "name": "backbone",
         "password": "backbone",
-        "clan_name": "clan_name"
+        "clan_name": "clan_name",
+        "parent": "1"
         }
 
     **Example return**:
@@ -54,12 +55,17 @@ def register(cp_code, email, name, password, clan_name):
     :param password: password of new user
     :param cp_code: co parent code form an already existing parent
     :param clan_name: name of the clan to be added to the database
+    :param picture: id of user's picture
     :return: an api key for this user
     """
     if Parent.query.filter_by(email=email).first():
         raise BackboneException(409, "Email already used")
     # noinspection PyArgumentList
-    new_user = Parent(email=email, name=name, password=generate_password_hash(password), clan_id=clan_name)
+    new_user = Parent(email=email,
+                      name=name,
+                      password=generate_password_hash(password),
+                      clan_id=clan_name,
+                      picture=picture)
     if cp_code:
         other_parent = Parent.query.filter_by(cp_code=cp_code).first()
         if not other_parent:

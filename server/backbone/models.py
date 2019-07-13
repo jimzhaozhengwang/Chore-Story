@@ -48,6 +48,7 @@ class Parent(UserMixin, db.Model):
     clan_id = db.Column(db.Integer, db.ForeignKey(f'{clan_table}.id'))
     clan = db.relationship('Clan', back_populates='parents')
     registration_id = db.Column(db.String(200), default=None, nullable=True)
+    picture = db.Column(db.Integer, default=None, nullable=True)
 
     def __repr__(self):
         return f'Parent {self.name}'

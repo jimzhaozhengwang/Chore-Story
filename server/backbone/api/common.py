@@ -445,7 +445,7 @@ def upload_quest_verification_picture(qid):
 @api_bp.route('/quest/<int:qid>/verification', methods=['GET'])
 @login_required
 @backbone_error_handle
-def show_child_picture(qid):
+def show_verification_picture(qid):
     """
     .. :quickref: Quest; return already existingt verification picture
 

@@ -9,7 +9,7 @@ from flask_login import current_user
 from sqlalchemy import inspect
 
 from ..exceptions import BackboneException
-from ..models import Parent, Child, QuestVerifications
+from ..models import Parent, Child
 
 ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif']
 
@@ -22,7 +22,7 @@ def generate_prnt_resp(prnt):
     """
     d = {'children': [{"id": p.id, "name": p.name} for p in prnt.clan.children],
          'clan_name': prnt.clan.name}
-    for e in ['email', 'name', 'id']:
+    for e in ['email', 'name', 'id', 'picture']:
         d[e] = getattr(prnt, e)
     return d
 
@@ -34,7 +34,7 @@ def generate_chd_resp(chd):
     :return: a dictionary of description of Child object
     """
     d = {'clan_name': chd.clan.name,
-         'parents': [{"id": p.id, "name": p.name} for p in chd.clan.parents]}
+         'parents': [{"id": p.id, "name": p.name, 'picture': p.picture} for p in chd.clan.parents]}
     for e in ['level', 'name', 'id', 'xp', 'username']:
         d[e] = getattr(chd, e)
     return d
@@ -68,7 +68,7 @@ def generate_clan_resp(clan):
     :param clan: clan object
     :return: a dictionary of description of Clan object
     """
-    d = {"parents": [{"id": p.id, "name": p.name} for p in clan.parents],
+    d = {"parents": [{"id": p.id, "name": p.name, "picture": p.picture} for p in clan.parents],
          "children": [{"id": c.id, "name": c.name} for c in clan.children]}
     for e in ['id', 'name']:
         d[e] = getattr(clan, e)
