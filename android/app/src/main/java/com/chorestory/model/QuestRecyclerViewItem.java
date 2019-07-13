@@ -1,7 +1,7 @@
 package com.chorestory.model;
 
 import com.chorestory.R;
-import com.chorestory.module.QuestCompletion;
+import com.chorestory.helpers.QuestCompletion;
 
 import java.util.ArrayList;
 import java.util.List;
