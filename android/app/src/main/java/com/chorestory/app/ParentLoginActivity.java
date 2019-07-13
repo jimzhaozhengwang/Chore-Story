@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-//import android.widget.Toast;
 
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.helpers.Toaster;
@@ -32,11 +30,11 @@ public class ParentLoginActivity extends ChoreStoryActivity {
     @Inject
     TokenHandler tokenHandler;
 
-    private String username;
+    private String email;
     private String password;
-    private EditText usernameEditText;
+    
+    private EditText emailEditText;
     private EditText passwordEditText;
-    private Toast toast;
     private Button logInButton;
 
     @Override
@@ -45,13 +43,12 @@ public class ParentLoginActivity extends ChoreStoryActivity {
         App.getAppComponent().inject(this);
         setContentView(R.layout.activity_parent_login);
 
-        usernameEditText = findViewById(R.id.username_edit_text);
+        emailEditText = findViewById(R.id.email_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
         logInButton = findViewById(R.id.log_in_button);
         buttons = Collections.singletonList(logInButton);
 
         enableButtons();
-
 
         AccountManager accountManager = AccountManager.get(this);
 
@@ -60,10 +57,10 @@ public class ParentLoginActivity extends ChoreStoryActivity {
             public void onClick(View v) {
                 hideKeyBoard();
                 disableButtons();
-                username = usernameEditText.getText().toString();
+                email = emailEditText.getText().toString();
                 password = passwordEditText.getText().toString();
 
-                LoginRequest loginRequest = new LoginRequest(username, password);
+                LoginRequest loginRequest = new LoginRequest(email, password);
                 Call<SingleResponse<String>> loginQuery = retrofitInterface.login(loginRequest);
 
                 loginQuery.enqueue(new Callback<SingleResponse<String>>() {
@@ -96,7 +93,7 @@ public class ParentLoginActivity extends ChoreStoryActivity {
 
                         } else {
                             // TODO: use Snackbar instead; move existing view up when Snackbar appears
-                            Toaster.showToast(ParentLoginActivity.this, "Invalid username or password");
+                            Toaster.showToast(ParentLoginActivity.this, "Invalid email or password");
                             enableButtons();
                         }
                     }

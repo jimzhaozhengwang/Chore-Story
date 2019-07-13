@@ -1,15 +1,15 @@
 package com.chorestory.templates;
 
 public class RegisterRequest {
+    private String email;
     private String clan_name;
     private String name;
-    private String email;
     private String password;
 
-    public RegisterRequest(String clanName, String username, String password) {
+    public RegisterRequest(String email, String clanName, String name, String password) {
+        this.email = email;
         this.clan_name = clanName;
-        this.name = username; // TODO: change the form to take name and email separately
-        this.email = username;
+        this.name = name;
         this.password = password;
     }
 }

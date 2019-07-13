@@ -23,7 +23,6 @@ public class ParentProfileFragment extends Fragment {
     TextView parentEmailTextView;
     Button changePasswordButton;
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_profile, container, false);

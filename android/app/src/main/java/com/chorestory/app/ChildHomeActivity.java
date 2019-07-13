@@ -7,25 +7,26 @@ import android.support.v4.view.ViewPager;
 
 import com.chorestory.R;
 import com.chorestory.adapter.HomeAdapter;
-import com.chorestory.fragment.ParentCreateFragment;
-import com.chorestory.fragment.ParentClanFragment;
-import com.chorestory.fragment.ParentProfileFragment;
-import com.chorestory.fragment.ParentQuestsFragment;
+import com.chorestory.fragment.ChildClanFragment;
+import com.chorestory.fragment.ChildFriendsFragment;
+import com.chorestory.fragment.ChildProfileFragment;
+import com.chorestory.fragment.ChildQuestsFragment;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class ParentHomeActivity extends ChoreStoryActivity {
+public class ChildHomeActivity extends ChoreStoryActivity {
 
     private final int[] tabSelectedIcons = {
             R.drawable.castle_color,
-            R.drawable.plus_color,
+            R.drawable.friends_color,
             R.drawable.sword_color,
             R.drawable.knight_color
     };
+
     private final int[] tabsUnselectedIcons = {
             R.drawable.castle_bw,
-            R.drawable.plus_bw,
+            R.drawable.friends_bw,
             R.drawable.sword_bw,
             R.drawable.knight_bw
     };
@@ -39,32 +40,24 @@ public class ParentHomeActivity extends ChoreStoryActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
-        setContentView(R.layout.activity_parent_home);
+        setContentView(R.layout.activity_child_home);
 
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);
 
-        final String CLAN_NAME = getResources().getString(R.string.clan_name);
-
-        Bundle bundle = new Bundle();
-        bundle.putString(CLAN_NAME, getIntent().getStringExtra(CLAN_NAME));
-        ParentClanFragment parentClanFragment = new ParentClanFragment();
-        parentClanFragment.setArguments(bundle);
-
-        List<Fragment> fragmentList = Arrays.asList(parentClanFragment,
-                new ParentCreateFragment(),
-                new ParentQuestsFragment(),
-                new ParentProfileFragment());
+        List<Fragment> fragmentList = Arrays.asList(new ChildClanFragment(),
+                new ChildFriendsFragment(),
+                new ChildQuestsFragment(),
+                new ChildProfileFragment());
 
         List<String> fragmentTitleList = Arrays.asList(getString(R.string.clan),
-                getString(R.string.create),
+                getString(R.string.friends),
                 getString(R.string.quests),
                 getString(R.string.profile));
 
         homeAdapter = new HomeAdapter(getSupportFragmentManager(),
                 fragmentList,
                 fragmentTitleList);
-
 
         viewPager.setAdapter(homeAdapter);
         tabLayout.setupWithViewPager(viewPager);

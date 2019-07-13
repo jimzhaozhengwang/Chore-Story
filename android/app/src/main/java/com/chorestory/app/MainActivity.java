@@ -32,27 +32,25 @@ public class MainActivity extends ChoreStoryActivity {
 
         // TODO: Move this to a splash screen to be more seamless
         String token = tokenHandler.getToken(getApplicationContext());
-        if (token != null) {
-            if (tokenHandler.isParentToken(token)) {
-                Call<AccountResponse> accountQuery = retrofitInterface.me(token);
-                accountQuery.enqueue(new Callback<AccountResponse>() {
-                    @Override
-                    public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
-                        // TODO: Navigate to profile page
-                        navigateTo(ParentHomeActivity.class,
-                                getResources().getString(R.string.clan_name),
-                                response.body().getData().getClanName());
-                    }
+        if (tokenHandler.isParentToken(token)) {
+            Call<AccountResponse> accountQuery = retrofitInterface.me(token);
+            accountQuery.enqueue(new Callback<AccountResponse>() {
+                @Override
+                public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
+                    // TODO: Navigate to profile page
+                    navigateTo(ParentHomeActivity.class,
+                            getResources().getString(R.string.clan_name),
+                            response.body().getData().getClanName());
+                }
 
-                    @Override
-                    public void onFailure(Call<AccountResponse> call, Throwable t) {
-                        Toaster.showToast(MainActivity.this, "Internal error occurred.");
-                        enableButtons();
-                    }
-                });
-            } else {
-                // TODO: redirect to child homepage
-            }
+                @Override
+                public void onFailure(Call<AccountResponse> call, Throwable t) {
+                    Toaster.showToast(MainActivity.this, "Internal error occurred.");
+                    enableButtons();
+                }
+            });
+        } else {
+            // TODO: redirect to child homepage
         }
 
         setContentView(R.layout.activity_main);
@@ -74,8 +72,14 @@ public class MainActivity extends ChoreStoryActivity {
         childButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: finish childButton's onClickListener
-                //disableButtons();
+                disableButtons();
+                // TODO: open camera to scan QR code
+
+                // if QR code is for child sign up
+                navigateTo(ChildJoinClanActivity.class);
+
+                // if QR code is for child login
+//                navigateTo(ChildHomeActivity.class);
             }
         });
     }

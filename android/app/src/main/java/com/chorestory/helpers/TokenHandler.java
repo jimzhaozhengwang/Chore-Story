@@ -34,7 +34,7 @@ public class TokenHandler  {
     }
 
     public boolean isParentToken(String token) {
-        return !(token.charAt(0) == ':');
+        return token != null && !token.isEmpty() && !(token.charAt(0) == ':');
     }
 
     private void storeToken(String token, Context context) {

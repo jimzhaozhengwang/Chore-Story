@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
+        <activity
+            android:name=".app.ChildHomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".app.ChildJoinClanActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".app.ParentHomeActivity"
             android:screenOrientation="portrait"
