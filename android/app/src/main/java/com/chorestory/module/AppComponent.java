@@ -13,6 +13,7 @@ import com.chorestory.app.ParentLoginActivity;
 import com.chorestory.app.ParentLoginSignUpActivity;
 import com.chorestory.app.ParentQuestDetailsActivity;
 import com.chorestory.app.ParentSignUpActivity;
+import com.chorestory.app.SplashActivity;
 
 @Singleton
 @Component(modules = {AppModule.class, NetModule.class, AuthModule.class})
@@ -34,4 +35,6 @@ public interface AppComponent {
     void inject(ChildHomeActivity activity);
 
     void inject(ParentQuestDetailsActivity activity);
+
+    void inject(SplashActivity activity);
 }
