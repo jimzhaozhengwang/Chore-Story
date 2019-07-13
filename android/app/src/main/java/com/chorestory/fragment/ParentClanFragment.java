@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,9 +17,10 @@ import com.chorestory.adapter.ParentRecyclerViewAdapter;
 import com.chorestory.model.ChildRecyclerViewItem;
 import com.chorestory.model.ParentRecyclerViewItem;
 
-public class ParentClanFragment extends Fragment {
+import java.util.Collections;
 
-    private final String CLAN = " Clan";
+public class ParentClanFragment extends ChoreStoryFragment {
+
     private TextView clanNameTextView;
     private RecyclerView parentRecyclerView;
     private RecyclerView.Adapter parentAdapter;
@@ -35,7 +35,7 @@ public class ParentClanFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_parent_clan, container, false);
 
         final String CLAN_NAME = getResources().getString(R.string.clan_name);
-        String clanName = getArguments().getString(CLAN_NAME) + CLAN;
+        String clanName = getArguments().getString(CLAN_NAME) + " " + getString(R.string.clan);
 
         clanNameTextView = view.findViewById(R.id.clan_name_text_view);
         clanNameTextView.setText(clanName);
@@ -59,10 +59,16 @@ public class ParentClanFragment extends Fragment {
         childRecyclerView.setAdapter(childAdapter);
 
         addClanMemberFab = view.findViewById(R.id.add_clan_member_fab);
+
+        views = Collections.singletonList(addClanMemberFab);
+
+        enableViews();
+
         addClanMemberFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: add a new member, disable button
+                // TODO: add a new member
+                disableViews();
             }
         });
 

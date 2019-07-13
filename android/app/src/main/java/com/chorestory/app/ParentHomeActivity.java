@@ -91,4 +91,9 @@ public class ParentHomeActivity extends ChoreStoryActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        this.moveTaskToBack(true);
+    }
 }

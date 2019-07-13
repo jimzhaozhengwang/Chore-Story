@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +21,10 @@ import android.widget.TimePicker;
 import com.chorestory.R;
 import com.chorestory.helpers.QuestCreationHandler;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
-public class ParentCreateFragment extends Fragment {
+public class ParentCreateFragment extends ChoreStoryFragment {
 
     private Spinner childSpinner;
     private Spinner questSpinner;
@@ -88,6 +88,10 @@ public class ParentCreateFragment extends Fragment {
 
         createQuestFab = view.findViewById(R.id.create_quest_fab);
 
+        views = Arrays.asList(selectDateButton, selectTimeButton, createQuestFab);
+
+        enableViews();
+
         // TODO: fetch children and replace child_array with children
         ArrayAdapter<CharSequence> childSpinnerAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.child_array, R.layout.spinner_item);
@@ -137,7 +141,7 @@ public class ParentCreateFragment extends Fragment {
         selectDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 final Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
@@ -160,14 +164,14 @@ public class ParentCreateFragment extends Fragment {
                         month,
                         day);
                 datePickerDialog.show();
-                enableButtons();
+                enableViews();
             }
         });
 
         selectTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 final Calendar c = Calendar.getInstance();
                 int hour = c.get(Calendar.HOUR_OF_DAY);
                 int minute = c.get(Calendar.MINUTE);
@@ -187,7 +191,7 @@ public class ParentCreateFragment extends Fragment {
                         minute,
                         DateFormat.is24HourFormat(getActivity()));
                 timePickerDialog.show();
-                enableButtons();
+                enableViews();
             }
         });
 
@@ -219,7 +223,7 @@ public class ParentCreateFragment extends Fragment {
         createQuestFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 if (!QuestCreationHandler.canCreateQuest(getActivity(),
                         child,
                         questType,
@@ -230,7 +234,7 @@ public class ParentCreateFragment extends Fragment {
                         mHour,
                         mMinute,
                         recurrenceType)) {
-                    enableButtons();
+                    enableViews();
                 } else {
                     // TODO: create quest, pass the following info
                     // String child;
@@ -247,28 +251,6 @@ public class ParentCreateFragment extends Fragment {
                 }
             }
         });
-
-        enableButtons();
-
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        enableButtons();
-    }
-
-    // TODO: create ChoreStoryFragment as super class
-    private void disableButtons() {
-        selectDateButton.setEnabled(false);
-        selectTimeButton.setEnabled(false);
-        createQuestFab.setEnabled(false);
-    }
-
-    private void enableButtons() {
-        selectDateButton.setEnabled(true);
-        selectTimeButton.setEnabled(true);
-        createQuestFab.setEnabled(true);
     }
 }
