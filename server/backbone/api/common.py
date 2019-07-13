@@ -333,9 +333,48 @@ def get_clan():
           }
         }
 
-    :return: description of currently logged in user
+    :return: description of currently logged in user's clan
     """
     return json_return(generate_clan_resp(current_user.clan))
+
+
+@api_bp.route('/clan/children', methods=['GET'])
+@login_required
+@backbone_error_handle
+def get_clan_children():
+    """
+    .. :quickref: Clan; return a list of clan's children descriptions
+
+    Get a  description of current user's clan children.
+
+    **Login required, either Parent, or Child**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": [
+            {
+              "clan_name": "Marky Mark",
+              "id": 1,
+              "level": 1,
+              "name": "Amanda",
+              "parents": [
+                {
+                  "id": 1,
+                  "name": "Mark"
+                }
+              ],
+              "username": "mandy",
+              "xp": 0
+            }
+          ]
+        }
+
+    :return: description of currently logged in user's clan children
+    """
+    return json_return([generate_chd_resp(c) for c in current_user.clan.children])
 
 
 @api_bp.route('/me/registration_id', methods=['POST'])
