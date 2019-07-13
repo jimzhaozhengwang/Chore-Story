@@ -17,7 +17,7 @@ public class AccountResponse {
     }
 
     public class Data {
-        List<Integer> children;
+        List<Child> children;
         String email;
         Integer id;
         String name;
@@ -29,7 +29,7 @@ public class AccountResponse {
             return id;
         }
 
-        public List<Integer> getChildren() {
+        public List<Child> getChildren() {
             return children;
         }
 
@@ -47,6 +47,19 @@ public class AccountResponse {
 
         public String getType() {
             return type;
+        }
+
+        public class Child {
+            Integer id;
+            String name;
+
+            public Integer getId() {
+                return id;
+            }
+
+            public String getName() {
+                return name;
+            }
         }
     }
 }

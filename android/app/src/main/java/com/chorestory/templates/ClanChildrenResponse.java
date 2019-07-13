@@ -24,7 +24,8 @@ public class ClanChildrenResponse {
         Integer level;
         String name;
         String username;
-        Integer xp;
+        @SerializedName("xp")
+        Integer exp;
         List<Parent> parents;
 
         public String getClanName() {
@@ -47,8 +48,8 @@ public class ClanChildrenResponse {
             return username;
         }
 
-        public Integer getXp() {
-            return xp;
+        public Integer getExp() {
+            return exp;
         }
 
         public List<Parent> getParent() {

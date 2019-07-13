@@ -13,16 +13,21 @@ import com.chorestory.model.ChildRecyclerViewItem;
 import com.chorestory.templates.ClanChildrenResponse.Children;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ChildRecyclerViewAdapter extends RecyclerView.Adapter<ChildRecyclerViewAdapter.MyViewHolder> {
 
-    private ArrayList<ChildRecyclerViewItem> childrenList = new ArrayList<ChildRecyclerViewItem>();
+    private ArrayList<ChildRecyclerViewItem> childrenList = new ArrayList<>();
 
     public ChildRecyclerViewAdapter(List<Children> childrenList) {
+        // Translate the list of children (in API endpoint format) to list of item view format
         for (Children child : childrenList) {
             this.childrenList.add(new ChildRecyclerViewItem(child));
         }
+
+        // Sort the list of Children in descending order of level and exp
+        Collections.sort(this.childrenList);
     }
 
     @NonNull

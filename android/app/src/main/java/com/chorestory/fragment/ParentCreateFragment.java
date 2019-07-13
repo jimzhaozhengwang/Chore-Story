@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,37 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
+import com.chorestory.app.App;
 import com.chorestory.helpers.QuestCreationHandler;
+import com.chorestory.helpers.Toaster;
+import com.chorestory.helpers.TokenHandler;
+import com.chorestory.templates.AccountResponse;
+import com.chorestory.templates.AccountResponse.Data.Child;
+import com.chorestory.templates.QuestCreateRequest;
+import com.chorestory.templates.QuestCreateResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ParentCreateFragment extends Fragment {
+
+    @Inject
+    RetrofitInterface retrofitInterface;
+    @Inject
+    TokenHandler tokenHandler;
+
 
     private Spinner childSpinner;
     private Spinner questSpinner;
@@ -38,9 +64,11 @@ public class ParentCreateFragment extends Fragment {
     private EditText descriptionEditText;
     private FloatingActionButton createQuestFab;
 
-    private String child;
+    private int selectedChildId;
     private String questType;
     private int exp;
+    private String yearDateStandard;
+    private String timeDateStandard;
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -50,11 +78,20 @@ public class ParentCreateFragment extends Fragment {
     private boolean mandatory;
     private String description;
 
+    private String token;
+    private List<Child> fragmentChildList;
+
+    final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_create, container, false);
 
-        child = null;
+        App.getAppComponent().inject(this);
+
+        token = tokenHandler.getToken(getContext());
+
+        selectedChildId = -1;
         questType = null;
         exp = -1;
         mYear = -1;
@@ -63,7 +100,7 @@ public class ParentCreateFragment extends Fragment {
         mHour = -1;
         mMinute = -1;
         recurrenceType = null;
-        description = null;
+        description = "";
 
         childSpinner = view.findViewById(R.id.child_spinner);
 
@@ -88,24 +125,7 @@ public class ParentCreateFragment extends Fragment {
 
         createQuestFab = view.findViewById(R.id.create_quest_fab);
 
-        // TODO: fetch children and replace child_array with children
-        ArrayAdapter<CharSequence> childSpinnerAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.child_array, R.layout.spinner_item);
-
-        childSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        childSpinner.setAdapter(childSpinnerAdapter);
-
-        childSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                child = (String) parent.getItemAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                child = null;
-            }
-        });
+        populateChildrenList();
 
         ArrayAdapter<CharSequence> questSpinnerAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.quest_array, R.layout.spinner_item);
@@ -150,6 +170,8 @@ public class ParentCreateFragment extends Fragment {
                                 // TODO: consider using July 1, 2019 instead
                                 month++; // month is represented by an integer from 0 to 11
                                 String date = dayOfMonth + "-" + month + "-" + year;
+                                yearDateStandard = String.format("%02d-%02d-%02d", year, month, dayOfMonth);
+
                                 mDay = dayOfMonth;
                                 mMonth = month;
                                 mYear = year;
@@ -178,6 +200,8 @@ public class ParentCreateFragment extends Fragment {
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 // TODO: consider using AM/PM instead
                                 String time = String.format("%02d:%02d", hourOfDay, minute);
+                                timeDateStandard = String.format("%02d:%02d:%02d", hourOfDay, minute, 0);
+
                                 mHour = hourOfDay;
                                 mMinute = minute;
                                 timeTextView.setText(time);
@@ -221,7 +245,7 @@ public class ParentCreateFragment extends Fragment {
             public void onClick(View v) {
                 disableButtons();
                 if (!QuestCreationHandler.canCreateQuest(getActivity(),
-                        child,
+                        selectedChildId,
                         questType,
                         exp,
                         mYear,
@@ -232,18 +256,62 @@ public class ParentCreateFragment extends Fragment {
                         recurrenceType)) {
                     enableButtons();
                 } else {
-                    // TODO: create quest, pass the following info
-                    // String child;
-//                    String questType;
-//                    int exp;
-//                    int mYear;
-//                    int mMonth;
-//                    int mDay;
-//                    int mHour;
-//                    int mMinute;
-//                    String recurrenceType;
-//                    boolean mandatory;
-//                    @Nullable String description;
+
+                    if (token != null && tokenHandler.isParentToken(token)) {
+
+                        // Get the description
+                        description = descriptionEditText.getText().toString();
+
+                        // Calculate the selected duedate in UTC
+                        Date dueDate = new Date();
+                        try {
+                            dueDate = sdf.parse(yearDateStandard + "T" + timeDateStandard);
+                        } catch (ParseException e) {
+                            Log.d("BUG", "Parse exception: ");
+                            Log.d("BUG", e.getMessage());
+                        }
+
+                        // Calculate the timestamp if it's recurring (-1 otherwise)
+                        long timestamp = getTimestamp();
+
+                        // Create the retrofit request containing all quest information
+                        QuestCreateRequest questRequest = new QuestCreateRequest(
+                                questType,
+                                description,
+                                exp,
+                                timestamp,
+                                dueDate.getTime() / 1000,
+                                mandatory
+                        );
+
+                        Call<QuestCreateResponse> questCreateQuery = retrofitInterface.create_quest(
+                                token,
+                                selectedChildId,
+                                questRequest
+                        );
+                        questCreateQuery.enqueue(new Callback<QuestCreateResponse>() {
+                            @Override
+                            public void onResponse(Call<QuestCreateResponse> call, Response<QuestCreateResponse> response) {
+                                if (response.isSuccessful()) {
+                                    Toaster.showToast(getContext(), "Successfully created quest!");
+
+                                    // TODO: Go to quest page
+
+                                } else {
+                                    Toaster.showToast(getContext(), "Something went wrong.");
+                                    // TODO: re-enable buttons
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<QuestCreateResponse> call, Throwable t) {
+                                Toaster.showToast(getContext(), "Something went wrong.");
+                                // TODO: re-enable buttons
+                            }
+                        });
+
+                    }
+
                 }
             }
         });
@@ -270,5 +338,79 @@ public class ParentCreateFragment extends Fragment {
         selectDateButton.setEnabled(true);
         selectTimeButton.setEnabled(true);
         createQuestFab.setEnabled(true);
+    }
+
+    private void populateChildrenList() {
+
+        if (token != null && tokenHandler.isParentToken(token)) {
+            Call<AccountResponse> accountQuery = retrofitInterface.me(token);
+            accountQuery.enqueue(new Callback<AccountResponse>() {
+                @Override
+                public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+
+                        AccountResponse.Data respData = response.body().getData();
+                        fragmentChildList = respData.getChildren();
+
+                        List<String> childNameList = new ArrayList<>();
+                        for (Child child : fragmentChildList) {
+                            childNameList.add(child.getName());
+                        }
+
+                        ArrayAdapter<String> childSpinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, childNameList);
+                        childSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        childSpinner.setAdapter(childSpinnerAdapter);
+
+                        childSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                if (position < fragmentChildList.size()) {
+                                    selectedChildId = fragmentChildList.get(position).getId();
+                                } else {
+                                    Log.d("BUG", "Our child list is inconsistent somehow.");
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+                                selectedChildId = 0;
+                            }
+                        });
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AccountResponse> call, Throwable t) {
+                    Toaster.showToast(getContext(), "Internal error occurred.");
+                    // TODO: delete the token we have stored and redirect the user to the login page
+                }
+            });
+        } else {
+            // TODO: delete the token and redirect user to login page?
+        }
+    }
+
+    private int getTimestamp() {
+        int timestamp;
+
+        switch (recurrenceType) {
+            case "Repeats daily":
+                timestamp = 60 * 60 * 24;
+                break;
+            case "Repeats weekly":
+                timestamp = (60 * 60 * 24) * 7;
+                break;
+            case "Repeats monthly":
+                timestamp = ((60 * 60 * 24) * 7) * 4;
+                break;
+            case "Repeats yearly":
+                timestamp = (((60 * 60 * 24) * 7) * 4) * 12;
+                break;
+            default:
+                timestamp = -1;
+        }
+
+        return timestamp;
     }
 }

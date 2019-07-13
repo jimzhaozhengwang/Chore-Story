@@ -6,7 +6,7 @@ import com.chorestory.R;
 
 public class QuestCreationHandler {
     public static boolean canCreateQuest(Activity activity,
-                                         String child,
+                                         int child,
                                          String questType,
                                          int exp,
                                          int year,
@@ -17,7 +17,7 @@ public class QuestCreationHandler {
                                          String recurrenceType) {
 
         // TODO: think of messages; make them string resources
-        if (child == null || child.equals(activity.getString(R.string.select_a_child))) {
+        if (child == -1) {
             Toaster.showToast(activity, "Please select a child");
             return false;
         } else if (questType == null || questType.equals(activity.getString(R.string.select_a_quest))) {

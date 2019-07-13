@@ -10,6 +10,7 @@ import com.chorestory.app.ParentLoginSignUpActivity;
 import com.chorestory.app.ParentQuestDetailsActivity;
 import com.chorestory.app.ParentSignUpActivity;
 import com.chorestory.fragment.ParentClanFragment;
+import com.chorestory.fragment.ParentCreateFragment;
 import com.chorestory.fragment.ParentProfileFragment;
 
 import javax.inject.Singleton;
@@ -40,4 +41,6 @@ public interface AppComponent {
     void inject(ParentClanFragment fragment);
 
     void inject(ParentProfileFragment fragment);
+
+    void inject(ParentCreateFragment fragment);
 }

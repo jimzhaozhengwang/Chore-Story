@@ -69,12 +69,6 @@
         <item>Prune trees and shrubs</item>
     </string-array>
 
-    <!-- TODO: remove this; fetch instead -->
-    <string-array name="child_array">
-        <item>Select a child</item>
-        <item>Child 1</item>
-    </string-array>
-
     <string-array name="recurrence_array">
         <item>Does not repeat</item>
         <item>Repeats daily</item>

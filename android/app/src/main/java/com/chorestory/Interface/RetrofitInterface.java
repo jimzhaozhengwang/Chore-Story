@@ -7,6 +7,8 @@ import com.chorestory.templates.ClanChildrenResponse;
 import com.chorestory.templates.ClanResponse;
 import com.chorestory.templates.FriendsResponse;
 import com.chorestory.templates.LoginRequest;
+import com.chorestory.templates.QuestCreateRequest;
+import com.chorestory.templates.QuestCreateResponse;
 import com.chorestory.templates.SingleResponse;
 import com.chorestory.templates.RegisterRequest;
 
@@ -16,6 +18,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface RetrofitInterface {
 
@@ -56,5 +59,12 @@ public interface RetrofitInterface {
     @GET("clan/children")
     Call<ClanChildrenResponse> get_clan_children(
             @Header("Authorization") String auth
+    );
+
+    @POST("child/{cid}/quest")
+    Call<QuestCreateResponse> create_quest(
+            @Header("Authorization") String auth,
+            @Path("cid") Integer cid,
+            @Body QuestCreateRequest questcreateRequest
     );
 }
