@@ -1,10 +1,12 @@
+import os
 from datetime import datetime
 from uuid import uuid4
 
-from flask import g
+from flask import g, current_app
 from flask_login import current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from server.backbone.dialogflow import call_dialogflow
 from .helpers import generate_qst_resp, generate_unique_parent_api_key, \
     generate_unique_child_api_key, child_is_my_child, find_next_time, award_xp_to_child, get_childs_quest_with_window
 from .. import db
@@ -308,6 +310,55 @@ def add_quest(cid, title, description, reward, due, needs_verification, timestam
     db.session.add(new_quest)
     db.session.commit()
     return generate_qst_resp(new_quest)
+
+
+@api_bp.route('/quest/text', methods=['POST'])
+@parent_login_required
+@json_content_only
+def parse_quest_test(text):
+    """
+    .. :quickref: Quest; parse a quest addition command into quest fields
+
+    Parse a quest addition command into separate fields.
+
+    **Parent login required**
+
+    **Example post body**:
+
+    .. code-block:: json
+
+        {
+         "text": "Add a quest for drawing a circle Sunday evening to Mark for 5 points"
+        }
+
+    **Errors**:
+
+    404, Cannot parse - either there's no GOOGLE_APPLICATION_CREDENTIALS, or is missing DIALOGFLOW_PROJECT_ID
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": {
+            "child": "Mark",
+            "experience_point": 5.0,
+            "quest": "drawing a circle",
+            "time": {
+              "endDateTime": "2019-07-07T23:59:59-04:00",
+              "startDateTime": "2019-07-07T17:00:00-04:00"
+            }
+          }
+        }
+
+
+    :param text: a text transcription of a quest addition command
+    :return: separate fields in a json
+    """
+    if ('DIALOGFLOW_PROJECT_ID' not in current_app.config or
+            'GOOGLE_APPLICATION_CREDENTIALS' not in os.environ):
+        raise BackboneException(404, "Cannot parse")
+    return call_dialogflow(text)
 
 
 @api_bp.route('/quest/<int:qid>', methods=['POST'])
