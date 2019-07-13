@@ -3,7 +3,7 @@ package com.chorestory.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class TokenHandler  {
+public class TokenHandler {
 
     private final String PREFERENCES_KEY = "token";
 
@@ -21,6 +21,7 @@ public class TokenHandler  {
         }
         storeToken(token + ":", context);
     }
+
     public void setChildToken(String token, Context context) {
         if (token == null) {
             token = "";
@@ -35,6 +36,10 @@ public class TokenHandler  {
 
     public boolean isParentToken(String token) {
         return token != null && !token.isEmpty() && !(token.charAt(0) == ':');
+    }
+
+    public boolean isChildToken(String token) {
+        return token != null && !token.isEmpty() && token.charAt(0) == ':';
     }
 
     private void storeToken(String token, Context context) {
