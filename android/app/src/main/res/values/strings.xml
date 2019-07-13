@@ -22,6 +22,7 @@
     <string name="optional">Optional</string>
     <string name="description">Description</string>
     <string name="clan">Clan</string>
+    <string name="clan_title">%1$s Clan</string>
     <string name="name">Name</string>
     <string name="members">Members</string>
     <string name="add_a_member">Add a member</string>

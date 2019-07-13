@@ -12,15 +12,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.adapter.ChildRecyclerViewAdapter;
 import com.chorestory.adapter.ParentRecyclerViewAdapter;
-import com.chorestory.model.ChildRecyclerViewItem;
-import com.chorestory.model.ParentRecyclerViewItem;
+import com.chorestory.app.App;
+import com.chorestory.helpers.Toaster;
+import com.chorestory.helpers.TokenHandler;
+import com.chorestory.templates.ClanChildrenResponse;
+import com.chorestory.templates.ClanResponse;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ParentClanFragment extends Fragment {
 
-    private final String CLAN = " Clan";
+    @Inject
+    RetrofitInterface retrofitInference;
+    @Inject
+    TokenHandler tokenHandler;
+
     private TextView clanNameTextView;
     private RecyclerView parentRecyclerView;
     private RecyclerView.Adapter parentAdapter;
@@ -34,11 +50,9 @@ public class ParentClanFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_clan, container, false);
 
-        final String CLAN_NAME = getResources().getString(R.string.clan_name);
-        String clanName = getArguments().getString(CLAN_NAME) + CLAN;
+        App.getAppComponent().inject(this);
 
         clanNameTextView = view.findViewById(R.id.clan_name_text_view);
-        clanNameTextView.setText(clanName);
 
         parentRecyclerView = view.findViewById(R.id.parent_recycler_view);
         parentRecyclerView.setHasFixedSize(true);
@@ -46,17 +60,11 @@ public class ParentClanFragment extends Fragment {
         parentLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         parentRecyclerView.setLayoutManager(parentLayoutManager);
 
-        parentAdapter = new ParentRecyclerViewAdapter(ParentRecyclerViewItem.getData());
-        parentRecyclerView.setAdapter(parentAdapter);
-
         childRecyclerView = view.findViewById(R.id.child_recycler_view);
         childRecyclerView.setHasFixedSize(true);
 
         childLayoutManager = new LinearLayoutManager(getActivity());
         childRecyclerView.setLayoutManager(childLayoutManager);
-
-        childAdapter = new ChildRecyclerViewAdapter(ChildRecyclerViewItem.getData());
-        childRecyclerView.setAdapter(childAdapter);
 
         addClanMemberFab = view.findViewById(R.id.add_clan_member_fab);
         addClanMemberFab.setOnClickListener(new View.OnClickListener() {
@@ -67,5 +75,68 @@ public class ParentClanFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Populate clan info
+        String token = tokenHandler.getToken(getContext());
+        if (token != null) {
+            if (tokenHandler.isParentToken(token)) {
+                // Get parent and generic clan information
+                Call<ClanResponse> clanQuery = retrofitInference.get_clan(token);
+                clanQuery.enqueue(new Callback<ClanResponse>() {
+                    @Override
+                    public void onResponse(Call<ClanResponse> call, Response<ClanResponse> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+
+                            ClanResponse.Data respData = response.body().getData();
+
+                            // Set the clan Title
+                            clanNameTextView.setText(getString(R.string.clan_title, respData.getClanName()));
+
+                            // Set the parent list
+                            List<ClanResponse.Data.Parent> parentList = respData.getParents();
+                            parentAdapter = new ParentRecyclerViewAdapter(parentList);
+                            parentRecyclerView.setAdapter(parentAdapter);
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ClanResponse> call, Throwable t) {
+                        Toaster.showToast(getContext(), "Internal error occurred.");
+                        // TODO: delete the token we have stored and redirect the user to the login page?
+                    }
+                });
+
+                // Get Children in clan information
+                Call<ClanChildrenResponse> clanChildrenQuery = retrofitInference.get_clan_children(token);
+                clanChildrenQuery.enqueue(new Callback<ClanChildrenResponse>() {
+                    @Override
+                    public void onResponse(Call<ClanChildrenResponse> call, Response<ClanChildrenResponse> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+
+                            // Set the child list
+                            List<ClanChildrenResponse.Children> childrenList = response.body().getChildren();
+                            childAdapter = new ChildRecyclerViewAdapter(childrenList);
+                            childRecyclerView.setAdapter(childAdapter);
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ClanChildrenResponse> call, Throwable t) {
+                        Toaster.showToast(getContext(), "Internal error occurred.");
+                        // TODO: delete the token we have stored and redirect the user to the login page?
+                    }
+                });
+            } else {
+                // TODO: redirect to login page
+            }
+        }
+
     }
 }

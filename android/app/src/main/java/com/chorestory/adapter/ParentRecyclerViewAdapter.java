@@ -10,15 +10,20 @@ import android.widget.TextView;
 
 import com.chorestory.R;
 import com.chorestory.model.ParentRecyclerViewItem;
+import com.chorestory.templates.ClanResponse.Data.Parent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParentRecyclerViewAdapter extends RecyclerView.Adapter<ParentRecyclerViewAdapter.MyViewHolder> {
 
-    private List<ParentRecyclerViewItem> itemList;
+    private ArrayList<ParentRecyclerViewItem> parentList = new ArrayList<ParentRecyclerViewItem>();
 
-    public ParentRecyclerViewAdapter(List<ParentRecyclerViewItem> itemList) {
-        this.itemList = itemList;
+    public ParentRecyclerViewAdapter(List<Parent> parentList) {
+
+        for (Parent parent : parentList) {
+            this.parentList.add(new ParentRecyclerViewItem(parent));
+        }
     }
 
     @NonNull
@@ -30,7 +35,7 @@ public class ParentRecyclerViewAdapter extends RecyclerView.Adapter<ParentRecycl
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        ParentRecyclerViewItem currentItem = itemList.get(i);
+        ParentRecyclerViewItem currentItem = parentList.get(i);
         myViewHolder.parentImageView.setImageResource(currentItem.getImageId());
         myViewHolder.parentNameTextView.setText(currentItem.getName());
 
@@ -39,7 +44,7 @@ public class ParentRecyclerViewAdapter extends RecyclerView.Adapter<ParentRecycl
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return parentList.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

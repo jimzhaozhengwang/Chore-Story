@@ -31,6 +31,7 @@ public class CreateClanActivity extends ChoreStoryActivity {
     private String clanName;
     private String name;
     private String password;
+    private Integer picture;
 
     private EditText emailEditText;
     private EditText clanNameEditText;
@@ -70,12 +71,13 @@ public class CreateClanActivity extends ChoreStoryActivity {
                 clanName = clanNameEditText.getText().toString();
                 name = nameEditText.getText().toString();
                 password = passwordEditText.getText().toString();
+                picture = R.drawable.king_color; // TODO: Let the user select this when the option is created
 
                 if (email.isEmpty() || clanName.isEmpty() || name.isEmpty() || password.isEmpty()) {
                     enableButtons();
                     Toaster.showToast(getApplicationContext(), "Missing sign up information!");
                 } else {
-                    RegisterRequest registerRequest = new RegisterRequest(email, clanName, name, password);
+                    RegisterRequest registerRequest = new RegisterRequest(email, clanName, name, password, picture);
                     Call<SingleResponse<String>> registerQuery = retrofitInterface.register(registerRequest);
 
                     registerQuery.enqueue(new Callback<SingleResponse<String>>() {

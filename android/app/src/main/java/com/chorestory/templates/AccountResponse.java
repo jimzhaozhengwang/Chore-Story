@@ -12,6 +12,10 @@ public class AccountResponse {
         return data;
     }
 
+    public Boolean hasResponse() {
+        return (data != null);
+    }
+
     public class Data {
         List<Integer> children;
         String email;
