@@ -27,14 +27,12 @@ public class SplashActivity extends ChoreStoryActivity {
 
         setContentView(R.layout.activity_splash);
 
-        // TODO: Move this to a splash screen to be more seamless
         String token = tokenHandler.getToken(getApplicationContext());
         if (tokenHandler.isParentToken(token)) {
             Call<AccountResponse> accountQuery = retrofitInterface.me(token);
             accountQuery.enqueue(new Callback<AccountResponse>() {
                 @Override
                 public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
-                    // TODO: Navigate to profile page
                     navigateTo(ParentHomeActivity.class,
                             getResources().getString(R.string.clan_name),
                             response.body().getData().getClanName());
