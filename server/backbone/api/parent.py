@@ -6,7 +6,7 @@ from flask import g, current_app
 from flask_login import current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from server.backbone.dialogflow import call_dialogflow
+from ..dialogflow import call_dialogflow
 from .helpers import generate_qst_resp, generate_unique_parent_api_key, \
     generate_unique_child_api_key, child_is_my_child, find_next_time, award_xp_to_child, get_childs_quest_with_window
 from .. import db
