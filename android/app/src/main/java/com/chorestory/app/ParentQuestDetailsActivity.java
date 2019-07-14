@@ -173,15 +173,10 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 recurrence = (String) parent.getItemAtPosition(position);
-                System.out.println("onItemSelected");
-                System.out.println(recurrence);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                recurrence = null; // TODO?
-                System.out.println("onNothingSelected");
-                System.out.println(recurrence);
             }
         });
 
