@@ -27,6 +27,8 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
     private ImageView questImageView;
     private EditText expEditText;
     private TextView statusTextView;
+    private ImageView statusImageView;
+    private Button viewProofButton;
     private Button selectDateButton;
     private Button selectTimeButton;
     private Spinner selectChildSpinner;
@@ -58,6 +60,8 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         questImageView = findViewById(R.id.quest_image_view);
         expEditText = findViewById(R.id.quest_exp_edit_text);
         statusTextView = findViewById(R.id.quest_status_text_view);
+        statusImageView = findViewById(R.id.quest_status_image_view);
+        viewProofButton = findViewById(R.id.view_proof_button);
         selectDateButton = findViewById(R.id.quest_select_date_button);
         selectTimeButton = findViewById(R.id.quest_select_time_button);
         selectChildSpinner = findViewById(R.id.select_child_spinner);
@@ -89,7 +93,19 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
 
         // status
         // TODO: fetch actual value and possibly hide button
-        statusTextView.setText(getString(R.string.pending_approval));
+        int statusText = R.string.completed;
+        statusTextView.setText(getString(statusText));
+        int statusImage;
+        if (statusText == R.string.pending_approval) {
+            statusImage = R.drawable.yellow_check_mark;
+        } else if (statusText == R.string.completed) {
+            statusImage = R.drawable.green_check_mark;
+        } else {
+            viewProofButton.setVisibility(viewProofButton.GONE);
+            statusImage = R.drawable.red_check_mark;
+        }
+        statusImageView.setImageResource(statusImage);
+
 
         // Select Date
         selectDateButton.setText(getDateText());
