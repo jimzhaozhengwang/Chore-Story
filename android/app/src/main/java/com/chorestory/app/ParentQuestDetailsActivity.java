@@ -12,7 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.chorestory.R;
@@ -21,19 +23,23 @@ import java.util.Calendar;
 
 public class ParentQuestDetailsActivity extends ChoreStoryActivity {
 
-    private Spinner questNameSpinner;
+    private EditText questNameEditText;
+    private ImageView questImageView;
     private EditText expEditText;
+    private TextView statusTextView;
     private Button selectDateButton;
     private Button selectTimeButton;
     private Spinner selectChildSpinner;
     private Spinner selectRecurrenceSpinner;
     private EditText descriptionEditText;
-    private String questType;
+    private Button cancelButton;
+    private Button saveButton;
     private int mYear;
     private int mMonth;
     private int mDay;
     private int mHour;
     private int mMinute;
+    private String questName;
     private String recurrence;
     private Activity activity = this;
 
@@ -48,13 +54,17 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         // prevent keyboard from opening on activity create
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        questNameSpinner = findViewById(R.id.quest_name_spinner);
+        questNameEditText = findViewById(R.id.quest_name_edit_text);
+        questImageView = findViewById(R.id.quest_image_view);
         expEditText = findViewById(R.id.quest_exp_edit_text);
+        statusTextView = findViewById(R.id.quest_status_text_view);
         selectDateButton = findViewById(R.id.quest_select_date_button);
         selectTimeButton = findViewById(R.id.quest_select_time_button);
         selectChildSpinner = findViewById(R.id.select_child_spinner);
         selectRecurrenceSpinner = findViewById(R.id.select_recurrence_spinner);
         descriptionEditText = findViewById(R.id.description_edit_text);
+        cancelButton = findViewById(R.id.cancel_button);
+        saveButton = findViewById(R.id.save_button);
 
         // TODO set all initial values to actual quest info
         mYear = 1996;
@@ -64,38 +74,22 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         mMinute = 30;
 
         // Quest Name
-        ArrayAdapter<CharSequence> questSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.quest_array, R.layout.spinner_item);
-        questSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        questNameSpinner.setAdapter(questSpinnerAdapter);
-        // TODO: fetch actual value for quest name
-        // TODO: this initial setSelection isn't working idk why
-        selectRecurrenceSpinner.setSelection(questSpinnerAdapter.getPosition("Doing laundry"));
-        questNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                questType = (String) parent.getItemAtPosition(position);
+        // TODO: fetch actual value
+        questName = "Sweep kitchen floor";
+        questNameEditText.setText(questName);
 
-                if (questType != null && !questType.equals(getString(R.string.select_a_quest))) {
-                    int exp = 30; // TODO: figure out an appropriate exp for each quest
-                    expEditText.setText(Integer.toString(exp));
-                } else {
-                    expEditText.setText("");
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                questType = null;
-            }
-        });
+        // Quest icon
+        // TODO: fetch quest icon based on name
+        int icon = R.drawable.cleaner;
+        questImageView.setImageResource(icon);
 
         // Quest Exp
         // TODO: fetch actual value
-        // TODO: this initial setText isn't working idk why
-        expEditText.setText("10");
+        expEditText.setText("20");
 
-        // TODO: selectChildSpinner
+        // status
+        // TODO: fetch actual value and possibly hide button
+        statusTextView.setText(getString(R.string.pending_approval));
 
         // Select Date
         selectDateButton.setText(getDateText());
@@ -174,15 +168,24 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
             }
         });
 
+        // TODO: selectChildSpinner
+
         // TODO: fetch actual value
         descriptionEditText.setText("This is the description of the quest before change");
 
+
         // TODO: add Cancel and Save buttons. on Save send request to modify quest and exit activity
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
     private String getDateText() {
         // months used are 0-11
-        return mDay + "-" + (mMonth+1) + "-" + mYear;
+        return mDay + "-" + (mMonth + 1) + "-" + mYear;
     }
 
     private String getTimeText() {
