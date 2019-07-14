@@ -7,7 +7,7 @@ public class RegisterRequest {
     private String password;
     private Integer picture;
 
-    public RegisterRequest(String email, String clanName, String name, String password, Integer picture) {
+    public RegisterRequest(String email, String clanName, String name, String password, int picture) {
         this.email = email;
         this.clan_name = clanName;
         this.name = name;

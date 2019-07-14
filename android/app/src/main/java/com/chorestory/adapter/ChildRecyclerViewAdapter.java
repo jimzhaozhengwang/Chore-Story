@@ -18,7 +18,7 @@ import java.util.List;
 
 public class ChildRecyclerViewAdapter extends RecyclerView.Adapter<ChildRecyclerViewAdapter.MyViewHolder> {
 
-    private ArrayList<ChildRecyclerViewItem> childrenList = new ArrayList<>();
+    private List<ChildRecyclerViewItem> childrenList = new ArrayList<>();
 
     public ChildRecyclerViewAdapter(List<Children> childrenList) {
         // Translate the list of children (in API endpoint format) to list of item view format

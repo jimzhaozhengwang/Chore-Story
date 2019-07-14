@@ -31,7 +31,7 @@ public class CreateClanActivity extends ChoreStoryActivity {
     private String clanName;
     private String name;
     private String password;
-    private Integer picture;
+    private int picture;
 
     private EditText emailEditText;
     private EditText clanNameEditText;
