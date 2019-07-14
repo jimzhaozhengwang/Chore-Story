@@ -93,7 +93,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
 
         // status
         // TODO: fetch actual value and possibly hide button
-        int statusText = R.string.completed;
+        int statusText = R.string.pending_approval;
         statusTextView.setText(getString(statusText));
         int statusImage;
         if (statusText == R.string.pending_approval) {
@@ -105,7 +105,6 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
             statusImage = R.drawable.red_check_mark;
         }
         statusImageView.setImageResource(statusImage);
-
 
         // Select Date
         selectDateButton.setText(getDateText());
