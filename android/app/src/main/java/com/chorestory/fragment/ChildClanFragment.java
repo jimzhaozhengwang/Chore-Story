@@ -41,8 +41,9 @@ public class ChildClanFragment extends ChoreStoryFragment {
         parentLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         parentRecyclerView.setLayoutManager(parentLayoutManager);
 
-        parentAdapter = new ParentRecyclerViewAdapter(ParentRecyclerViewItem.getData());
-        parentRecyclerView.setAdapter(parentAdapter);
+        // TODO: This needs to be written properly when the data comes in
+//        parentAdapter = new ParentRecyclerViewAdapter(ParentRecyclerViewItem.getData());
+//        parentRecyclerView.setAdapter(parentAdapter);
 
         childRecyclerView = view.findViewById(R.id.child_recycler_view);
         childRecyclerView.setHasFixedSize(true);
@@ -50,8 +51,9 @@ public class ChildClanFragment extends ChoreStoryFragment {
         childLayoutManager = new LinearLayoutManager(getActivity());
         childRecyclerView.setLayoutManager(childLayoutManager);
 
-        childAdapter = new ChildRecyclerViewAdapter(ChildRecyclerViewItem.getData());
-        childRecyclerView.setAdapter(childAdapter);
+        // TODO: This needs to be written properly when the data comes in
+//        childAdapter = new ChildRecyclerViewAdapter(ChildRecyclerViewItem.getData());
+//        childRecyclerView.setAdapter(childAdapter);
 
         return view;
     }
