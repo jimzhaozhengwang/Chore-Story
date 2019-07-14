@@ -16,7 +16,8 @@ public class ChildResponse {
         private int id;
         private int level;
         private String name;
-        private int xp;
+        @SerializedName("xp")
+        private int exp;
 
         public String getClanName() {
             return clanName;
@@ -34,8 +35,8 @@ public class ChildResponse {
             return name;
         }
 
-        public int getXp() {
-            return xp;
+        public int getExp() {
+            return exp;
         }
     }
 }

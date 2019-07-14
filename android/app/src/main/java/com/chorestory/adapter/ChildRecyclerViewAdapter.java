@@ -10,15 +10,24 @@ import android.widget.TextView;
 
 import com.chorestory.R;
 import com.chorestory.model.ChildRecyclerViewItem;
+import com.chorestory.templates.ClanChildrenResponse.Children;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ChildRecyclerViewAdapter extends RecyclerView.Adapter<ChildRecyclerViewAdapter.MyViewHolder> {
 
-    private List<ChildRecyclerViewItem> itemList;
+    private List<ChildRecyclerViewItem> childrenList = new ArrayList<>();
 
-    public ChildRecyclerViewAdapter(List<ChildRecyclerViewItem> itemList) {
-        this.itemList = itemList;
+    public ChildRecyclerViewAdapter(List<Children> childrenList) {
+        // Translate the list of children (in API endpoint format) to list of item view format
+        for (Children child : childrenList) {
+            this.childrenList.add(new ChildRecyclerViewItem(child));
+        }
+
+        // Sort the list of Children in descending order of level and exp
+        Collections.sort(this.childrenList);
     }
 
     @NonNull
@@ -30,21 +39,21 @@ public class ChildRecyclerViewAdapter extends RecyclerView.Adapter<ChildRecycler
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        ChildRecyclerViewItem currentItem = itemList.get(i);
-        myViewHolder.childImageView.setImageResource(currentItem.getImageId());
-        myViewHolder.childNameTextView.setText(currentItem.getName());
+        ChildRecyclerViewItem currChild = childrenList.get(i);
+        myViewHolder.childImageView.setImageResource(currChild.getImageId());
+        myViewHolder.childNameTextView.setText(currChild.getName());
 
-        String level = "Level " + currentItem.getLevel();
+        String level = "Level " + currChild.getLevel();
         myViewHolder.childLevelTextView.setText(level);
 
-        String exp = currentItem.getExp() + " Exp";
+        String exp = currChild.getExp() + " Exp";
         myViewHolder.childExpTextView.setText(exp);
 
         String quest;
-        if (currentItem.getQuest() == 1) {
-            quest = currentItem.getQuest() + " Quest Completed";
+        if (currChild.getQuest() == 1) {
+            quest = currChild.getQuest() + " Quest Completed";
         } else {
-            quest = currentItem.getQuest() + " Quests Completed";
+            quest = currChild.getQuest() + " Quests Completed";
         }
 
         myViewHolder.childQuestTextView.setText(quest);
@@ -54,7 +63,7 @@ public class ChildRecyclerViewAdapter extends RecyclerView.Adapter<ChildRecycler
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return childrenList.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

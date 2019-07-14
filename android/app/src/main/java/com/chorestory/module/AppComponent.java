@@ -1,9 +1,5 @@
 package com.chorestory.module;
 
-import javax.inject.Singleton;
-
-import dagger.Component;
-
 import com.chorestory.app.ChildHomeActivity;
 import com.chorestory.app.ChildJoinClanActivity;
 import com.chorestory.app.CreateClanActivity;
@@ -14,6 +10,13 @@ import com.chorestory.app.ParentLoginSignUpActivity;
 import com.chorestory.app.ParentQuestDetailsActivity;
 import com.chorestory.app.ParentSignUpActivity;
 import com.chorestory.app.SplashActivity;
+import com.chorestory.fragment.ParentClanFragment;
+import com.chorestory.fragment.ParentCreateFragment;
+import com.chorestory.fragment.ParentProfileFragment;
+
+import javax.inject.Singleton;
+
+import dagger.Component;
 
 @Singleton
 @Component(modules = {AppModule.class, NetModule.class, AuthModule.class})
@@ -35,6 +38,12 @@ public interface AppComponent {
     void inject(ChildHomeActivity activity);
 
     void inject(ParentQuestDetailsActivity activity);
+
+    void inject(ParentClanFragment fragment);
+
+    void inject(ParentProfileFragment fragment);
+
+    void inject(ParentCreateFragment fragment);
 
     void inject(SplashActivity activity);
 }

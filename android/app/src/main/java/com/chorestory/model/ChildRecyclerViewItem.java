@@ -1,83 +1,41 @@
 package com.chorestory.model;
 
+
 import com.chorestory.R;
+import com.chorestory.templates.ClanChildrenResponse.Children;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
-public class ChildRecyclerViewItem {
+public class ChildRecyclerViewItem implements Comparable<ChildRecyclerViewItem>{
 
     private String name;
-    private int imageId;
     private int level;
     private int exp;
     private int quest;
+    private int imageId;
 
-    public static List<ChildRecyclerViewItem> getData() {
-        List<ChildRecyclerViewItem> dataList = new ArrayList<>(); // TODO: sort decreasing exp
-        String[] names = retrieveNames();
-        int[] imageIds = retrieveImages();
-        int[] levels = retrieveLevels();
-        int[] exps = retrieveExps();
-        int[] quests = retrieveQuests();
+    public ChildRecyclerViewItem(Children child) {
+        this.name = child.getName();
+        this.level = child.getLevel();
+        this.exp = child.getExp();
+        this.quest = 10; // TODO: quests completed count somewhere?
+        this.imageId = R.drawable.joker_color;// TODO: need to grab this from the endpoint. here maybe?
+    }
 
-        for (int i = 0; i < names.length; ++i) {
-            ChildRecyclerViewItem item = new ChildRecyclerViewItem();
-            item.name = names[i];
-            item.imageId = imageIds[i];
-            item.level = levels[i];
-            item.exp = exps[i];
-            item.quest = quests[i];
-            dataList.add(item);
+    @Override
+    public int compareTo(ChildRecyclerViewItem otherChild) {
+        if (this.level > otherChild.getLevel()) {
+            return -1;
+        } else if (this.level == otherChild.getLevel() && this.exp >= otherChild.getExp()) {
+            return -1;
+        } else if (this.level == otherChild.getLevel() && this.exp == otherChild.getExp()) {
+            return 0;
         }
-        return dataList;
-    }
-
-    private static int[] retrieveImages() { // TODO: retrieve images
-        return new int[]{
-                R.drawable.joker_color,
-                R.drawable.soldier_color,
-                R.drawable.joker_color,
-                R.drawable.knight_color,
-                R.drawable.soldier_color,
-                R.drawable.knight_color};
-    }
-
-    private static String[] retrieveNames() { // TODO: retrieve names
-        return new String[]{
-                "Christian",
-                "Mark",
-                "Jim",
-                "Isabelle",
-                "Minnie",
-                "Amanda"
-        };
-    }
-
-    private static int[] retrieveLevels() { // TODO: retrieve levels
-        return new int[]{
-                10, 9, 4, 4, 2, 1
-        };
-    }
-
-    private static int[] retrieveExps() { // TODO: retrieve exps
-        return new int[]{
-                1021, 919, 442, 400, 200, 12
-        };
-    }
-
-    private static int[] retrieveQuests() {
-        return new int[]{
-                200, 100, 42, 40, 20, 1
-        };
+        return 1;
     }
 
     public String getName() {
         return name;
-    }
-
-    public int getImageId() {
-        return imageId;
     }
 
     public int getLevel() {
@@ -90,5 +48,9 @@ public class ChildRecyclerViewItem {
 
     public int getQuest() {
         return quest;
+    }
+
+    public int getImageId() {
+        return imageId;
     }
 }
