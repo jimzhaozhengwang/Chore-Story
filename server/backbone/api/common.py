@@ -395,9 +395,7 @@ def save_registration_number(registration_id):
     .. code-block:: json
 
         {
-          "data": {
-            true
-          }
+          "data": true
         }
 
     :return: whether the saved registration id was changes succesfully
