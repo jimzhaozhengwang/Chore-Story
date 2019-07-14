@@ -36,6 +36,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
     private EditText descriptionEditText;
     private Button cancelButton;
     private Button saveButton;
+    private Button deleteButton;
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -69,6 +70,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         descriptionEditText = findViewById(R.id.description_edit_text);
         cancelButton = findViewById(R.id.cancel_button);
         saveButton = findViewById(R.id.save_button);
+        deleteButton = findViewById(R.id.delete_button);
 
         // TODO set all initial values to actual quest info
         mYear = 1996;
@@ -188,9 +190,23 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         // TODO: fetch actual value
         descriptionEditText.setText("This is the description of the quest before change");
 
-
-        // TODO: add Cancel and Save buttons. on Save send request to modify quest and exit activity
         cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        // TODO: send modify quest request
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        // TODO: send delete quest request
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();

@@ -49,6 +49,7 @@
     <string name="recurrence">Recurrence</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
 
     <!-- TODO: remove once it is added to the server -->
     <string-array name="quest_array">
