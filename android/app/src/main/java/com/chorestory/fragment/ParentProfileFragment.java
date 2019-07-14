@@ -3,7 +3,6 @@ package com.chorestory.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,9 @@ import android.widget.TextView;
 
 import com.chorestory.R;
 
-public class ParentProfileFragment extends Fragment {
+import java.util.Arrays;
+
+public class ParentProfileFragment extends ChoreStoryFragment {
 
     ImageView parentImageView;
     TextView parentNameTextView;
@@ -40,12 +41,13 @@ public class ParentProfileFragment extends Fragment {
         parentNameTextView.setText("David");
         clanNameTextView.setText("CS449");
 
-        enableButtons();
+        views = Arrays.asList(addMemberButton, leaveClanButton, changePasswordButton);
+        enableViews();
 
         addMemberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 // TODO: add a member, camera QR code?
             }
         });
@@ -53,7 +55,7 @@ public class ParentProfileFragment extends Fragment {
         leaveClanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 // TODO: determine appropriate behaviour
             }
         });
@@ -63,28 +65,10 @@ public class ParentProfileFragment extends Fragment {
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 // TODO: change user password
             }
         });
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        enableButtons();
-    }
-
-    private void enableButtons() {
-        addMemberButton.setEnabled(true);
-        leaveClanButton.setEnabled(true);
-        changePasswordButton.setEnabled(true);
-    }
-
-    private void disableButtons() {
-        addMemberButton.setEnabled(false);
-        leaveClanButton.setEnabled(false);
-        changePasswordButton.setEnabled(false);
     }
 }
