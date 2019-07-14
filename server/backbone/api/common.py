@@ -198,6 +198,7 @@ def modify_child(cid, name, username):
 
         {
           "name": "Jim"
+          "username": "beastmaster69"
         }
 
     **Example return**:
@@ -207,6 +208,7 @@ def modify_child(cid, name, username):
         {
           "data": {
             "clan_name": "makyy mark",
+            "username": "beastmaster69",
             "id": 1,
             "level": 1,
             "name": "Jim",
@@ -333,6 +335,139 @@ def get_clan():
           }
         }
 
-    :return: description of currently logged in user
+    :return: description of currently logged in user's clan
     """
     return json_return(generate_clan_resp(current_user.clan))
+
+
+@api_bp.route('/clan/children', methods=['GET'])
+@login_required
+@backbone_error_handle
+def get_clan_children():
+    """
+    .. :quickref: Clan; return a list of clan's children descriptions
+
+    Get a  description of current user's clan children.
+
+    **Login required, either Parent, or Child**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": [
+            {
+              "clan_name": "Marky Mark",
+              "id": 1,
+              "level": 1,
+              "name": "Amanda",
+              "parents": [
+                {
+                  "id": 1,
+                  "name": "Mark"
+                }
+              ],
+              "username": "mandy",
+              "xp": 0
+            }
+          ]
+        }
+
+    :return: description of currently logged in user's clan children
+    """
+    return json_return([generate_chd_resp(c) for c in current_user.clan.children])
+
+
+@api_bp.route('/me/registration_id', methods=['POST'])
+@login_required
+@json_content_only
+def save_registration_number(registration_id):
+    """
+    .. :quickref: User; save registration id
+
+    Save firebase registration number for notifications.
+
+    **Login required, either Parent, or Child**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": {
+            true
+          }
+        }
+
+    :return: whether the saved registration id was changes succesfully
+    """
+    current_user.registration_id = registration_id
+    db.session.commit()
+    return current_user.registration_id == registration_id
+
+
+@api_bp.route('/quest/<int:qid>/verification', methods=['POST'])
+@login_required
+@backbone_error_handle
+def upload_quest_verification_picture(qid):
+    """
+    .. :quickref: Quest; upload picture for verification
+
+    Upload a picture for quest for verification purposes.
+    If there was a picture previously uploaded, this will replace it.
+
+    **Login required, either Parent, or Child**
+
+    **Errors**:
+
+    404, Quest not found - child doesn't exists, or permission denied
+
+    :param qid: id of quest who's verification picture we're uploading
+    :return: whether the picture has been uploaded successful
+    """
+    quest = Quest.query.filter_by(id=qid).first()
+    if not quest:
+        raise BackboneException(404, "Quest not found")
+    file = request.files.get('file')
+    if file and file.filename != '' and allowed_file(file.filename):
+        looking_in = os.path.join(app.config['UPLOAD_FOLDER'], 'verification_pics')
+        # Delete previous picture if exists
+        previous_file = look_for_file(looking_in, str(qid) + '.')
+        if previous_file:
+            os.remove(previous_file)
+        # Save new picture
+        _, ext = secure_filename(file.filename).rsplit('.', 1)
+        new_file_path = os.path.join(looking_in, str(qid) + '.' + ext)
+        file.save(new_file_path)
+        return json_return(os.path.isfile(new_file_path))
+    return json_return(False)
+
+
+@api_bp.route('/quest/<int:qid>/verification', methods=['GET'])
+@login_required
+@backbone_error_handle
+def show_verification_picture(qid):
+    """
+    .. :quickref: Quest; return already existingt verification picture
+
+    Return the picture of a quest in 2 cases: if the currently logged in child requests their own verification picture,
+    if the parent request it's child's verification picture.
+
+    **Login required, either Parent, or Child**
+
+    **Errors**:
+
+    404, Quest not found - owner child doesn't exists, or permission denied
+    405, Picture not found - quest doesn't have a verification picture
+
+    :param cid: id of child who's picture we're looking for
+    :return: the picture itself if they exist
+    """
+    quest = Quest.query.filter_by(id=qid).first()
+    if not child_is_me_or_my_child_or_friend(quest.owner):
+        raise BackboneException(404, "Quest not found")
+    file = look_for_file(os.path.join(app.config['UPLOAD_FOLDER'], 'verification_pics'), str(qid) + '.')
+    if not file:
+        raise BackboneException(405, "Picture not found")
+    return send_file(file)

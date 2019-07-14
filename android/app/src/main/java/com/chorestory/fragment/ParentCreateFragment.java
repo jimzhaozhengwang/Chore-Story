@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,7 +43,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ParentCreateFragment extends Fragment {
+public class ParentCreateFragment extends ChoreStoryFragment {
 
     @Inject
     RetrofitInterface retrofitInterface;
@@ -157,7 +156,7 @@ public class ParentCreateFragment extends Fragment {
         selectDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 final Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
@@ -182,14 +181,14 @@ public class ParentCreateFragment extends Fragment {
                         month,
                         day);
                 datePickerDialog.show();
-                enableButtons();
+                enableViews();
             }
         });
 
         selectTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 final Calendar c = Calendar.getInstance();
                 int hour = c.get(Calendar.HOUR_OF_DAY);
                 int minute = c.get(Calendar.MINUTE);
@@ -211,7 +210,7 @@ public class ParentCreateFragment extends Fragment {
                         minute,
                         DateFormat.is24HourFormat(getActivity()));
                 timePickerDialog.show();
-                enableButtons();
+                enableViews();
             }
         });
 
@@ -243,7 +242,7 @@ public class ParentCreateFragment extends Fragment {
         createQuestFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 if (!QuestCreationHandler.canCreateQuest(getActivity(),
                         selectedChildId,
                         questType,
@@ -254,7 +253,7 @@ public class ParentCreateFragment extends Fragment {
                         mHour,
                         mMinute,
                         recurrenceType)) {
-                    enableButtons();
+                    enableViews();
                 } else {
 
                     if (token != null && tokenHandler.isParentToken(token)) {
@@ -315,9 +314,6 @@ public class ParentCreateFragment extends Fragment {
                 }
             }
         });
-
-        enableButtons();
-
         return view;
     }
 

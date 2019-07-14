@@ -1,10 +1,8 @@
 package com.chorestory.fragment;
 
-import android.accounts.Account;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +17,15 @@ import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.templates.AccountResponse;
 
+import java.util.Arrays;
+
 import javax.inject.Inject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
-public class ParentProfileFragment extends Fragment {
+public class ParentProfileFragment extends ChoreStoryFragment {
 
     ImageView parentImageView;
     TextView parentNameTextView;
@@ -55,12 +54,18 @@ public class ParentProfileFragment extends Fragment {
         parentEmailTextView = view.findViewById(R.id.parent_email_text_view);
         changePasswordButton = view.findViewById(R.id.change_password_button);
 
-        enableButtons();
+        // TODO: fetch parent info; replace mocked
+        parentImageView.setImageResource(R.drawable.king_color);
+        parentNameTextView.setText("David");
+        clanNameTextView.setText("CS449");
+
+        views = Arrays.asList(addMemberButton, leaveClanButton, changePasswordButton);
+        enableViews();
 
         addMemberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 // TODO: add a member, camera QR code?
             }
         });
@@ -68,7 +73,7 @@ public class ParentProfileFragment extends Fragment {
         leaveClanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 // TODO: determine appropriate behaviour
             }
         });
@@ -76,7 +81,7 @@ public class ParentProfileFragment extends Fragment {
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons();
+                disableViews();
                 // TODO: change user password
             }
         });

@@ -39,6 +39,12 @@
     <string name="pending_quests">Pending Quests</string>
     <string name="completed_quests">Completed Quests</string>
     <string name="quest_details">Quest Details</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="pending">Pending</string>
+    <string name="completed">Completed</string>
+    <string name="stats">Stats</string>
+    <string name="level">Level</string>
+    <string name="exp">EXP</string>
 
     <!-- TODO: remove once it is added to the server -->
     <string-array name="quest_array">

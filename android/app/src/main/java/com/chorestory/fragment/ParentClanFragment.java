@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import com.chorestory.helpers.TokenHandler;
 import com.chorestory.templates.ClanChildrenResponse;
 import com.chorestory.templates.ClanResponse;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ParentClanFragment extends Fragment {
+public class ParentClanFragment extends ChoreStoryFragment {
 
     @Inject
     RetrofitInterface retrofitInference;
@@ -52,6 +52,9 @@ public class ParentClanFragment extends Fragment {
 
         App.getAppComponent().inject(this);
 
+        final String CLAN_NAME = getResources().getString(R.string.clan_name);
+        String clanName = getArguments().getString(CLAN_NAME) + " " + getString(R.string.clan);
+
         clanNameTextView = view.findViewById(R.id.clan_name_text_view);
 
         parentRecyclerView = view.findViewById(R.id.parent_recycler_view);
@@ -67,10 +70,16 @@ public class ParentClanFragment extends Fragment {
         childRecyclerView.setLayoutManager(childLayoutManager);
 
         addClanMemberFab = view.findViewById(R.id.add_clan_member_fab);
+
+        views = Collections.singletonList(addClanMemberFab);
+
+        enableViews();
+
         addClanMemberFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: add a new member, disable button
+                // TODO: add a new member
+                disableViews();
             }
         });
 
