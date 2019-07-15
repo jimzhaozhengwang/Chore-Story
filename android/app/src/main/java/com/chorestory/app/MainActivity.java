@@ -16,6 +16,7 @@ public class MainActivity extends ChoreStoryActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
+
         setContentView(R.layout.activity_main);
 
         // Register Notification Channel
@@ -41,9 +42,20 @@ public class MainActivity extends ChoreStoryActivity {
         childButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: finish childButton's onClickListener
-                //disableButtons();
+                disableButtons();
+                // TODO: open camera to scan QR code
+
+                // if QR code is for child sign up
+                navigateTo(ChildJoinClanActivity.class);
+
+                // if QR code is for child login
+//                navigateTo(ChildHomeActivity.class);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.moveTaskToBack(true);
     }
 }

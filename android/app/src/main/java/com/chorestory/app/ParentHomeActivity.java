@@ -2,21 +2,21 @@ package com.chorestory.app;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
 import com.chorestory.R;
-import com.chorestory.adapter.ParentHomeAdapter;
+import com.chorestory.adapter.HomeAdapter;
 import com.chorestory.fragment.ParentCreateFragment;
 import com.chorestory.fragment.ParentClanFragment;
 import com.chorestory.fragment.ParentProfileFragment;
 import com.chorestory.fragment.ParentQuestsFragment;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ParentHomeActivity extends ChoreStoryActivity {
 
-    private final String CLAN = "Clan";
-    private final String CREATE = "Create";
-    private final String QUEST = "Quests";
-    private final String PROFILE = "Profile";
     private final int[] tabSelectedIcons = {
             R.drawable.castle_color,
             R.drawable.plus_color,
@@ -33,7 +33,7 @@ public class ParentHomeActivity extends ChoreStoryActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-    private ParentHomeAdapter adapter;
+    private HomeAdapter homeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,21 +44,29 @@ public class ParentHomeActivity extends ChoreStoryActivity {
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);
 
-        adapter = new ParentHomeAdapter(getSupportFragmentManager());
-
         final String CLAN_NAME = getResources().getString(R.string.clan_name);
 
         Bundle bundle = new Bundle();
         bundle.putString(CLAN_NAME, getIntent().getStringExtra(CLAN_NAME));
         ParentClanFragment parentClanFragment = new ParentClanFragment();
         parentClanFragment.setArguments(bundle);
-        adapter.addFragment(parentClanFragment, CLAN);
 
-        adapter.addFragment(new ParentCreateFragment(), CREATE);
-        adapter.addFragment(new ParentQuestsFragment(), QUEST);
-        adapter.addFragment(new ParentProfileFragment(), PROFILE);
+        List<Fragment> fragmentList = Arrays.asList(parentClanFragment,
+                new ParentCreateFragment(),
+                new ParentQuestsFragment(),
+                new ParentProfileFragment());
 
-        viewPager.setAdapter(adapter);
+        List<String> fragmentTitleList = Arrays.asList(getString(R.string.clan),
+                getString(R.string.create),
+                getString(R.string.quests),
+                getString(R.string.profile));
+
+        homeAdapter = new HomeAdapter(getSupportFragmentManager(),
+                fragmentList,
+                fragmentTitleList);
+
+
+        viewPager.setAdapter(homeAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
         // Set default icons
@@ -72,13 +80,20 @@ public class ParentHomeActivity extends ChoreStoryActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 tab.setIcon(tabSelectedIcons[tab.getPosition()]);
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 tab.setIcon(tabsUnselectedIcons[tab.getPosition()]);
             }
+
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
     }
-}
 
+    @Override
+    public void onBackPressed() {
+        this.moveTaskToBack(true);
+    }
+}

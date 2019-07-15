@@ -26,6 +26,20 @@
             </intent-filter>
         </service>
         <activity
+            android:name=".app.SplashActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".app.ChildHomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".app.ChildJoinClanActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".app.ParentHomeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -42,14 +56,12 @@
             android:name=".app.ParentLoginSignUpActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".app.ParentQuestDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
             android:name=".app.MainActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -44,8 +44,11 @@ class Parent(UserMixin, db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
     cp_code = db.Column(db.String(37), default=None, unique=True)
+    ch_code = db.Column(db.String(37), default=None, unique=True)
     clan_id = db.Column(db.Integer, db.ForeignKey(f'{clan_table}.id'))
     clan = db.relationship('Clan', back_populates='parents')
+    registration_id = db.Column(db.String(200), default=None, nullable=True)
+    picture = db.Column(db.Integer, default=None, nullable=True)
 
     def __repr__(self):
         return f'Parent {self.name}'
@@ -66,6 +69,7 @@ class Child(UserMixin, db.Model):
     quests = db.relationship('Quest', cascade='all,delete')
     clan_id = db.Column(db.Integer, db.ForeignKey(f'{clan_table}.id'))
     clan = db.relationship('Clan', back_populates='children')
+    registration_id = db.Column(db.String(200), default=None, nullable=True)
 
     def __repr__(self):
         return f'Child {self.name}'

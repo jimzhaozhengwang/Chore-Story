@@ -1,7 +1,5 @@
 package com.chorestory.module;
 
-import android.app.Application;
-
 import com.chorestory.helpers.TokenHandler;
 
 import javax.inject.Singleton;

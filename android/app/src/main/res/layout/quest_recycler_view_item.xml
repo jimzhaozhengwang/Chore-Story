@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border"
+    android:paddingHorizontal="5dp"
+    android:paddingVertical="15dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/quest_image_view"
+        android:layout_width="70dp"
+        android:layout_height="70dp"/>
+
+    <TextView
+        android:id="@+id/quest_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/quest_image_view"
+        android:layout="@id/quest_image_view"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/quest_owner_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_below="@id/quest_name_text_view"
+        android:layout_toEndOf="@id/quest_image_view"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/quest_exp_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_below="@id/quest_name_text_view"
+        android:layout_marginStart="30dp"
+        android:layout_toEndOf="@id/quest_owner_text_view"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/quest_mandatory_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/quest_image_view"
+        android:layout_marginTop="5dp"
+        android:textSize="17sp"
+        android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:id="@+id/quest_due_date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/quest_image_view"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="150dp"
+        android:textSize="17sp" />
+
+</RelativeLayout>

@@ -7,22 +7,10 @@
     android:background="@color/colorPrimary"
     tools:context=".app.CreateClanActivity">
 
-    <EditText
-        android:id="@+id/clan_name_edit_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="170dp"
-        android:ems="10"
-        android:hint="@string/clan_name"
-        android:inputType="text"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:textSize="25sp" />
-
     <include
         layout="@layout/register_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/clan_name_edit_text" />
+        android:layout_marginTop="100dp" />
 
 </RelativeLayout>

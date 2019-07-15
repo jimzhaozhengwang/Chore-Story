@@ -49,7 +49,7 @@ abstract public class ChoreStoryActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    protected void navigateTo(Class<?> cls) {
+    public void navigateTo(Class<?> cls) {
         startActivity(new Intent(this, cls));
     }
 
