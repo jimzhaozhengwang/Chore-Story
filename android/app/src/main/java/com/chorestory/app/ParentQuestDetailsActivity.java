@@ -74,7 +74,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
 
         // TODO set all initial values to actual quest info
         mYear = 1996;
-        mMonth = 10;
+        mMonth = 11;
         mDay = 29;
         mHour = 5;
         mMinute = 30;
@@ -122,6 +122,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        month++; // month is represented by an integer from 0 to 11
                         mDay = dayOfMonth;
                         mMonth = month;
                         mYear = year;
@@ -210,8 +211,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
     }
 
     private String getDateText() {
-        // months used are 0-11
-        return mDay + "-" + (mMonth + 1) + "-" + mYear;
+        return mDay + "-" + mMonth + "-" + mYear;
     }
 
     private String getTimeText() {
