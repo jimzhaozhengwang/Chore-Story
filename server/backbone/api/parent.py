@@ -1,11 +1,13 @@
+import os
 from datetime import datetime
 from uuid import uuid4
 
-from flask import g
+from flask import g, current_app
 from flask_login import current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .helpers import generate_qst_resp, generate_chd_resp, generate_unique_parent_api_key, \
+from ..dialogflow import call_dialogflow
+from .helpers import generate_qst_resp, generate_unique_parent_api_key, \
     generate_unique_child_api_key, child_is_my_child, find_next_time, award_xp_to_child, get_childs_quest_with_window
 from .. import db
 from ..decorators import backbone_error_handle, parent_login_required, json_return, json_content_only
@@ -15,13 +17,13 @@ from ..views import api_bp
 
 
 @api_bp.route('/register', methods=['POST'], defaults={'cp_code': None})
-@api_bp.route('/register/<cp_code>', methods=['POST'], defaults={'clan_name': None})
+@api_bp.route('/register/<string:cp_code>', methods=['POST'], defaults={'clan_name': None})
 @json_content_only
-def register(cp_code, email, name, password, clan_name):
+def register(cp_code, email, name, password, clan_name, picture):
     """
     .. :quickref: User; register a parent account
 
-    Register a new account with ``email``, ``name`` and ``password``.
+    Register a new account with ``email``, ``name``, ``picture`` and ``password``.
     If ``cp_code`` is sent then corresponding parent's children are copied to new parent.
     Note ``clan_name`` can be not excluded, if there is a ``cp_code``.
 
@@ -38,7 +40,8 @@ def register(cp_code, email, name, password, clan_name):
         "email": "example@inter.net",
         "name": "backbone",
         "password": "backbone",
-        "clan_name": "clan_name"
+        "clan_name": "clan_name",
+        "parent": "1"
         }
 
     **Example return**:
@@ -54,12 +57,17 @@ def register(cp_code, email, name, password, clan_name):
     :param password: password of new user
     :param cp_code: co parent code form an already existing parent
     :param clan_name: name of the clan to be added to the database
+    :param picture: id of user's picture
     :return: an api key for this user
     """
     if Parent.query.filter_by(email=email).first():
         raise BackboneException(409, "Email already used")
     # noinspection PyArgumentList
-    new_user = Parent(email=email, name=name, password=generate_password_hash(password), clan_id=clan_name)
+    new_user = Parent(email=email,
+                      name=name,
+                      password=generate_password_hash(password),
+                      clan_id=clan_name,
+                      picture=picture)
     if cp_code:
         other_parent = Parent.query.filter_by(cp_code=cp_code).first()
         if not other_parent:
@@ -125,47 +133,33 @@ def login(email, password):
 
 @api_bp.route('/child', methods=['POST'])
 @parent_login_required
-@json_content_only
-def add_child(name, username):
+@backbone_error_handle
+def add_child():
     """
     .. :quickref: Child; add a child account
 
     Creates a new child account associated with current parent account.
+    Note: only one of these can be registered at a time.
 
     **Parent login required**
-
-    **Example post body**:
-
-    .. code-block:: json
-
-        {
-        "name": "Jim",
-        "username": "beastmaster69"
-        }
 
     **Example return**:
 
     .. code-block:: json
 
         {
-          "data": {
-            "clan_name": "Marky Mark",
-            "id": 1,
-            "level": 42,
-            "name": "Jim",
-            "username": "beastmaster69",
-            "xp": 0
-          }
+          "data": "1fbb1906-c79c-4db4-a701-a059440ab543"
         }
 
-    :param name: name of child
     :return: a description of the new child
     """
-    # noinspection PyArgumentList
-    new_child = Child(level=1, xp=0, name=name, username=username, clan_id=current_user.clan_id)
-    db.session.add(new_child)
+    new_ch_code = str(uuid4())
+    # make sure it's a unique cp_code
+    while Parent.query.filter_by(ch_code=new_ch_code).first() is not None:
+        new_ch_code = str(uuid4())
+    current_user.ch_code = str(new_ch_code)
     db.session.commit()
-    return generate_chd_resp(new_child)
+    return json_return(new_ch_code)
 
 
 @api_bp.route('/child/<int:cid>/delete', methods=['POST'])
@@ -202,7 +196,7 @@ def delete_child(cid):
     return json_return(Child.query.filter_by(id=cid).first() is None)
 
 
-@api_bp.route('/child_login/<int:cid>', methods=['GET'])
+@api_bp.route('/child/<int:cid>/login', methods=['GET'])
 @parent_login_required
 @backbone_error_handle
 def generate_child_login(cid):
@@ -238,7 +232,7 @@ def generate_child_login(cid):
     return json_return(child.api_key)
 
 
-@api_bp.route('/quest', methods=['POST'])
+@api_bp.route('/child/<int:cid>/quest', methods=['POST'])
 @parent_login_required
 @json_content_only
 def add_quest(cid, title, description, reward, due, needs_verification, timestamps=None):
@@ -254,7 +248,6 @@ def add_quest(cid, title, description, reward, due, needs_verification, timestam
     .. code-block:: json
 
         {
-         "cid": 1,
          "title": "Brush your teeth",
          "description": "You're going on a quest to save the princess, brush your teeth.",
          "reward": 2,
@@ -317,6 +310,55 @@ def add_quest(cid, title, description, reward, due, needs_verification, timestam
     db.session.add(new_quest)
     db.session.commit()
     return generate_qst_resp(new_quest)
+
+
+@api_bp.route('/quest/text', methods=['POST'])
+@parent_login_required
+@json_content_only
+def parse_quest_test(text):
+    """
+    .. :quickref: Quest; parse a quest addition command into quest fields
+
+    Parse a quest addition command into separate fields.
+
+    **Parent login required**
+
+    **Example post body**:
+
+    .. code-block:: json
+
+        {
+         "text": "Add a quest for drawing a circle Sunday evening to Mark for 5 points"
+        }
+
+    **Errors**:
+
+    404, Cannot parse - either there's no GOOGLE_APPLICATION_CREDENTIALS, or is missing DIALOGFLOW_PROJECT_ID
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": {
+            "child": "Mark",
+            "experience_point": 5.0,
+            "quest": "drawing a circle",
+            "time": {
+              "endDateTime": "2019-07-07T23:59:59-04:00",
+              "startDateTime": "2019-07-07T17:00:00-04:00"
+            }
+          }
+        }
+
+
+    :param text: a text transcription of a quest addition command
+    :return: separate fields in a json
+    """
+    if ('DIALOGFLOW_PROJECT_ID' not in current_app.config or
+            'GOOGLE_APPLICATION_CREDENTIALS' not in os.environ):
+        raise BackboneException(404, "Cannot parse")
+    return call_dialogflow(text)
 
 
 @api_bp.route('/quest/<int:qid>', methods=['POST'])
@@ -435,7 +477,7 @@ def delete_quest(qid):
     return json_return(Quest.query.filter_by(id=qid).first() is None)
 
 
-@api_bp.route('/generate_cp_code', methods=['POST'])
+@api_bp.route('/parent', methods=['POST'])
 @parent_login_required
 @backbone_error_handle
 def add_co_parent():
@@ -454,8 +496,6 @@ def add_co_parent():
 
     :return: new co parent registration code to be used in the ``/api/register`` end-point.
     """
-    # even though we did not authenticate by a header, let's skip adding cookie to the response
-    g.login_via_request = True
     new_cp_code = str(uuid4())
     # make sure it's a unique cp_code
     while Parent.query.filter_by(cp_code=new_cp_code).first() is not None:
@@ -506,7 +546,7 @@ def get_child_quests(cid):
     """
     .. :quickref: Quest; get all quests of a child
 
-    Returns the list of a child's quests' ids.
+    Returns the list of a child's quests.
 
     **Parent login required**
 
@@ -516,7 +556,17 @@ def get_child_quests(cid):
 
         {
           "data": [
-            1
+            {
+              "completed_on": null,
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1559250000.0,
+              "id": 1,
+              "needs_verification": true,
+              "recurring": false,
+              "reward": 99,
+              "title": "This is the initial quest",
+              "verified_on": null
+            }
           ]
         }
 
@@ -525,7 +575,7 @@ def get_child_quests(cid):
     child = Child.query.filter_by(id=cid).first()
     if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
-    return json_return([q.id for q in child.quests])
+    return json_return([generate_qst_resp(q) for q in child.quests])
 
 
 @api_bp.route('/child/<int:cid>/quest/<float:start>', methods=['GET'], defaults={'lookahead': 86400.0})
@@ -546,8 +596,17 @@ def get_child_quests_window(cid, start, lookahead):
 
         {
           "data": [
-            1,
-            2
+            {
+              "completed_on": null,
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1559250000.0,
+              "id": 1,
+              "needs_verification": true,
+              "recurring": false,
+              "reward": 99,
+              "title": "This is the initial quest",
+              "verified_on": null
+            }
           ]
         }
 
@@ -559,7 +618,8 @@ def get_child_quests_window(cid, start, lookahead):
     child = Child.query.filter_by(id=cid).first()
     if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
-    return json_return(get_childs_quest_with_window(start, lookahead))
+    quests = get_childs_quest_with_window(child, start, lookahead)
+    return json_return([generate_qst_resp(q) for q in quests])
 
 
 @api_bp.route('/quest/<int:qid>/verify', methods=['POST'], defaults={'ts': None})
@@ -602,7 +662,7 @@ def verify_quest_completion(qid, ts):
 
     :param qid: id of quest to be completed
     :param ts: timestamp the quest needs to be completed by
-    :return: quest description with ``lvled_up`` and ``completed_now`` filds added
+    :return: quest description with ``lvled_up`` and ``completed_now`` fields added
     """
     quest = Quest.query.filter_by(id=qid).first()
     quest_owner = Child.query.filter_by(id=quest.owner).first()
@@ -627,3 +687,51 @@ def verify_quest_completion(qid, ts):
         'qst': generate_qst_resp(quest, ts)
     }
     return json_return(resp)
+
+
+@api_bp.route('/child_quest/<float:start>', methods=['GET'], defaults={'lookahead': 86400.0})
+@api_bp.route('/child_quest/<float:start>/<float:lookahead>', methods=['GET'])
+@parent_login_required
+@backbone_error_handle
+def get_all_quests_in_window(start, lookahead):
+    """
+    .. :quickref: quest; get all children's quests in window
+
+    Get all children's quests information in a window with the added information of the
+    owner of the quest (id and name).
+
+    **Parent login required**
+
+    **Example return**:
+
+    .. code-block:: json
+
+        {
+          "data": [
+            {
+              "completed_on": null,
+              "description": "You're going on a quest to save the princess, brush your teeth so you don't embarrass yourself.",
+              "due": 1563008544.0,
+              "id": 1,
+              "needs_verification": true,
+              "owner": {
+                "id": 1,
+                "name": "Amanda"
+              },
+              "recurring": false,
+              "reward": 99,
+              "title": "This is the initial quest",
+              "verified_on": null
+            }
+          ]
+        }
+
+    :param ts: timestamp the quest needs to be completed by
+    :param lookahead: length of lookahead window in seconds
+    :return: list of quest description with ``lvled_up``, ``completed_now`` fields and owner info added
+    """
+    all_quests = []
+    for child in current_user.clan.children:
+        all_quests.extend([{'owner': {'id': child.id, 'name': child.name},
+                            **generate_qst_resp(q)} for q in get_childs_quest_with_window(child, start, lookahead)])
+    return json_return(all_quests)

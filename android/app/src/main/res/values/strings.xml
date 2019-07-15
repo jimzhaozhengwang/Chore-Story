@@ -22,6 +22,7 @@
     <string name="optional">Optional</string>
     <string name="description">Description</string>
     <string name="clan">Clan</string>
+    <string name="clan_title">%1$s Clan</string>
     <string name="name">Name</string>
     <string name="members">Members</string>
     <string name="add_a_member">Add a member</string>
@@ -29,6 +30,7 @@
     <string name="account">Account</string>
     <string name="email">Email</string>
     <string name="change_password">Change password</string>
+    <string name="notification_channel_id">notification_channel</string>
     <string name="friends">Friends</string>
     <string name="quests">Quests</string>
     <string name="profile">Profile</string>
@@ -50,6 +52,12 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="pending">Pending</string>
+    <string name="completed">Completed</string>
+    <string name="stats">Stats</string>
+    <string name="level">Level</string>
+    <string name="exp">EXP</string>
 
     <!-- TODO: remove once it is added to the server -->
     <string-array name="quest_array">
@@ -78,12 +86,6 @@
         <item>Winterize the house</item>
         <item>Clean garage</item>
         <item>Prune trees and shrubs</item>
-    </string-array>
-
-    <!-- TODO: remove this; fetch instead -->
-    <string-array name="child_array">
-        <item>Select a child</item>
-        <item>Child 1</item>
     </string-array>
 
     <string-array name="recurrence_array">

@@ -4,14 +4,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ParentQuestsAdapter extends FragmentStatePagerAdapter {
+public class QuestsAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> fragmentList;
     private List<String> fragmentTitleList;
 
-    public ParentQuestsAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList, List<String> fragmentTitleList) {
+    public QuestsAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList, List<String> fragmentTitleList) {
         super(fragmentManager);
         this.fragmentList = fragmentList;
         this.fragmentTitleList = fragmentTitleList;
