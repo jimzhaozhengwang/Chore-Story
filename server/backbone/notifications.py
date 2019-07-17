@@ -19,7 +19,9 @@ class Notification(ABC):
   
   def send_notification(self):
     if (self.should_send_notification()):
-      return self.push_service.notify_single_device(registration_id=self.receiver.registration_id, message_title=self.message_title, message_body=self.message_body)
+      return self.push_service.notify_single_device(registration_id=self.receiver.registration_id,
+                                                    message_title=self.message_title,
+                                                    message_body=self.message_body)
     else:
       return False
 
