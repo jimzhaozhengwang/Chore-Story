@@ -45,6 +45,10 @@
     <string name="stats">Stats</string>
     <string name="level">Level</string>
     <string name="exp">EXP</string>
+    <string name="add_a_parent_guardian">Add a parent/Guardian</string>
+    <string name="add_a_child">Add a child</string>
+    <string name="qr_code">QR Code</string>
+    <string name="unable_to_detect_qr_code">Unable to detect QR code</string>
 
     <!-- TODO: remove once it is added to the server -->
     <string-array name="quest_array">

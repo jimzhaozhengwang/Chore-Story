@@ -1,6 +1,8 @@
 package com.chorestory.fragment;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import androidx.fragment.app.Fragment;
 import android.view.View;
 
 import java.util.List;
@@ -28,5 +30,15 @@ abstract public class ChoreStoryFragment extends Fragment {
 
     protected void disableViews() {
         setViewsEnabled(false);
+    }
+
+    protected void navigateTo(Context context, Class<?> toClass) {
+        startActivity(new Intent(context, toClass));
+    }
+
+    protected void navigateTo(Context context, Class<?> toClass, String key, String value) {
+        Intent intent = new Intent(context, toClass);
+        intent.putExtra(key, value);
+        startActivity(intent);
     }
 }
