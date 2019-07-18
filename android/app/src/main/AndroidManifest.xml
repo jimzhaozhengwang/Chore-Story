@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_channel_id"
+        android:value="@string/notification_channel_id" />
+
     <application
         android:name=".app.App"
         android:allowBackup="true"
@@ -29,6 +33,16 @@
         <activity
             android:name=".app.QrCodeActivity"
             android:screenOrientation="portrait" />
+
+        <service
+            android:name=".services.NotificationService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".app.SplashActivity"
             android:screenOrientation="portrait">

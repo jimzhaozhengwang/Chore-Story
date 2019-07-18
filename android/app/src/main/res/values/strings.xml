@@ -30,6 +30,7 @@
     <string name="account">Account</string>
     <string name="email">Email</string>
     <string name="change_password">Change password</string>
+    <string name="notification_channel_id">notification_channel</string>
     <string name="friends">Friends</string>
     <string name="quests">Quests</string>
     <string name="profile">Profile</string>
@@ -39,9 +40,18 @@
     <string name="pending_quests">Pending Quests</string>
     <string name="completed_quests">Completed Quests</string>
     <string name="quest_details">Quest Details</string>
+    <string name="pending_approval">Pending Approval</string>
+    <string name="completed">Completed</string>
+    <string name="overdue">Overdue</string>
     <string name="upcoming">Upcoming</string>
     <string name="pending">Pending</string>
-    <string name="completed">Completed</string>
+    <string name="view_proof">View Proof</string>
+    <string name="due_date">Due Date</string>
+    <string name="due_time">Due Time</string>
+    <string name="recurrence">Recurrence</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
     <string name="stats">Stats</string>
     <string name="level">Level</string>
     <string name="exp">EXP</string>
@@ -49,6 +59,7 @@
     <string name="add_a_child">Add a child</string>
     <string name="qr_code">QR Code</string>
     <string name="unable_to_detect_qr_code">Unable to detect QR code</string>
+
 
     <!-- TODO: remove once it is added to the server -->
     <string-array name="quest_array">

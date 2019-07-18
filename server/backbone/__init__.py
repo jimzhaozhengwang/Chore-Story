@@ -7,24 +7,41 @@ from .db import db
 from . import api
 
 
-def grab_secret_key():
+def grab_file_content(name, required):
     import os
     import sys
-    path = os.path.join(os.path.dirname(__file__), 'secret_key.txt')
+    path = os.path.join(os.path.dirname(__file__), name)
     if not os.path.exists(path):
-        print("secret_key.txt file is missing, we need this to start backbone", file=sys.stderr)
-        exit(200)
-    with open(path, 'r') as f:
-        try:
-            return f.read().strip()
-        except IOError:
-            print("secret_key.txt file could not be read, we need this to start backbone", file=sys.stderr)
+        if required:
+            print(f"{name} file is missing, we need this file", file=sys.stderr)
             exit(200)
+        else:
+            return None
+    try:
+        with open(path, 'r') as f:
+            return f.read().strip()
+    except (IOError, FileNotFoundError):
+        if required:
+            print(f"{name} file could not be read, we need this file", file=sys.stderr)
+            exit(200)
+        else:
+            return None
+
+
+def grab_secret_key():
+    return grab_file_content('secret_key.txt', True)
+
+
+def grab_project_id():
+    return grab_file_content('project_id.txt', False)
 
 
 def create_app():
     app = Flask(__name__)
 
+    project_id = grab_project_id()
+    if project_id:
+        app.config['DIALOGFLOW_PROJECT_ID'] = project_id
     app.config['SECRET_KEY'] = grab_secret_key()
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
