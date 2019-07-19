@@ -120,6 +120,8 @@ def child_is_me_or_my_friend(child_obj):
 
 def find_next_time(qst, time_now=datetime.utcnow()):
     """Helper function to find next occurrence of a quest"""
+    if isinstance(time_now, float):
+        time_now = datetime.fromtimestamp(time_now)
     if not qst.recurring:
         return qst.due
     time = qst.due
@@ -174,7 +176,7 @@ def generate_unique_api_key_for(cls):
 
 def get_childs_quest_with_window(child, start, lookahead):
     """This helper function generates a list of the descriptions of a child's quests due in the time window."""
-    start = datetime.utcfromtimestamp(start)
+    start = datetime.fromtimestamp(start)
     end = start + timedelta(seconds=lookahead)
 
     # Get one time quests in window
