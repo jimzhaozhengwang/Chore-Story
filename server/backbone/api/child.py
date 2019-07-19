@@ -228,7 +228,7 @@ def get_quests(start, lookahead):
     :return: list of quest ids
     """
     quests = get_childs_quest_with_window(current_user, start, lookahead)
-    return json_return([generate_qst_resp(q) for q in quests])
+    return json_return([generate_qst_resp(q, ts) for q, ts in quests])
 
 
 @api_bp.route('/child/<string:ch_code>', methods=['POST'])

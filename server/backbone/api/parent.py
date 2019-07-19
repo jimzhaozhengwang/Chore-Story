@@ -619,7 +619,7 @@ def get_child_quests_window(cid, start, lookahead):
     if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
     quests = get_childs_quest_with_window(child, start, lookahead)
-    return json_return([generate_qst_resp(q, start) for q in quests])
+    return json_return([generate_qst_resp(q, ts) for q, ts in quests])
 
 
 @api_bp.route('/quest/<int:qid>/verify', methods=['POST'], defaults={'ts': None})
