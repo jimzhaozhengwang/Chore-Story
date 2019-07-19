@@ -4,6 +4,9 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +24,7 @@ import android.widget.TimePicker;
 
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
+import com.chorestory.adapter.HomeAdapter;
 import com.chorestory.app.App;
 import com.chorestory.helpers.QuestCreationHandler;
 import com.chorestory.helpers.Toaster;
@@ -76,6 +80,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
     private String recurrenceType;
     private boolean mandatory;
     private String description;
+    private ViewPager viewPager;
 
     private String token;
     private List<Child> fragmentChildList;
@@ -102,6 +107,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
         description = "";
 
         childSpinner = view.findViewById(R.id.child_spinner);
+        viewPager = getActivity().findViewById(R.id.view_pager);
 
         questSpinner = view.findViewById(R.id.quest_spinner);
 
@@ -293,9 +299,10 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                             public void onResponse(Call<QuestCreateResponse> call, Response<QuestCreateResponse> response) {
                                 if (response.isSuccessful()) {
                                     Toaster.showToast(getContext(), "Successfully created quest!");
-
-                                    // TODO: Go to quest page
-
+                                    // go to quests fragment and refresh
+                                    viewPager.setCurrentItem(2);
+                                    HomeAdapter homeAdapter = (HomeAdapter) viewPager.getAdapter();
+                                    homeAdapter.getItem(2).onResume();
                                 } else {
                                     Toaster.showToast(getContext(), "Something went wrong.");
                                     // TODO: re-enable buttons
