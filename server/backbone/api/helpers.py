@@ -50,6 +50,8 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
     d = {}
     for e in ['title', 'description', 'reward', 'due', 'id', 'recurring', 'needs_verification']:
         d[e] = getattr(qst, e)
+    # Add timestamps
+    d['timestamps'] = [t.value for t in qst.timestamps]
     # Add extra values that we don't store in database
     looking_for = find_next_time(qst, ts) if qst.recurring else qst.due
     d['due'] = datetime.timestamp(d['due'])
