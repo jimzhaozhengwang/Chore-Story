@@ -52,7 +52,7 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
         String owner = currentItem.getOwner() + "'s quest";
         myViewHolder.questOwnerTextView.setText(owner);
         // Quest Exp
-        String exp = currentItem.getExp() + " " + "EXP";
+        String exp = currentItem.getExp() + " Exp";
         myViewHolder.questExpTextView.setText(exp);
         // Quest due date
         myViewHolder.questDueDateTextView.setText("Due " + currentItem.getDueDateString());
