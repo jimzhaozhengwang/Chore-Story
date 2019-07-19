@@ -2,6 +2,7 @@ package com.chorestory.app;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,7 +45,7 @@ public class QrCodeActivity extends ChoreStoryActivity {
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
             qrCodeImageView.setImageBitmap(bitmap);
         } catch (WriterException e) {
-            e.printStackTrace();
+            Log.e(this.getString(R.string.debug), e.toString());
         }
     }
 }
