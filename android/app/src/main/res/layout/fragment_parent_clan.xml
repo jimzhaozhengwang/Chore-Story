@@ -6,11 +6,11 @@
     <!-- TODO: add settings button -->
     <include layout="@layout/clan_tab"/>
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_clan_member_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,6 +19,6 @@
             android:layout_margin="15dp"
             android:src="@mipmap/ic_launcher" /> <!-- TODO: change icon -->
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>

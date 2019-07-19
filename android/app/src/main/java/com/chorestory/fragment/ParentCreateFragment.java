@@ -3,7 +3,7 @@ package com.chorestory.fragment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
