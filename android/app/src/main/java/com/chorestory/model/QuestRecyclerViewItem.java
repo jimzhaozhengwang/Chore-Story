@@ -16,6 +16,8 @@ public class QuestRecyclerViewItem {
     private String description;
     private boolean mandatory;
     private int dueDate;
+    private boolean recurring;
+    private int nextOccurrence;
 
     public static List<QuestRecyclerViewItem> getData(ArrayList<QuestParcelable> questParcelables) {
         List<QuestRecyclerViewItem> dataList = new ArrayList<>();
@@ -33,6 +35,8 @@ public class QuestRecyclerViewItem {
         this.description = quest.getDescription();
         this.mandatory = true;
         this.dueDate = quest.getDue();
+        this.recurring = quest.getReccurring();
+        this.nextOccurrence = quest.getNextOccurrence();
     }
 
     public String getName() {
@@ -95,8 +99,12 @@ public class QuestRecyclerViewItem {
 
     public String getDueDateString() {
         long currentTime = System.currentTimeMillis();
-        long dueDateMilli = ((long) dueDate) * 1000;
-        System.out.println("SEC: " + dueDate + " DUE DATE (milli): "+ dueDateMilli + " currtime: " + currentTime);
+        long dueDateMilli;
+        if (recurring) {
+            dueDateMilli = ((long) nextOccurrence) * 1000;
+        } else{
+            dueDateMilli = ((long) dueDate) * 1000;
+        }
         return (String) DateUtils.getRelativeTimeSpanString(dueDateMilli, currentTime, 0L, DateUtils.FORMAT_ABBREV_ALL);
     }
 }
