@@ -92,14 +92,13 @@ public class ChildFriendsFragment extends ChoreStoryFragment {
                             addFriendEditText.setText("");
                             getChildren();
                         } else {
-                            // TODO: friend doesn't exist
                             Toaster.showToast(getContext(), "Friend not found");
                         }
                     }
 
                     @Override
                     public void onFailure(Call<AddFriendResponse> call, Throwable t) {
-                        // TODO: delete the token we have stored and redirect the user to the login page?
+                        Toaster.showToast(getContext(), "Internal error occurred.");
                     }
                 });
             } else {
