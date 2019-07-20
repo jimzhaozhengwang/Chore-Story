@@ -470,7 +470,7 @@ def delete_quest(qid):
     if not quest:
         raise BackboneException(404, "Quest not found")
     owner = Child.query.filter_by(id=quest.owner).first()
-    if not owner or owner not in current_user.children:
+    if not child_is_my_child(owner):
         raise BackboneException(404, "Quest not found")
     db.session.delete(quest)
     db.session.commit()
