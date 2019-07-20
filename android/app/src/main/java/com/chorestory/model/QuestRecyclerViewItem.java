@@ -1,5 +1,7 @@
 package com.chorestory.model;
 
+import android.text.format.DateUtils;
+
 import com.chorestory.R;
 import com.chorestory.helpers.QuestCompletion;
 
@@ -9,38 +11,69 @@ import java.util.List;
 public class QuestRecyclerViewItem {
 
     private String name;
-    private int imageId;
     private int exp;
     private String owner;
     private String description;
     private boolean mandatory;
     private int dueDate;
+    private boolean recurring;
+    private int nextOccurrence;
 
-    public static List<QuestRecyclerViewItem> getData(QuestCompletion questCompletion) {
+    public static List<QuestRecyclerViewItem> getData(ArrayList<QuestParcelable> questParcelables) {
         List<QuestRecyclerViewItem> dataList = new ArrayList<>();
-        // TODO: fetch quests using QuestCompletion
-        for (int i = 0; i < 2; ++i) {
-            QuestRecyclerViewItem item = new QuestRecyclerViewItem("Sweep the floor", R.drawable.broom, 30, "Isabelle", "sweep it for 10 hours plz", true, 5);
+        for (int i = 0; i < questParcelables.size(); i++) {
+            QuestRecyclerViewItem item = new QuestRecyclerViewItem(questParcelables.get(i));
             dataList.add(item);
         }
         return dataList;
     }
 
-    QuestRecyclerViewItem(String name, int imageId, int exp, String owner, String description, boolean mandatory, int dueDate) {
-        this.name = name;
-        this.imageId = imageId;
-        this.exp = exp;
-        this.owner = owner;
-        this.description = description;
-        this.mandatory = mandatory;
-        this.dueDate = dueDate;
+    QuestRecyclerViewItem(QuestParcelable quest) {
+        this.name = quest.getTitle();
+        this.exp = quest.getReward();
+        this.owner = quest.getOwnerName();
+        this.description = quest.getDescription();
+        this.mandatory = true;
+        this.dueDate = quest.getDue();
+        this.recurring = quest.getReccurring();
+        this.nextOccurrence = quest.getNextOccurrence();
     }
 
     public String getName() {
         return name;
     }
 
+    private boolean stringContainsItemFromList(String inputStr, String[] items) {
+        for(int i =0; i < items.length; i++) {
+            if (inputStr.contains(items[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int getImageId() {
+        String lowerName = name.toLowerCase();
+        int imageId;
+        if (stringContainsItemFromList(lowerName, new String[]{"laundry", "washer", "dryer"})) imageId = R.drawable.washing_machine;
+        else if (stringContainsItemFromList(lowerName, new String[]{"fold"})) imageId = R.drawable.laundry;
+        else if (stringContainsItemFromList(lowerName, new String[]{"dish"})) imageId = R.drawable.washing_plate;
+        else if (stringContainsItemFromList(lowerName, new String[]{"meal", "food"})) imageId = R.drawable.dish;
+        else if (stringContainsItemFromList(lowerName, new String[]{"dust"})) imageId = R.drawable.dusting;
+        else if (stringContainsItemFromList(lowerName, new String[]{"mop"})) imageId = R.drawable.floor_mop;
+        else if (stringContainsItemFromList(lowerName, new String[]{"paint"})) imageId = R.drawable.paint;
+        else if (stringContainsItemFromList(lowerName, new String[]{"garbage", "trash", "rubbish", "recycl", "throw"})) imageId = R.drawable.garbage;
+        else if (stringContainsItemFromList(lowerName, new String[]{"plant", "garden"})) imageId = R.drawable.garden_hose;
+        else if (stringContainsItemFromList(lowerName, new String[]{"iron", "press"})) imageId = R.drawable.iron;
+        else if (stringContainsItemFromList(lowerName, new String[]{"lawn", "grass", "mow"})) imageId = R.drawable.lawn_mower;
+        else if (stringContainsItemFromList(lowerName, new String[]{"paint"})) imageId = R.drawable.paint;
+        else if (stringContainsItemFromList(lowerName, new String[]{"shower, teeth"})) imageId = R.drawable.shower;
+        else if (stringContainsItemFromList(lowerName, new String[]{"rak"})) imageId = R.drawable.rake;
+        else if (stringContainsItemFromList(lowerName, new String[]{"toilet", "washroom", "bathroom"})) imageId = R.drawable.toilet;
+        else if (stringContainsItemFromList(lowerName, new String[]{"vacuum"})) imageId = R.drawable.vacuum;
+        else if (stringContainsItemFromList(lowerName, new String[]{"sweep", "broom"})) imageId = R.drawable.broom;
+        else if (stringContainsItemFromList(lowerName, new String[]{"room", "tidy"})) imageId = R.drawable.room;
+        else imageId = R.drawable.house;
         return imageId;
     }
 
@@ -64,4 +97,14 @@ public class QuestRecyclerViewItem {
         return dueDate;
     }
 
+    public String getDueDateString() {
+        long currentTime = System.currentTimeMillis();
+        long dueDateMilli;
+        if (recurring) {
+            dueDateMilli = ((long) nextOccurrence) * 1000;
+        } else{
+            dueDateMilli = ((long) dueDate) * 1000;
+        }
+        return (String) DateUtils.getRelativeTimeSpanString(dueDateMilli, currentTime, 0L, DateUtils.FORMAT_ABBREV_ALL);
+    }
 }

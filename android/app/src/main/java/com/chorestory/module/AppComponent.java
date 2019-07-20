@@ -15,6 +15,7 @@ import com.chorestory.app.SplashActivity;
 import com.chorestory.fragment.ParentClanFragment;
 import com.chorestory.fragment.ParentCreateFragment;
 import com.chorestory.fragment.ParentProfileFragment;
+import com.chorestory.fragment.ParentQuestsFragment;
 
 import javax.inject.Singleton;
 
@@ -46,6 +47,8 @@ public interface AppComponent {
     void inject(ParentProfileFragment fragment);
 
     void inject(ParentCreateFragment fragment);
+
+    void inject(ParentQuestsFragment fragment);
 
     void inject(SplashActivity activity);
 
