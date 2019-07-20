@@ -4,13 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.viewpager.widget.ViewPager;
+
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.adapter.HomeAdapter;
@@ -41,6 +36,7 @@ import com.chorestory.templates.AccountResponse;
 import com.chorestory.templates.AccountResponse.Data.Child;
 import com.chorestory.templates.QuestCreateRequest;
 import com.chorestory.templates.QuestCreateResponse;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -76,7 +72,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
     private TextView timeTextView;
     private Button selectTimeButton;
     private Spinner recurrenceSpinner;
-    private CheckBox mandatoryCheckBox;
+    private CheckBox needsVerificationCheckBox;
     private EditText descriptionEditText;
     private FloatingActionButton createQuestFab;
 
@@ -91,7 +87,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
     private int mHour;
     private int mMinute;
     private String recurrenceType;
-    private boolean mandatory;
+    private boolean needsVerification;
     private String description;
     private ViewPager viewPager;
 
@@ -117,6 +113,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
         mHour = -1;
         mMinute = -1;
         recurrenceType = null;
+        needsVerification = false;
         description = "";
 
         childSpinner = view.findViewById(R.id.child_spinner);
@@ -139,7 +136,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
 
         recurrenceSpinner = view.findViewById(R.id.recurrence_spinner);
 
-        mandatoryCheckBox = view.findViewById(R.id.mandatory_check_box);
+        needsVerificationCheckBox = view.findViewById(R.id.needs_verification_check_box);
 
         descriptionEditText = view.findViewById(R.id.description_edit_text);
 
@@ -264,10 +261,10 @@ public class ParentCreateFragment extends ChoreStoryFragment {
             }
         });
 
-        mandatoryCheckBox.setOnClickListener(new View.OnClickListener() {
+        needsVerificationCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mandatory = mandatoryCheckBox.isChecked();
+                needsVerification = needsVerificationCheckBox.isChecked();
             }
         });
 
@@ -312,7 +309,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                                 exp,
                                 timestamp,
                                 dueDate.getTime() / 1000,
-                                mandatory
+                                needsVerification
                         );
 
                         Call<QuestCreateResponse> questCreateQuery = retrofitInterface.create_quest(

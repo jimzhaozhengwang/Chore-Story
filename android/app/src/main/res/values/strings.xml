@@ -18,7 +18,7 @@
     <string name="select_date">Select Date</string>
     <string name="select_time">Select Time</string>
     <string name="does_not_repeat">Does not repeat</string>
-    <string name="mandatory">Mandatory</string>
+    <string name="verification_required">Verification Required</string>
     <string name="optional">Optional</string>
     <string name="description">Description</string>
     <string name="clan">Clan</string>
