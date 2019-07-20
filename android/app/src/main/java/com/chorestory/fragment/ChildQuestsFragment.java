@@ -1,10 +1,13 @@
 package com.chorestory.fragment;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.viewpager.widget.ViewPager;
 
 import com.chorestory.model.QuestParcelable;
@@ -42,7 +45,7 @@ public class ChildQuestsFragment extends ChoreStoryFragment {
         Bundle bundle = new Bundle();
         // TODO: make request to get quests
         ArrayList<QuestParcelable> questParcelables = new ArrayList<>();
-        bundle.putParcelableArrayList("all_quests", questParcelables);
+        bundle.putParcelableArrayList(getString(R.string.all_quests), questParcelables);
 
         QuestsUpcomingFragment questsUpcomingFragment = new QuestsUpcomingFragment();
         questsUpcomingFragment.setArguments(bundle);

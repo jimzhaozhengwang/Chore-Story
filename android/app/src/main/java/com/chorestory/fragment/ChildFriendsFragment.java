@@ -1,6 +1,7 @@
 package com.chorestory.fragment;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.chorestory.templates.AddFriendResponse;
 import com.chorestory.templates.ClanChildrenResponse;
 import com.chorestory.templates.ClanChildrenResponse.Children;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,6 +55,7 @@ public class ChildFriendsFragment extends ChoreStoryFragment {
         addFriendButton = view.findViewById(R.id.add_friend_button);
         addFriendEditText = view.findViewById(R.id.add_friend_edit_text);
         childRecyclerView.setHasFixedSize(true);
+        views = Arrays.asList(addFriendButton);
 
         childLayoutManager = new LinearLayoutManager(getActivity());
         childRecyclerView.setLayoutManager(childLayoutManager);
@@ -61,8 +64,14 @@ public class ChildFriendsFragment extends ChoreStoryFragment {
         addFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                disableViews();
                 String username = addFriendEditText.getText().toString();
-                addFriend(username);
+                if (username.trim().length() > 0) {
+                    addFriend(username);
+                } else {
+                    Toaster.showToast(getContext(), "Please enter a username");
+                }
+                enableViews();
             }
         });
 
@@ -124,7 +133,6 @@ public class ChildFriendsFragment extends ChoreStoryFragment {
                 // TODO: redirect to login page
             }
         }
-
     }
 
     @Override

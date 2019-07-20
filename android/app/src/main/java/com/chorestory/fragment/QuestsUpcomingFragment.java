@@ -32,7 +32,7 @@ public class QuestsUpcomingFragment extends ChoreStoryFragment {
         View view = inflater.inflate(R.layout.fragment_quests_upcoming, container, false);
 
         Bundle bundle = this.getArguments();
-        ArrayList<QuestParcelable> questParcelables = bundle.getParcelableArrayList("all_quests");
+        ArrayList<QuestParcelable> questParcelables = bundle.getParcelableArrayList(getString(R.string.all_quests));
 
         // Overdue Quests
         overdueQuestsRecyclerView = view.findViewById(R.id.overdue_quests_recycler_view);
