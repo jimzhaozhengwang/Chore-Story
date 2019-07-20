@@ -1,6 +1,8 @@
 package com.chorestory.adapter;
 
 import android.content.Intent;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +12,22 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chorestory.R;
+import com.chorestory.app.App;
+import com.chorestory.app.ChildQuestDetailsActivity;
 import com.chorestory.app.ChoreStoryActivity;
 import com.chorestory.app.ParentQuestDetailsActivity;
+import com.chorestory.helpers.TokenHandler;
 import com.chorestory.model.QuestRecyclerViewItem;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 
 public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecyclerViewAdapter.MyViewHolder> {
+
+    @Inject
+    TokenHandler tokenHandler;
 
     private List<QuestRecyclerViewItem> itemList;
     private ChoreStoryActivity activity;
@@ -26,13 +36,20 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
     public QuestRecyclerViewAdapter(List<QuestRecyclerViewItem> itemList, ChoreStoryActivity activity) {
         this.itemList = itemList;
         this.activity = activity;
+        App.getAppComponent().inject(this);
         onItemClickListener = new View.OnClickListener() {
             public void onClick(View view) {
                 RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                 int position = viewHolder.getAdapterPosition();
                 QuestRecyclerViewItem currentItem = itemList.get(position);
                 int id = currentItem.getId();
-                Intent intent = new Intent(activity, ParentQuestDetailsActivity.class);
+              
+                Intent intent;
+                if (tokenHandler.isParentToken(token)) {
+                    intent = new Intent(activity, ParentQuestDetailsActivity.class);
+                } else {
+                    intent = new Intent(activity, ChildQuestDetailsActivity.class);
+                }
                 intent.putExtra(activity.getResources().getString(R.string.qid), currentItem.getId());
                 intent.putExtra(activity.getResources().getString(R.string.ownerName), currentItem.getOwner());
                 if (currentItem.getRecurring()) {
@@ -47,7 +64,7 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.quest_recycler_view_item, viewGroup, false);
-
+      
         return new MyViewHolder(view);
     }
 
