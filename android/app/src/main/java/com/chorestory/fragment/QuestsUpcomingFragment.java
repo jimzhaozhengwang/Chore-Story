@@ -11,7 +11,12 @@ import com.chorestory.R;
 import com.chorestory.adapter.QuestRecyclerViewAdapter;
 import com.chorestory.app.ChoreStoryActivity;
 import com.chorestory.helpers.QuestCompletion;
+import com.chorestory.model.QuestParcelable;
 import com.chorestory.model.QuestRecyclerViewItem;
+import com.chorestory.templates.GetQuestsResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuestsUpcomingFragment extends ChoreStoryFragment {
 
@@ -25,12 +30,16 @@ public class QuestsUpcomingFragment extends ChoreStoryFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quests_upcoming, container, false);
+
+        Bundle bundle = this.getArguments();
+        ArrayList<QuestParcelable> questParcelables = bundle.getParcelableArrayList("all_quests");
+
         // Overdue Quests
         overdueQuestsRecyclerView = view.findViewById(R.id.overdue_quests_recycler_view);
         overdueQuestsLayoutManager = new LinearLayoutManager(getActivity());
         overdueQuestsRecyclerView.setLayoutManager(overdueQuestsLayoutManager);
 
-        overdueQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(QuestCompletion.OVERDUE), (ChoreStoryActivity) getActivity());
+        overdueQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(questParcelables), (ChoreStoryActivity) getActivity());
         overdueQuestsRecyclerView.setAdapter(overdueQuestsAdapter);
 
         // Upcoming Quests
@@ -38,7 +47,7 @@ public class QuestsUpcomingFragment extends ChoreStoryFragment {
         upcomingQuestsLayoutManager = new LinearLayoutManager(getActivity());
         upcomingQuestsRecyclerView.setLayoutManager(upcomingQuestsLayoutManager);
 
-        upcomingQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(QuestCompletion.UPCOMING), (ChoreStoryActivity) getActivity());
+        upcomingQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(questParcelables), (ChoreStoryActivity) getActivity());
         upcomingQuestsRecyclerView.setAdapter(upcomingQuestsAdapter);
 
         return view;

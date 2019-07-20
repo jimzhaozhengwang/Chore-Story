@@ -67,23 +67,12 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
         // Quest owner
         String owner = currentItem.getOwner() + "'s quest";
         myViewHolder.questOwnerTextView.setText(owner);
-        // Quest mandatory/optional
-        String mandatory;
-        if (currentItem.getMandatory()) {
-            mandatory = activity.getString(R.string.mandatory);
-        } else {
-            mandatory = activity.getString(R.string.optional);
-        }
-        myViewHolder.questMandatoryTextView.setText(mandatory);
         // Quest Exp
         String exp = currentItem.getExp() + " Exp";
         myViewHolder.questExpTextView.setText(exp);
         // Quest due date
-        // TODO
-        String dueDate = "Due in " + Integer.toString(currentItem.getDueDate()) + " days";
-        myViewHolder.questDueDateTextView.setText(dueDate);
-
-        // TODO: handle click events
+        myViewHolder.questDueDateTextView.setText("Due " + currentItem.getDueDateString());
+        // TODO show different things for completed quests
     }
 
     @Override
@@ -97,7 +86,6 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
         private TextView questNameTextView;
         private TextView questOwnerTextView;
         private TextView questExpTextView;
-        private TextView questMandatoryTextView;
         private TextView questDueDateTextView;
 
         MyViewHolder(View itemView) {
@@ -106,7 +94,6 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
             questNameTextView = itemView.findViewById(R.id.quest_name_text_view);
             questOwnerTextView = itemView.findViewById(R.id.quest_owner_text_view);
             questExpTextView = itemView.findViewById(R.id.quest_exp_text_view);
-            questMandatoryTextView = itemView.findViewById(R.id.quest_mandatory_text_view);
             questDueDateTextView = itemView.findViewById(R.id.quest_due_date_text_view);
         }
     }
