@@ -4,7 +4,7 @@ from flask import g
 from flask_login import current_user
 
 from .helpers import find_next_time, is_qst_completed, generate_qst_resp, award_xp_to_child, _until_next_level, \
-    get_childs_quest_with_window, generate_unique_child_api_key
+    get_childs_quest_with_window, generate_unique_child_api_key, generate_chd_resp
 from .. import db
 from ..decorators import child_login_required, backbone_error_handle, json_return, json_content_only
 from ..exceptions import BackboneException
@@ -87,15 +87,28 @@ def get_friends():
     .. code-block:: json
 
         {
-         "data": [
-            1,
-            2
-         ]
+          "data": [
+            {
+              "clan_name": "Marky Mark",
+              "id": 2,
+              "level": 1,
+              "name": "Jim",
+              "parents": [
+                {
+                  "id": 1,
+                  "name": "Mark",
+                  "picture": 1
+                }
+              ],
+              "username": "jimbo",
+              "xp": 0
+            }
+          ]
         }
 
     :return: list of child ids
     """
-    return json_return([f.id for f in current_user.all_friends])
+    return json_return([generate_chd_resp(f) for f in current_user.all_friends])
 
 
 @api_bp.route('/quest/<int:qid>/complete', methods=['POST'], defaults={'ts': None})
