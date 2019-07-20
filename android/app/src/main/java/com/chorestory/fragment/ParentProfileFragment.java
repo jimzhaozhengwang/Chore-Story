@@ -1,14 +1,15 @@
 package com.chorestory.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
@@ -35,16 +36,16 @@ public class ParentProfileFragment extends ChoreStoryFragment {
     Button addParentGuardianButton;
     Button addChildButton;
     TextView parentEmailTextView;
+    Button logoutButton;
 
     @Inject
-    RetrofitInterface retrofitInference;
+    RetrofitInterface retrofitInterface;
     @Inject
     TokenHandler tokenHandler;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_profile, container, false);
-
         App.getAppComponent().inject(this);
 
         parentImageView = view.findViewById(R.id.parent_image_view);
@@ -53,9 +54,13 @@ public class ParentProfileFragment extends ChoreStoryFragment {
         addParentGuardianButton = view.findViewById(R.id.add_parent_guardian_button);
         addChildButton = view.findViewById(R.id.add_child_button);
         parentEmailTextView = view.findViewById(R.id.parent_email_text_view);
+        logoutButton = view.findViewById(R.id.logout_parent_button);
 
         views = Arrays.asList(addParentGuardianButton, addChildButton);
         enableViews();
+
+        // TODO: need to add a child selection dropdown somewhere here
+        //          so we can generate the child login token for the qr code
 
         addParentGuardianButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +84,15 @@ public class ParentProfileFragment extends ChoreStoryFragment {
             }
         });
 
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // delete the token we have stored and redirect the user to the login page
+                tokenHandler.deleteStoredToken(getContext());
+                navigateTo(getContext(), MainActivity.class);
+            }
+        });
+
         return view;
     }
 
@@ -89,7 +103,7 @@ public class ParentProfileFragment extends ChoreStoryFragment {
         String token = tokenHandler.getToken(getContext());
         if (token != null) {
             if (tokenHandler.isParentToken(token)) {
-                Call<AccountResponse> accountQuery = retrofitInference.me(token);
+                Call<AccountResponse> accountQuery = retrofitInterface.me(token);
                 accountQuery.enqueue(new Callback<AccountResponse>() {
                     @Override
                     public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
@@ -102,6 +116,10 @@ public class ParentProfileFragment extends ChoreStoryFragment {
                             clanNameTextView.setText(respData.getClanName());
                             parentEmailTextView.setText(respData.getEmail());
                             parentImageView.setImageResource(R.drawable.king_color); // TODO: get image id (currently not being set)
+                        } else {
+                            // delete the token we have stored and redirect the user to the login page
+                            tokenHandler.deleteStoredToken(getContext());
+                            navigateTo(getContext(), MainActivity.class);
                         }
                     }
 

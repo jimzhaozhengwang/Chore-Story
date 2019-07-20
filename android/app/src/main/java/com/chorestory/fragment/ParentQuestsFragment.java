@@ -1,29 +1,23 @@
 package com.chorestory.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-
-import com.chorestory.app.MainActivity;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
-import com.chorestory.adapter.ChildRecyclerViewAdapter;
-import com.chorestory.adapter.ParentRecyclerViewAdapter;
 import com.chorestory.adapter.QuestsAdapter;
 import com.chorestory.app.App;
+import com.chorestory.app.MainActivity;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.model.QuestParcelable;
-import com.chorestory.templates.ClanChildrenResponse;
-import com.chorestory.templates.ClanResponse;
 import com.chorestory.templates.GetQuestsResponse;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +32,7 @@ import retrofit2.Response;
 public class ParentQuestsFragment extends ChoreStoryFragment {
 
     @Inject
-    RetrofitInterface retrofitInference;
+    RetrofitInterface retrofitInterface;
     @Inject
     TokenHandler tokenHandler;
 
@@ -95,10 +89,10 @@ public class ParentQuestsFragment extends ChoreStoryFragment {
         String token = tokenHandler.getToken(getContext());
         if (token != null) {
             if (tokenHandler.isParentToken(token)) {
-                long currentTime = System.currentTimeMillis()/1000;
+                long currentTime = System.currentTimeMillis() / 1000;
                 long start = currentTime - SECONDS_IN_WEEK;
                 long lookahead = SECONDS_IN_WEEK * 2;
-                Call<GetQuestsResponse> getQuestsQuery = retrofitInference.get_all_quests(token, start + ".0", lookahead + ".0");
+                Call<GetQuestsResponse> getQuestsQuery = retrofitInterface.get_all_quests(token, start + ".0", lookahead + ".0");
                 getQuestsQuery.enqueue(new Callback<GetQuestsResponse>() {
                     @Override
                     public void onResponse(Call<GetQuestsResponse> call, Response<GetQuestsResponse> response) {

@@ -1,14 +1,15 @@
 package com.chorestory.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
@@ -18,7 +19,6 @@ import com.chorestory.app.App;
 import com.chorestory.app.MainActivity;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
-import com.chorestory.model.ParentRecyclerViewItem;
 import com.chorestory.templates.ClanChildrenResponse;
 import com.chorestory.templates.ClanResponse;
 
@@ -83,7 +83,7 @@ public class ChildClanFragment extends ChoreStoryFragment {
                         ClanResponse.Data respData = response.body().getData();
 
                         // Set clan title
-                        clanNameTextView.setText(respData.getClanName());
+                        clanNameTextView.setText(getString(R.string.clan_title, respData.getClanName()));
 
                         // Set parent list
                         List<ClanResponse.Data.Parent> parentList = respData.getParents();

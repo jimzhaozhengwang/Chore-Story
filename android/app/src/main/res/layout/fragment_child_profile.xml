@@ -135,5 +135,16 @@
             android:layout_toEndOf="@id/level_text_view"
             android:textAlignment="center"
             android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/logout_child_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/child_exp_text_view"
+            android:layout_marginTop="20dp"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
+            android:text="@string/logout_button"
+            android:textSize="25sp" />
     </RelativeLayout>
 </ScrollView>
