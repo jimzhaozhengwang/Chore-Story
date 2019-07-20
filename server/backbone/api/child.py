@@ -39,7 +39,7 @@ def until_next_level(current_level):
 
 @api_bp.route('/friend/<username>', methods=['POST'])
 @child_login_required
-@json_content_only
+@backbone_error_handle
 def add_friend(username):
     """
     .. :quickref: Friend; add a friend
