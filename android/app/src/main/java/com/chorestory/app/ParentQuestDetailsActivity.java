@@ -62,7 +62,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
     private Activity activity = this;
     private QuestRecyclerViewItem quest;
     private String questOwnerName;
-    private int SECONDS_IN_5_MINUTES = 300;
+    private final int SECONDS_IN_5_MINUTES = 300;
 
 
     @Override
@@ -233,9 +233,9 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         String token = tokenHandler.getToken(this);
         if (token != null) {
             if (tokenHandler.isParentToken(token)) {
-                int qid = getIntent().getIntExtra("qid", 1);
-                questOwnerName = getIntent().getStringExtra("ownerName");
-                int ts = getIntent().getIntExtra("ts", -1);
+                int qid = getIntent().getIntExtra(getResources().getString(R.string.qid), 1);
+                questOwnerName = getIntent().getStringExtra(getResources().getString(R.string.ownerName));
+                int ts = getIntent().getIntExtra(getResources().getString(R.string.ts), -1);
                 Call<GetQuestResponse> getQuestQuery;
                 if (ts == -1) {
                     getQuestQuery = retrofitInference.get_quest(token, qid);
@@ -261,7 +261,6 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
                 // TODO: redirect to login page
             }
         }
-
     }
 
     private String getDateText() {

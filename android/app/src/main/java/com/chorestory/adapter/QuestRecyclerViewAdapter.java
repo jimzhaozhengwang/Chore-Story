@@ -33,10 +33,10 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
                 QuestRecyclerViewItem currentItem = itemList.get(position);
                 int id = currentItem.getId();
                 Intent intent = new Intent(activity, ParentQuestDetailsActivity.class);
-                intent.putExtra("qid", currentItem.getId());
-                intent.putExtra("ownerName", currentItem.getOwner());
+                intent.putExtra(activity.getResources().getString(R.string.qid), currentItem.getId());
+                intent.putExtra(activity.getResources().getString(R.string.ownerName), currentItem.getOwner());
                 if (currentItem.getRecurring()) {
-                    intent.putExtra("ts", currentItem.getDueDate());
+                    intent.putExtra(activity.getResources().getString(R.string.ts), currentItem.getDueDate());
                 }
                 activity.startActivity(intent);
             }

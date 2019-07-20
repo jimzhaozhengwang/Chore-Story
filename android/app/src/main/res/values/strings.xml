@@ -60,6 +60,9 @@
     <string name="qr_code">QR Code</string>
     <string name="unable_to_detect_qr_code">Unable to detect QR code</string>
     <string name="debug">debug</string>
+    <string name="qid">qid</string>
+    <string name="ownerName">ownerName</string>
+    <string name="ts">ts</string>
 
 
     <!-- TODO: remove once it is added to the server -->
