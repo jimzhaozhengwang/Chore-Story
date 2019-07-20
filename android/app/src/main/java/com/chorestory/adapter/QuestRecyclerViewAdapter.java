@@ -43,8 +43,9 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
                 int position = viewHolder.getAdapterPosition();
                 QuestRecyclerViewItem currentItem = itemList.get(position);
                 int id = currentItem.getId();
-              
+
                 Intent intent;
+                String token = tokenHandler.getToken(activity);
                 if (tokenHandler.isParentToken(token)) {
                     intent = new Intent(activity, ParentQuestDetailsActivity.class);
                 } else {

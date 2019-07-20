@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chorestory.R;
 import com.chorestory.adapter.QuestRecyclerViewAdapter;
 import com.chorestory.app.ChoreStoryActivity;
+import com.chorestory.helpers.QuestCompletion;
 import com.chorestory.model.QuestParcelable;
 import com.chorestory.model.QuestRecyclerViewItem;
 
