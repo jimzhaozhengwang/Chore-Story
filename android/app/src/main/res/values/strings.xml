@@ -46,6 +46,7 @@
     <string name="upcoming">Upcoming</string>
     <string name="pending">Pending</string>
     <string name="view_proof">View Proof</string>
+    <string name="add_proof">Add Proof</string>
     <string name="due_date">Due Date</string>
     <string name="due_time">Due Time</string>
     <string name="recurrence">Recurrence</string>
