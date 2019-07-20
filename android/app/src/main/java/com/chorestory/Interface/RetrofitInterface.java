@@ -82,4 +82,11 @@ public interface RetrofitInterface {
             @Header("Authorization") String auth,
             @Path("qid") Integer qid
     );
+
+    @GET("quest/{qid}/{ts}")
+    Call<GetQuestResponse> get_quest_ts(
+            @Header("Authorization") String auth,
+            @Path("qid") Integer qid,
+            @Path("ts") String ts
+    );
 }

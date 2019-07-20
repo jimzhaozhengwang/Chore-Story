@@ -1,14 +1,13 @@
 package com.chorestory.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chorestory.R;
 import com.chorestory.app.ChoreStoryActivity;
@@ -22,28 +21,32 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
 
     private List<QuestRecyclerViewItem> itemList;
     private ChoreStoryActivity activity;
+    private View.OnClickListener onItemClickListener;
 
     public QuestRecyclerViewAdapter(List<QuestRecyclerViewItem> itemList, ChoreStoryActivity activity) {
         this.itemList = itemList;
         this.activity = activity;
+        onItemClickListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                int position = viewHolder.getAdapterPosition();
+                QuestRecyclerViewItem currentItem = itemList.get(position);
+                int id = currentItem.getId();
+                Intent intent = new Intent(activity, ParentQuestDetailsActivity.class);
+                intent.putExtra("qid", currentItem.getId());
+                intent.putExtra("ownerName", currentItem.getOwner());
+                if (currentItem.getRecurring()) {
+                    intent.putExtra("ts", currentItem.getDueDate());
+                }
+                activity.startActivity(intent);
+            }
+        };
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.quest_recycler_view_item, viewGroup, false);
-
-        view.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                QuestRecyclerViewItem currentItem = itemList.get(i);
-                System.out.println("FIND I: " + i);
-                Intent intent = new Intent(activity, ParentQuestDetailsActivity.class);
-                System.out.println("QID1: " + currentItem.getId());
-                intent.putExtra("qid", currentItem.getId());
-                intent.putExtra("ownerName", currentItem.getOwner());
-                activity.startActivity(intent);
-            }
-        });
 
         return new MyViewHolder(view);
     }
@@ -82,6 +85,8 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
 
         MyViewHolder(View itemView) {
             super(itemView);
+            itemView.setTag(this);
+            itemView.setOnClickListener(onItemClickListener);
             questImageView = itemView.findViewById(R.id.quest_image_view);
             questNameTextView = itemView.findViewById(R.id.quest_name_text_view);
             questOwnerTextView = itemView.findViewById(R.id.quest_owner_text_view);

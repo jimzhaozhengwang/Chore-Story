@@ -33,6 +33,7 @@ public class GetQuestsResponse {
         String title;
         @SerializedName("verified_on")
         String verifiedOn;
+        List<Float> timestamps;
 
         public String getCompletedOn() {
             return completedOn;
@@ -93,6 +94,13 @@ public class GetQuestsResponse {
             public String getName() {
                 return name;
             }
+        }
+
+        public Integer getTimestamp() {
+            if (getRecurring() && timestamps.size() >= 1) {
+                return Math.round(timestamps.get(0));
+            }
+            return -1;
         }
     }
 }

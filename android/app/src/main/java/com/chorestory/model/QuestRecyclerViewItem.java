@@ -27,6 +27,7 @@ public class QuestRecyclerViewItem {
     private boolean needsVerification;
     private int completedOn;
     private int verifiedOn;
+    private int timestamp;
 
     public static List<QuestRecyclerViewItem> getData(ArrayList<QuestParcelable> questParcelables) {
         List<QuestRecyclerViewItem> dataList = new ArrayList<>();
@@ -46,7 +47,6 @@ public class QuestRecyclerViewItem {
         this.dueDate = quest.getDue();
         this.recurring = quest.getReccurring();
         this.nextOccurrence = quest.getNextOccurrence();
-        System.out.println("QID3: " + quest.getId());
         this.id = quest.getId();
         this.needsVerification = quest.getNeedsVerification();
         this.completedOn = stringToTimestamp(quest.getCompletedOn());
@@ -62,8 +62,8 @@ public class QuestRecyclerViewItem {
         this.dueDate = quest.getDue();
         this.recurring = quest.getRecurring();
         this.nextOccurrence = quest.getNextOccurrence();
+        this.timestamp = quest.getTimestamp();
         this.id = quest.getId();
-        System.out.println("QID2: " + quest.getId());
         this.needsVerification = quest.getNeedsVerification();
         this.completedOn = stringToTimestamp(quest.getCompletedOn());
         this.verifiedOn = stringToTimestamp(quest.getVerifiedOn());
@@ -111,7 +111,7 @@ public class QuestRecyclerViewItem {
         else if (stringContainsItemFromList(lowerName, new String[]{"iron", "press"})) imageId = R.drawable.iron;
         else if (stringContainsItemFromList(lowerName, new String[]{"lawn", "grass", "mow"})) imageId = R.drawable.lawn_mower;
         else if (stringContainsItemFromList(lowerName, new String[]{"paint"})) imageId = R.drawable.paint;
-        else if (stringContainsItemFromList(lowerName, new String[]{"shower, teeth"})) imageId = R.drawable.shower;
+        else if (stringContainsItemFromList(lowerName, new String[]{"shower"})) imageId = R.drawable.shower;
         else if (stringContainsItemFromList(lowerName, new String[]{"rak"})) imageId = R.drawable.rake;
         else if (stringContainsItemFromList(lowerName, new String[]{"toilet", "washroom", "bathroom"})) imageId = R.drawable.toilet;
         else if (stringContainsItemFromList(lowerName, new String[]{"vacuum"})) imageId = R.drawable.vacuum;
@@ -135,6 +135,26 @@ public class QuestRecyclerViewItem {
 
     public boolean getMandatory() {
         return mandatory;
+    }
+
+    public boolean getRecurring() { return recurring; }
+
+    public int getTimestamp() { return timestamp; }
+
+    public String getRecurrenceText() {
+        int timestamp = getTimestamp();
+        switch (timestamp) {
+            case 60 * 60 * 24:
+                return "Daily";
+            case (60 * 60 * 24) * 7:
+                return "Weekly";
+            case ((60 * 60 * 24) * 7) * 4:
+                return "Monthly";
+            case (((60 * 60 * 24) * 7) * 4) * 12:
+                return "Yearly";
+            default:
+                return "Only once";
+        }
     }
 
     public int getDueDate() {

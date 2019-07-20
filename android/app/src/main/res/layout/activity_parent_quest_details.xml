@@ -123,15 +123,15 @@
             android:text="@string/recurrence"
             android:textSize="20sp" />
 
-        <Spinner
-            android:id="@+id/select_recurrence_spinner"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/quest_recurrence_value_text_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_due_time_text_view"
-            android:layout_marginStart="130dp"
+            android:layout_marginStart="150dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="5dp"
-            android:prompt="@string/select_a_child" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/quest_owner_text_view"

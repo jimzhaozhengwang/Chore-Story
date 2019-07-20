@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -49,9 +47,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
     private DatePickerDialog datePickerDialog;
     private Button selectTimeButton;
     private TextView questOwnerTextView;
-    private TextView recurrenceTextView;
-    private Spinner selectRecurrenceSpinner;
-    private ArrayAdapter<CharSequence> recurrenceSpinnerAdapter;
+    private TextView recurrenceValueTextView;
     private EditText descriptionEditText;
     private Button cancelButton;
     private Button saveButton;
@@ -66,6 +62,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
     private Activity activity = this;
     private QuestRecyclerViewItem quest;
     private String questOwnerName;
+    private int SECONDS_IN_5_MINUTES = 300;
 
 
     @Override
@@ -87,8 +84,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         selectDateButton = findViewById(R.id.quest_select_date_button);
         selectTimeButton = findViewById(R.id.quest_select_time_button);
         questOwnerTextView = findViewById(R.id.quest_owner_text_view_value);
-        selectRecurrenceSpinner = findViewById(R.id.select_recurrence_spinner);
-        recurrenceTextView = findViewById(R.id.quest_recurrence_text_view);
+        recurrenceValueTextView = findViewById(R.id.quest_recurrence_value_text_view);
         descriptionEditText = findViewById(R.id.description_edit_text);
         cancelButton = findViewById(R.id.cancel_button);
         saveButton = findViewById(R.id.save_button);
@@ -107,7 +103,6 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        month++; // month is represented by an integer from 0 to 11
                         mDay = dayOfMonth;
                         mMonth = month;
                         mYear = year;
@@ -150,25 +145,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
             }
         });
 
-        // Recurrence Spinner
-        recurrenceSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.recurrence_array, R.layout.spinner_item);
-        recurrenceSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectRecurrenceSpinner.setAdapter(recurrenceSpinnerAdapter);
-        selectRecurrenceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                recurrence = (String) parent.getItemAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        // TODO: selectChildSpinner
-
-
+        // TODO: Recurrence Spinner
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,13 +214,12 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
 
         selectTimeButton.setText(getTimeText());
 
-        // TODO: Display recurrence
+        // TODO: make this a dropdown so you can edit it
         // Recurrence
-        selectRecurrenceSpinner.setVisibility(selectRecurrenceSpinner.GONE);
-        recurrenceTextView.setVisibility(recurrenceTextView.GONE);
+        recurrenceValueTextView.setText(quest.getRecurrenceText());
 
         // Child
-        // TODO: make this editable
+        // TODO: make this a dropdown (would have to make a clan request)
         questOwnerTextView.setText(questOwnerName);
 
         // Description
@@ -258,10 +234,15 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         if (token != null) {
             if (tokenHandler.isParentToken(token)) {
                 int qid = getIntent().getIntExtra("qid", 1);
-                System.out.println("QID: " + qid);
                 questOwnerName = getIntent().getStringExtra("ownerName");
-                Call<GetQuestResponse> getQuestQuery = retrofitInference.get_quest(token, qid);
-
+                int ts = getIntent().getIntExtra("ts", -1);
+                Call<GetQuestResponse> getQuestQuery;
+                if (ts == -1) {
+                    getQuestQuery = retrofitInference.get_quest(token, qid);
+                } else {
+                    ts -= SECONDS_IN_5_MINUTES; // the response uses math.round so subtract 5 minutes to be safe
+                    getQuestQuery = retrofitInference.get_quest_ts(token, qid, ts + ".0");
+                }
                 getQuestQuery.enqueue(new Callback<GetQuestResponse>() {
                     @Override
                     public void onResponse(Call<GetQuestResponse> call, Response<GetQuestResponse> response) {
@@ -284,7 +265,8 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
     }
 
     private String getDateText() {
-        return mDay + "-" + mMonth + "-" + mYear;
+        // mMonth is represented by an integer from 0 to 11
+        return mDay + "-" + (mMonth + 1) + "-" + mYear;
     }
 
     private String getTimeText() {
