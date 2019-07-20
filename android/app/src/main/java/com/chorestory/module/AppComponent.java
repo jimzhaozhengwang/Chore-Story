@@ -1,5 +1,6 @@
 package com.chorestory.module;
 
+import com.chorestory.app.CameraActivity;
 import com.chorestory.app.ChildHomeActivity;
 import com.chorestory.app.ChildJoinClanActivity;
 import com.chorestory.app.CreateClanActivity;
@@ -9,6 +10,7 @@ import com.chorestory.app.ParentLoginActivity;
 import com.chorestory.app.ParentLoginSignUpActivity;
 import com.chorestory.app.ParentQuestDetailsActivity;
 import com.chorestory.app.ParentSignUpActivity;
+import com.chorestory.app.QrCodeActivity;
 import com.chorestory.app.SplashActivity;
 import com.chorestory.fragment.ParentClanFragment;
 import com.chorestory.fragment.ParentCreateFragment;
@@ -49,4 +51,8 @@ public interface AppComponent {
     void inject(ParentQuestsFragment fragment);
 
     void inject(SplashActivity activity);
+
+    void inject(QrCodeActivity activity);
+
+    void inject(CameraActivity activity);
 }
