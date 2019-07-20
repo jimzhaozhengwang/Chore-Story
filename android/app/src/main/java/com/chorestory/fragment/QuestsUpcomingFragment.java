@@ -25,7 +25,6 @@ public class QuestsUpcomingFragment extends ChoreStoryFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quests_upcoming, container, false);
-
         // Overdue Quests
         overdueQuestsRecyclerView = view.findViewById(R.id.overdue_quests_recycler_view);
         overdueQuestsLayoutManager = new LinearLayoutManager(getActivity());
