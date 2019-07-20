@@ -6,12 +6,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.helpers.Toaster;
+import com.chorestory.helpers.TokenHandler;
+import com.chorestory.templates.ChildRequest;
+import com.chorestory.templates.ChildResponse;
+import com.chorestory.templates.SingleResponse;
 
 import java.util.Collections;
 
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ChildJoinClanActivity extends ChoreStoryActivity {
+
+    @Inject
+    TokenHandler tokenHandler;
+    @Inject
+    RetrofitInterface retrofitInterface;
 
     private TextView welcomeTextView;
 
@@ -32,7 +48,7 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
         setContentView(R.layout.activity_child_join_clan);
 
         welcomeTextView = findViewById(R.id.welcome_text_view);
-        welcomeTextView.setText("Welcome to the CS449 Clan!"); // TODO: fetch clan name
+        welcomeTextView.setText("Sign up to join your Clan!"); // TODO: fetch clan name
 
         emailEditText = findViewById(R.id.email_edit_text);
         emailEditText.setVisibility(View.GONE);
@@ -64,7 +80,34 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
                     // TODO: think of message
                     Toaster.showToast(getApplicationContext(), "Missing sign up information!");
                 } else {
-                    // TODO: create child account
+
+                    if (tokenHandler.hasChildCreationToken()) {
+
+                        ChildRequest childRequest = new ChildRequest(name, username);
+
+                        Call<SingleResponse<String>> childTokenQuery = retrofitInterface.create_child(
+                                tokenHandler.getChildCreationToken(),
+                                childRequest);
+                        childTokenQuery.enqueue(new Callback<SingleResponse<String>>() {
+                            @Override
+                            public void onResponse(Call<SingleResponse<String>> call, Response<SingleResponse<String>> response) {
+                                if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+
+                                    String childToken = response.body().getData();
+                                    tokenHandler.setChildToken(childToken, getApplicationContext());
+
+                                    navigateTo(ChildHomeActivity.class);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SingleResponse<String>> call, Throwable t) {
+
+                            }
+                        });
+
+                    }
+
                     navigateTo(ChildHomeActivity.class);
                 }
             }

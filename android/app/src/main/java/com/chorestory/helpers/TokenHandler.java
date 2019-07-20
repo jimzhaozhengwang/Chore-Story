@@ -7,6 +7,8 @@ public class TokenHandler {
 
     private final String PREFERENCES_KEY = "token";
 
+    private String childCreationToken;
+
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
 
@@ -14,6 +16,23 @@ public class TokenHandler {
      * TOKEN SPEC:
      * Authorization: <Parent token>:<Child token>
      */
+
+    public void setChildCreationToken(String token) {
+        if (token == null) {
+            token = "";
+        }
+        this.childCreationToken = token;
+    }
+
+    public String getChildCreationToken() {
+        String childCreationToken = this.childCreationToken;
+        this.childCreationToken = ""; // only want it being used once
+        return childCreationToken;
+    }
+
+    public boolean hasChildCreationToken() {
+        return this.childCreationToken != null && this.childCreationToken != "";
+    }
 
     public void setParentToken(String token, Context context) {
         if (token == null) {
