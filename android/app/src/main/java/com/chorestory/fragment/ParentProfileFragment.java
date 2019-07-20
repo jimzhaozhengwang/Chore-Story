@@ -107,7 +107,6 @@ public class ParentProfileFragment extends ChoreStoryFragment {
                             parentEmailTextView.setText(respData.getEmail());
 
                             parentImageView.setImageResource(R.drawable.king_color); // TODO: get image id
-
                         }
                     }
 

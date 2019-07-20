@@ -20,11 +20,11 @@ public class QuestCreationHandler {
         if (child == -1) {
             Toaster.showToast(activity, "Please select a child");
             return false;
-        } else if (questType == null || questType.equals(activity.getString(R.string.select_a_quest))) {
-            Toaster.showToast(activity, "Please select a quest");
+        } else if (questType == null || questType.isEmpty()) {
+            Toaster.showToast(activity, "Please enter a quest");
             return false;
         } else if (exp < 0) {
-            Toaster.showToast(activity, "Please select an exp");
+            Toaster.showToast(activity, "Please enter an exp");
             return false;
         } else if (year < 0 || month < 0 || day < 0) {
             Toaster.showToast(activity, "Please select a date");
