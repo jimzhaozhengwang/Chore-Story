@@ -6,10 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.viewpager.widget.ViewPager;
+
+import com.chorestory.model.QuestParcelable;
 import com.google.android.material.tabs.TabLayout;
 
 import com.chorestory.adapter.QuestsAdapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,9 +39,21 @@ public class ChildQuestsFragment extends ChoreStoryFragment {
     }
 
     private void setupViewPager() {
-        List<Fragment> fragmentList = Arrays.asList(new QuestsUpcomingFragment(),
-                new QuestsPendingFragment(),
-                new QuestsCompletedFragment());
+        Bundle bundle = new Bundle();
+        // TODO: make request to get quests
+        ArrayList<QuestParcelable> questParcelables = new ArrayList<>();
+        bundle.putParcelableArrayList("all_quests", questParcelables);
+
+        QuestsUpcomingFragment questsUpcomingFragment = new QuestsUpcomingFragment();
+        questsUpcomingFragment.setArguments(bundle);
+        QuestsPendingFragment questsPendingFragment = new QuestsPendingFragment();
+        questsPendingFragment.setArguments(bundle);
+        QuestsCompletedFragment questsCompletedFragment = new QuestsCompletedFragment();
+        questsCompletedFragment.setArguments(bundle);
+
+        List<Fragment> fragmentList = Arrays.asList(questsUpcomingFragment,
+                questsPendingFragment,
+                questsCompletedFragment);
         List<String> fragmentTitleList = Arrays.asList(getString(R.string.upcoming),
                 getString(R.string.pending),
                 getString(R.string.completed));
