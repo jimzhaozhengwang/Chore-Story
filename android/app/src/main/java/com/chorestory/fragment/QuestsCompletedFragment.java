@@ -1,16 +1,16 @@
 package com.chorestory.fragment;
 
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.chorestory.R;
 import com.chorestory.adapter.QuestRecyclerViewAdapter;
 import com.chorestory.app.ChoreStoryActivity;
-import com.chorestory.helpers.QuestCompletion;
 import com.chorestory.model.QuestParcelable;
 import com.chorestory.model.QuestRecyclerViewItem;
 

@@ -110,7 +110,6 @@ public class ParentClanFragment extends ChoreStoryFragment {
                             List<ClanResponse.Data.Parent> parentList = respData.getParents();
                             parentAdapter = new ParentRecyclerViewAdapter(parentList);
                             parentRecyclerView.setAdapter(parentAdapter);
-
                         }
                     }
 
@@ -146,6 +145,5 @@ public class ParentClanFragment extends ChoreStoryFragment {
                 // TODO: redirect to login page
             }
         }
-
     }
 }
