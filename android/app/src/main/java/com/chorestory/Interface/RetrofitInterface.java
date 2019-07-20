@@ -2,6 +2,7 @@ package com.chorestory.Interface;
 
 import com.chorestory.templates.AccountResponse;
 import com.chorestory.templates.ChildRequest;
+import com.chorestory.templates.ChildResponse;
 import com.chorestory.templates.ClanChildrenResponse;
 import com.chorestory.templates.ClanResponse;
 import com.chorestory.templates.FriendsResponse;
@@ -36,6 +37,11 @@ public interface RetrofitInterface {
 
     @GET("me")
     Call<AccountResponse> me(
+            @Header("Authorization") String auth
+    );
+
+    @GET("me")
+    Call<ChildResponse> me_child(
             @Header("Authorization") String auth
     );
 

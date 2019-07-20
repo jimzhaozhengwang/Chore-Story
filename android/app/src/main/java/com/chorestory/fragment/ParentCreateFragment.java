@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
+
+import com.chorestory.app.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -386,11 +388,16 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                 @Override
                 public void onFailure(Call<AccountResponse> call, Throwable t) {
                     Toaster.showToast(getContext(), "Internal error occurred.");
-                    // TODO: delete the token we have stored and redirect the user to the login page
+
+                    // delete the token we have stored and redirect the user to the login page
+                    tokenHandler.deleteStoredToken(getContext());
+                    navigateTo(getContext(), MainActivity.class);
                 }
             });
         } else {
-            // TODO: delete the token and redirect user to login page?
+            // delete the token we have stored and redirect the user to the login page
+            tokenHandler.deleteStoredToken(getContext());
+            navigateTo(getContext(), MainActivity.class);
         }
     }
 

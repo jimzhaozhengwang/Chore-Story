@@ -12,6 +12,7 @@ import com.chorestory.app.ParentQuestDetailsActivity;
 import com.chorestory.app.ParentSignUpActivity;
 import com.chorestory.app.QrCodeActivity;
 import com.chorestory.app.SplashActivity;
+import com.chorestory.fragment.ChildClanFragment;
 import com.chorestory.fragment.ParentClanFragment;
 import com.chorestory.fragment.ParentCreateFragment;
 import com.chorestory.fragment.ParentProfileFragment;
@@ -39,6 +40,8 @@ public interface AppComponent {
     void inject(ChildJoinClanActivity activity);
 
     void inject(ChildHomeActivity activity);
+
+    void inject(ChildClanFragment fragment);
 
     void inject(ParentQuestDetailsActivity activity);
 

@@ -61,6 +61,16 @@ public class TokenHandler {
         return token != null && !token.isEmpty() && token.charAt(0) == ':';
     }
 
+    public void deleteStoredToken(Context context) {
+        this.childCreationToken = "";
+
+        createPreferencesObject(context);
+
+        this.editor.clear();
+
+        this.editor.commit();
+    }
+
     private void storeToken(String token, Context context) {
         createPreferencesObject(context);
 

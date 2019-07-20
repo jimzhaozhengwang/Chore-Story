@@ -44,11 +44,9 @@ public class SplashActivity extends ChoreStoryActivity {
                 }
             });
         } else if (tokenHandler.isChildToken(token)) {
-            // TODO: retrofit
-            // onResponse navigate to childHome
-            // onfailure: navigate to MainActivity
-
-            navigateTo(MainActivity.class);
+            // There's no need to verify the child token here since if the childHome request
+            //      fails then it'll redirect back to main activity after deleting the token
+            navigateTo(ChildHomeActivity.class);
         } else {
             navigateTo(MainActivity.class);
         }

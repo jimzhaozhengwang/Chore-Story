@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.app.App;
+import com.chorestory.app.MainActivity;
 import com.chorestory.app.QrCodeActivity;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
@@ -52,11 +53,6 @@ public class ParentProfileFragment extends ChoreStoryFragment {
         addParentGuardianButton = view.findViewById(R.id.add_parent_guardian_button);
         addChildButton = view.findViewById(R.id.add_child_button);
         parentEmailTextView = view.findViewById(R.id.parent_email_text_view);
-
-        // TODO: fetch parent info; replace mocked
-        parentImageView.setImageResource(R.drawable.king_color);
-        parentNameTextView.setText("David");
-        clanNameTextView.setText("CS449");
 
         views = Arrays.asList(addParentGuardianButton, addChildButton);
         enableViews();
@@ -106,7 +102,7 @@ public class ParentProfileFragment extends ChoreStoryFragment {
                             clanNameTextView.setText(respData.getClanName());
                             parentEmailTextView.setText(respData.getEmail());
 
-                            parentImageView.setImageResource(R.drawable.king_color); // TODO: get image id
+                            parentImageView.setImageResource(R.drawable.king_color); // TODO: get image id (currently not being set)
 
                         }
                     }
@@ -114,11 +110,16 @@ public class ParentProfileFragment extends ChoreStoryFragment {
                     @Override
                     public void onFailure(Call<AccountResponse> call, Throwable t) {
                         Toaster.showToast(getContext(), "Internal error occurred.");
-                        // TODO: delete the token we have stored and redirect the user to the login page
+
+                        // delete the token we have stored and redirect the user to the login page
+                        tokenHandler.deleteStoredToken(getContext());
+                        navigateTo(getContext(), MainActivity.class);
                     }
                 });
             } else {
-                // TODO: redirect to login page
+                // delete the token we have stored and redirect the user to the login page
+                tokenHandler.deleteStoredToken(getContext());
+                navigateTo(getContext(), MainActivity.class);
             }
         }
     }

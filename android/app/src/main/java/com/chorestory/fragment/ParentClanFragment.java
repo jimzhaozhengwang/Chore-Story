@@ -3,6 +3,8 @@ package com.chorestory.fragment;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.chorestory.app.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +35,7 @@ import retrofit2.Response;
 public class ParentClanFragment extends ChoreStoryFragment {
 
     @Inject
-    RetrofitInterface retrofitInference;
+    RetrofitInterface retrofitInterface;
     @Inject
     TokenHandler tokenHandler;
 
@@ -49,11 +51,7 @@ public class ParentClanFragment extends ChoreStoryFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_clan, container, false);
-
         App.getAppComponent().inject(this);
-
-        final String CLAN_NAME = getResources().getString(R.string.clan_name);
-        String clanName = getArguments().getString(CLAN_NAME) + " " + getString(R.string.clan);
 
         clanNameTextView = view.findViewById(R.id.clan_name_text_view);
 
@@ -95,7 +93,7 @@ public class ParentClanFragment extends ChoreStoryFragment {
         if (token != null) {
             if (tokenHandler.isParentToken(token)) {
                 // Get parent and generic clan information
-                Call<ClanResponse> clanQuery = retrofitInference.get_clan(token);
+                Call<ClanResponse> clanQuery = retrofitInterface.get_clan(token);
                 clanQuery.enqueue(new Callback<ClanResponse>() {
                     @Override
                     public void onResponse(Call<ClanResponse> call, Response<ClanResponse> response) {
@@ -117,12 +115,15 @@ public class ParentClanFragment extends ChoreStoryFragment {
                     @Override
                     public void onFailure(Call<ClanResponse> call, Throwable t) {
                         Toaster.showToast(getContext(), "Internal error occurred.");
-                        // TODO: delete the token we have stored and redirect the user to the login page?
+
+                        // delete the token we have stored and redirect the user to the login page
+                        tokenHandler.deleteStoredToken(getContext());
+                        navigateTo(getContext(), MainActivity.class);
                     }
                 });
 
                 // Get Children in clan information
-                Call<ClanChildrenResponse> clanChildrenQuery = retrofitInference.get_clan_children(token);
+                Call<ClanChildrenResponse> clanChildrenQuery = retrofitInterface.get_clan_children(token);
                 clanChildrenQuery.enqueue(new Callback<ClanChildrenResponse>() {
                     @Override
                     public void onResponse(Call<ClanChildrenResponse> call, Response<ClanChildrenResponse> response) {
@@ -139,11 +140,16 @@ public class ParentClanFragment extends ChoreStoryFragment {
                     @Override
                     public void onFailure(Call<ClanChildrenResponse> call, Throwable t) {
                         Toaster.showToast(getContext(), "Internal error occurred.");
-                        // TODO: delete the token we have stored and redirect the user to the login page?
+
+                        // delete the token we have stored and redirect the user to the login page
+                        tokenHandler.deleteStoredToken(getContext());
+                        navigateTo(getContext(), MainActivity.class);
                     }
                 });
             } else {
-                // TODO: redirect to login page
+                // delete the token we have stored and redirect the user to the login page
+                tokenHandler.deleteStoredToken(getContext());
+                navigateTo(getContext(), MainActivity.class);
             }
         }
 
