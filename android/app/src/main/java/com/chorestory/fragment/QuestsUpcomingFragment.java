@@ -74,3 +74,4 @@ public class QuestsUpcomingFragment extends ChoreStoryFragment {
         return upcomingQuests;
     }
 }
+
