@@ -1,12 +1,12 @@
 package com.chorestory.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.view.ViewPager;
-import android.support.design.widget.TabLayout;
+import androidx.viewpager.widget.ViewPager;
+import com.google.android.material.tabs.TabLayout;
 
 import com.chorestory.adapter.QuestsAdapter;
 
