@@ -15,6 +15,7 @@ import com.chorestory.model.QuestParcelable;
 import com.chorestory.model.QuestRecyclerViewItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuestsCompletedFragment extends ChoreStoryFragment {
 
@@ -34,9 +35,21 @@ public class QuestsCompletedFragment extends ChoreStoryFragment {
         completedQuestsLayoutManager = new LinearLayoutManager(getActivity());
         completedQuestsRecyclerView.setLayoutManager(completedQuestsLayoutManager);
 
-        completedQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(questParcelables), (ChoreStoryActivity) getActivity());
+        List<QuestRecyclerViewItem> completedQuests = getCompletedQuests(QuestRecyclerViewItem.getData(questParcelables));
+        completedQuestsAdapter = new QuestRecyclerViewAdapter(completedQuests, (ChoreStoryActivity) getActivity());
         completedQuestsRecyclerView.setAdapter(completedQuestsAdapter);
 
         return view;
+    }
+
+
+    private List<QuestRecyclerViewItem> getCompletedQuests(List<QuestRecyclerViewItem> allQuests) {
+        List<QuestRecyclerViewItem> completedQuests = new ArrayList<>();
+        for (QuestRecyclerViewItem quest : allQuests) {
+            if (quest.getStatus() == QuestCompletion.COMPLETED) {
+                completedQuests.add(quest);
+            }
+        }
+        return completedQuests;
     }
 }

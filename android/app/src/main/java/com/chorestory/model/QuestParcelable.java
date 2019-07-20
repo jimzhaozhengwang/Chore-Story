@@ -2,12 +2,13 @@ package com.chorestory.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.chorestory.helpers.QuestCompletion;
 import com.chorestory.templates.GetQuestsResponse;
 
 
 public class QuestParcelable implements Parcelable {
 
-    String completedOn;
+    int completedOn;
     String description;
     int due;
     int id;
@@ -18,7 +19,7 @@ public class QuestParcelable implements Parcelable {
     boolean recurring;
     int reward;
     String title;
-    String verifiedOn;
+    int verifiedOn;
 
     public QuestParcelable(GetQuestsResponse.Quest quest) {
         this.completedOn = quest.getCompletedOn();
@@ -40,7 +41,7 @@ public class QuestParcelable implements Parcelable {
     }
 
     public QuestParcelable(Parcel source) {
-        completedOn = source.readString();
+        completedOn = source.readInt();
         description = source.readString();
         due = source.readInt();
         id = source.readInt();
@@ -51,7 +52,7 @@ public class QuestParcelable implements Parcelable {
         recurring = source.readByte() != 0;
         reward = source.readInt();
         title = source.readString();
-        verifiedOn = source.readString();
+        verifiedOn = source.readInt();
     }
 
     @Override
@@ -61,7 +62,7 @@ public class QuestParcelable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(completedOn);
+        dest.writeInt(completedOn);
         dest.writeString(description);
         dest.writeInt(due);
         dest.writeInt(id);
@@ -72,10 +73,10 @@ public class QuestParcelable implements Parcelable {
         dest.writeByte((byte) (recurring ? 1 : 0));
         dest.writeInt(reward);
         dest.writeString(title);
-        dest.writeString(verifiedOn);
+        dest.writeInt(verifiedOn);
     }
 
-    public String getCompletedOn() {
+    public int getCompletedOn() {
         return completedOn;
     }
 
@@ -119,7 +120,7 @@ public class QuestParcelable implements Parcelable {
         return title;
     }
 
-    public String getVerifiedOn() {
+    public int getVerifiedOn() {
         return verifiedOn;
     }
 

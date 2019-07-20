@@ -1,16 +1,12 @@
 package com.chorestory.model;
 
 import android.text.format.DateUtils;
-import android.util.Log;
 
 import com.chorestory.R;
 import com.chorestory.helpers.QuestCompletion;
 import com.chorestory.templates.GetQuestsResponse;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class QuestRecyclerViewItem {
@@ -49,8 +45,8 @@ public class QuestRecyclerViewItem {
         this.nextOccurrence = quest.getNextOccurrence();
         this.id = quest.getId();
         this.needsVerification = quest.getNeedsVerification();
-        this.completedOn = stringToTimestamp(quest.getCompletedOn());
-        this.verifiedOn = stringToTimestamp(quest.getVerifiedOn());
+        this.completedOn = quest.getCompletedOn();
+        this.verifiedOn = quest.getVerifiedOn();
     }
 
     public QuestRecyclerViewItem(GetQuestsResponse.Quest quest) {
@@ -65,22 +61,8 @@ public class QuestRecyclerViewItem {
         this.timestamp = quest.getTimestamp();
         this.id = quest.getId();
         this.needsVerification = quest.getNeedsVerification();
-        this.completedOn = stringToTimestamp(quest.getCompletedOn());
-        this.verifiedOn = stringToTimestamp(quest.getVerifiedOn());
-    }
-
-    private int stringToTimestamp(String str) {
-        if (str == null) return -1;
-        String pattern = "EEE, dd MMM yyyy HH:mm:ss zzz";
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        Date date = new Date();
-        try {
-            date = format.parse(str);
-        } catch (ParseException e) {
-            Log.d("BUG", "Parse exception: ");
-            Log.d("BUG", e.getMessage());
-        }
-        return (int)(date.getTime() / 1000);
+        this.completedOn = quest.getCompletedOn();
+        this.verifiedOn = quest.getVerifiedOn();
     }
 
     public String getName() {

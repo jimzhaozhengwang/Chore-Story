@@ -1,7 +1,12 @@
 package com.chorestory.templates;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -35,8 +40,8 @@ public class GetQuestsResponse {
         String verifiedOn;
         List<Float> timestamps;
 
-        public String getCompletedOn() {
-            return completedOn;
+        public Integer getCompletedOn() {
+            return stringToTimestamp(completedOn);
         }
 
         public String getDescription() {
@@ -79,8 +84,8 @@ public class GetQuestsResponse {
             return title;
         }
 
-        public String getVerifiedOn() {
-            return verifiedOn;
+        public Integer getVerifiedOn() {
+            return stringToTimestamp(verifiedOn);
         }
 
         public class Owner {
@@ -101,6 +106,20 @@ public class GetQuestsResponse {
                 return Math.round(timestamps.get(0));
             }
             return -1;
+        }
+
+        private int stringToTimestamp(String str) {
+            if (str == null) return -1;
+            String pattern = "EEE, dd MMM yyyy HH:mm:ss zzz";
+            SimpleDateFormat format = new SimpleDateFormat(pattern);
+            Date date = new Date();
+            try {
+                date = format.parse(str);
+            } catch (ParseException e) {
+                Log.d("BUG", "Parse exception: ");
+                Log.d("BUG", e.getMessage());
+            }
+            return (int)(date.getTime() / 1000);
         }
     }
 }
