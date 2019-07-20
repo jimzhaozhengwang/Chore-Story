@@ -62,6 +62,8 @@
     <string name="unable_to_detect_qr_code">Unable to detect QR code</string>
     <string name="unable_to_recognize_speech">Unable to recognize speech</string>
     <string name="debug">debug</string>
+    <string name="all_quests">all_quests</string>
+
 
 
     <string-array name="recurrence_array">
