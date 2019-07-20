@@ -1,12 +1,9 @@
 package com.chorestory.model;
 
-
 import com.chorestory.R;
 import com.chorestory.templates.ClanChildrenResponse.Children;
 
-import java.util.Random;
-
-public class ChildRecyclerViewItem implements Comparable<ChildRecyclerViewItem>{
+public class ChildRecyclerViewItem implements Comparable<ChildRecyclerViewItem> {
 
     private String name;
     private int level;

@@ -3,129 +3,152 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/new_quest_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:text="@string/new_quest"
-        android:textSize="40sp" />
-
-    <Spinner
-        android:id="@+id/child_spinner"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/new_quest_text_view"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:prompt="@string/select_a_child" />
+        android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/quest_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/child_spinner"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:prompt="@string/select_a_quest" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/exp_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/quest_spinner"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:textSize="25sp" />
+            <TextView
+                android:id="@+id/new_quest_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:text="@string/new_quest"
+                android:textSize="40sp" />
 
-    <TextView
-        android:id="@+id/date_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/exp_text_view"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:textSize="25sp" />
+            <ImageButton
+                android:id="@+id/mic_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/ic_mic_black_24dp" />
 
-    <Button
-        android:id="@+id/select_date_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/exp_text_view"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:text="@string/select_date" />
+            <Spinner
+                android:id="@+id/child_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/new_quest_text_view"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:prompt="@string/select_a_child" />
 
-    <TextView
-        android:id="@+id/time_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/date_text_view"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="25dp"
-        android:textSize="25sp" />
+            <EditText
+                android:id="@+id/quest_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/child_spinner"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/border"
+                android:hint="@string/enter_a_quest"
+                android:inputType="textMultiLine" />
 
-    <Button
-        android:id="@+id/select_time_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/select_date_button"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:text="@string/select_time" />
+            <TextView
+                android:id="@+id/exp_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/quest_edit_text"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:textSize="25sp" />
 
-    <Spinner
-        android:id="@+id/recurrence_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/select_time_button"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:prompt="@string/does_not_repeat" />
+            <TextView
+                android:id="@+id/date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/exp_text_view"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:textSize="25sp" />
 
-    <TextView
-        android:id="@+id/mandatory_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recurrence_spinner"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/mandatory"
-        android:textSize="25sp" />
+            <Button
+                android:id="@+id/select_date_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/exp_text_view"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:text="@string/select_date" />
 
-    <CheckBox
-        android:id="@+id/mandatory_check_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recurrence_spinner"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:checked="false" />
+            <TextView
+                android:id="@+id/time_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/date_text_view"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="25dp"
+                android:textSize="25sp" />
 
-    <EditText
-        android:id="@+id/description_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mandatory_text_view"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="100dp"
-        android:background="@drawable/border"
-        android:hint="@string/description"
-        android:inputType="textMultiLine" />
+            <Button
+                android:id="@+id/select_time_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/select_date_button"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:text="@string/select_time" />
+
+            <Spinner
+                android:id="@+id/recurrence_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/select_time_button"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:prompt="@string/does_not_repeat" />
+
+            <TextView
+                android:id="@+id/needs_verification_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recurrence_spinner"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/verification_required"
+                android:textSize="25sp" />
+
+            <CheckBox
+                android:id="@+id/needs_verification_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recurrence_spinner"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:checked="false" />
+
+            <EditText
+                android:id="@+id/description_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/needs_verification_text_view"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="100dp"
+                android:background="@drawable/border"
+                android:hint="@string/description"
+                android:inputType="textMultiLine" />
+        </RelativeLayout>
+    </ScrollView>
+
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"

@@ -14,11 +14,11 @@
     <string name="add_a_clan_member">Add a clan member</string>
     <string name="new_quest">New Quest</string>
     <string name="select_a_child">Select a child</string>
-    <string name="select_a_quest">Select a quest</string>
+    <string name="enter_a_quest">Enter a quest</string>
     <string name="select_date">Select Date</string>
     <string name="select_time">Select Time</string>
     <string name="does_not_repeat">Does not repeat</string>
-    <string name="mandatory">Mandatory</string>
+    <string name="verification_required">Verification Required</string>
     <string name="optional">Optional</string>
     <string name="description">Description</string>
     <string name="clan">Clan</string>
@@ -46,6 +46,7 @@
     <string name="upcoming">Upcoming</string>
     <string name="pending">Pending</string>
     <string name="view_proof">View Proof</string>
+    <string name="add_proof">Add Proof</string>
     <string name="due_date">Due Date</string>
     <string name="due_time">Due Time</string>
     <string name="recurrence">Recurrence</string>
@@ -59,39 +60,11 @@
     <string name="add_a_child">Add a child</string>
     <string name="qr_code">QR Code</string>
     <string name="unable_to_detect_qr_code">Unable to detect QR code</string>
+    <string name="unable_to_recognize_speech">Unable to recognize speech</string>
     <string name="debug">debug</string>
     <string name="all_quests">all_quests</string>
 
 
-
-    <!-- TODO: remove once it is added to the server -->
-    <string-array name="quest_array">
-        <item>Select a quest</item>
-        <item>Dusting</item>
-        <item>Sweeping</item>
-        <item>Vacuuming</item>
-        <item>Washing dishes</item>
-        <item>Feeding pets</item>
-        <item>Doing laundry</item>
-        <item>Preparing meals</item>
-        <item>Cleaning bathrooms</item>
-        <item>Washing bedding</item>
-        <item>Mopping floors</item>
-        <item>Watering plants</item>
-        <item>Mowing the lawn</item>
-        <item>Weeding the garden</item>
-        <item>Taking out the trash</item>
-        <item>Wash the car</item>
-        <item>Washing windows</item>
-        <item>Bathing pets</item>
-        <item>Clean refrigerator</item>
-        <item>Clean blinds</item>
-        <item>Vacuum curtains</item>
-        <item>Shampooing the carpets</item>
-        <item>Winterize the house</item>
-        <item>Clean garage</item>
-        <item>Prune trees and shrubs</item>
-    </string-array>
 
     <string-array name="recurrence_array">
         <item>Does not repeat</item>
