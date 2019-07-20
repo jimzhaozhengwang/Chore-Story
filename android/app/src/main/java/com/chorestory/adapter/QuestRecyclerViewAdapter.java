@@ -1,6 +1,8 @@
 package com.chorestory.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +35,13 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
 
         view.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                activity.navigateTo(ParentQuestDetailsActivity.class);
+                QuestRecyclerViewItem currentItem = itemList.get(i);
+                System.out.println("FIND I: " + i);
+                Intent intent = new Intent(activity, ParentQuestDetailsActivity.class);
+                System.out.println("QID1: " + currentItem.getId());
+                intent.putExtra("qid", currentItem.getId());
+                intent.putExtra("ownerName", currentItem.getOwner());
+                activity.startActivity(intent);
             }
         });
 

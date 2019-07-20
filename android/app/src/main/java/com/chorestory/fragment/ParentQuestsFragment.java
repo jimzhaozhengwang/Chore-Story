@@ -119,6 +119,7 @@ public class ParentQuestsFragment extends ChoreStoryFragment {
                 });
             } else {
                 // TODO: redirect to login page
+                System.out.println("DID NOT CALL");
             }
         }
     }

@@ -1,11 +1,16 @@
 package com.chorestory.model;
 
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.chorestory.R;
 import com.chorestory.helpers.QuestCompletion;
+import com.chorestory.templates.GetQuestsResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class QuestRecyclerViewItem {
@@ -18,6 +23,10 @@ public class QuestRecyclerViewItem {
     private int dueDate;
     private boolean recurring;
     private int nextOccurrence;
+    private int id;
+    private boolean needsVerification;
+    private int completedOn;
+    private int verifiedOn;
 
     public static List<QuestRecyclerViewItem> getData(ArrayList<QuestParcelable> questParcelables) {
         List<QuestRecyclerViewItem> dataList = new ArrayList<>();
@@ -37,6 +46,41 @@ public class QuestRecyclerViewItem {
         this.dueDate = quest.getDue();
         this.recurring = quest.getReccurring();
         this.nextOccurrence = quest.getNextOccurrence();
+        System.out.println("QID3: " + quest.getId());
+        this.id = quest.getId();
+        this.needsVerification = quest.getNeedsVerification();
+        this.completedOn = stringToTimestamp(quest.getCompletedOn());
+        this.verifiedOn = stringToTimestamp(quest.getVerifiedOn());
+    }
+
+    public QuestRecyclerViewItem(GetQuestsResponse.Quest quest) {
+        this.name = quest.getTitle();
+        this.exp = quest.getReward();
+        this.owner = null;
+        this.description = quest.getDescription();
+        this.mandatory = true;
+        this.dueDate = quest.getDue();
+        this.recurring = quest.getRecurring();
+        this.nextOccurrence = quest.getNextOccurrence();
+        this.id = quest.getId();
+        System.out.println("QID2: " + quest.getId());
+        this.needsVerification = quest.getNeedsVerification();
+        this.completedOn = stringToTimestamp(quest.getCompletedOn());
+        this.verifiedOn = stringToTimestamp(quest.getVerifiedOn());
+    }
+
+    private int stringToTimestamp(String str) {
+        if (str == null) return -1;
+        String pattern = "EEE, dd MMM yyyy HH:mm:ss zzz";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Date date = new Date();
+        try {
+            date = format.parse(str);
+        } catch (ParseException e) {
+            Log.d("BUG", "Parse exception: ");
+            Log.d("BUG", e.getMessage());
+        }
+        return (int)(date.getTime() / 1000);
     }
 
     public String getName() {
@@ -94,17 +138,46 @@ public class QuestRecyclerViewItem {
     }
 
     public int getDueDate() {
-        return dueDate;
+        if (recurring) {
+            return nextOccurrence;
+        } else{
+            return dueDate;
+        }
     }
+
+    public int getId() { return id; }
 
     public String getDueDateString() {
         long currentTime = System.currentTimeMillis();
-        long dueDateMilli;
-        if (recurring) {
-            dueDateMilli = ((long) nextOccurrence) * 1000;
-        } else{
-            dueDateMilli = ((long) dueDate) * 1000;
-        }
+        long dueDateMilli = (long) getDueDate() * 1000;
         return (String) DateUtils.getRelativeTimeSpanString(dueDateMilli, currentTime, 0L, DateUtils.FORMAT_ABBREV_ALL);
+    }
+
+    public QuestCompletion getStatus() {
+        long currentTime = System.currentTimeMillis();
+        long dueDateMilli = (long) getDueDate() * 1000;
+        if ((completedOn > 0 && (!needsVerification) || verifiedOn > 0)) {
+            return QuestCompletion.COMPLETED;
+        }
+        if (completedOn > 0) {
+            return QuestCompletion.PENDING;
+        }
+        if (dueDateMilli > currentTime) {
+            return QuestCompletion.UPCOMING;
+        }
+        return QuestCompletion.OVERDUE;
+    }
+
+    public String getQuestCompletionString(QuestCompletion status) {
+        switch (status) {
+            case OVERDUE:
+                return "Overdue";
+            case PENDING:
+                return "Pending";
+            case UPCOMING:
+                return "Upcoming";
+            default:
+                return "Completed";
+        }
     }
 }

@@ -55,7 +55,11 @@ public class GetQuestsResponse {
         }
 
         public Integer getNextOccurrence() {
-            return Math.round(nextOccurrence);
+            if (nextOccurrence != null) {
+                return Math.round(nextOccurrence);
+            } else {
+                return -1;
+            }
         }
 
         public Owner getOwner() {
