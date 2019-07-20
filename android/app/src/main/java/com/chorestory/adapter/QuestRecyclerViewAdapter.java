@@ -9,14 +9,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chorestory.R;
+import com.chorestory.app.App;
+import com.chorestory.app.ChildQuestDetailsActivity;
 import com.chorestory.app.ChoreStoryActivity;
 import com.chorestory.app.ParentQuestDetailsActivity;
+import com.chorestory.helpers.TokenHandler;
 import com.chorestory.model.QuestRecyclerViewItem;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 
 public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecyclerViewAdapter.MyViewHolder> {
+
+    @Inject
+    TokenHandler tokenHandler;
 
     private List<QuestRecyclerViewItem> itemList;
     private ChoreStoryActivity activity;
@@ -24,6 +32,7 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
     public QuestRecyclerViewAdapter(List<QuestRecyclerViewItem> itemList, ChoreStoryActivity activity) {
         this.itemList = itemList;
         this.activity = activity;
+        App.getAppComponent().inject(this);
     }
 
     @Override
@@ -33,7 +42,13 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
 
         view.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                activity.navigateTo(ParentQuestDetailsActivity.class);
+                String token = tokenHandler.getToken(activity);
+                // NOTE: this doesn't work yet because child tokens aren't set up
+                if (tokenHandler.isParentToken(token)) {
+                    activity.navigateTo(ParentQuestDetailsActivity.class);
+                } else {
+                    activity.navigateTo(ChildQuestDetailsActivity.class);
+                }
             }
         });
 

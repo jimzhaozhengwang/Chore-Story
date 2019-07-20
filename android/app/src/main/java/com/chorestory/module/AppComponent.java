@@ -1,7 +1,9 @@
 package com.chorestory.module;
 
+import com.chorestory.adapter.QuestRecyclerViewAdapter;
 import com.chorestory.app.ChildHomeActivity;
 import com.chorestory.app.ChildJoinClanActivity;
+import com.chorestory.app.ChildQuestDetailsActivity;
 import com.chorestory.app.CreateClanActivity;
 import com.chorestory.app.MainActivity;
 import com.chorestory.app.ParentHomeActivity;
@@ -39,6 +41,8 @@ public interface AppComponent {
 
     void inject(ParentQuestDetailsActivity activity);
 
+    void inject(ChildQuestDetailsActivity activity);
+
     void inject(ParentClanFragment fragment);
 
     void inject(ParentProfileFragment fragment);
@@ -46,4 +50,6 @@ public interface AppComponent {
     void inject(ParentCreateFragment fragment);
 
     void inject(SplashActivity activity);
+
+    void inject(QuestRecyclerViewAdapter adapter);
 }
