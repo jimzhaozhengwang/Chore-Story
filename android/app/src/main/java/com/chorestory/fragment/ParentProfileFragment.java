@@ -101,9 +101,7 @@ public class ParentProfileFragment extends ChoreStoryFragment {
                             parentNameTextView.setText(respData.getName());
                             clanNameTextView.setText(respData.getClanName());
                             parentEmailTextView.setText(respData.getEmail());
-
                             parentImageView.setImageResource(R.drawable.king_color); // TODO: get image id (currently not being set)
-
                         }
                     }
 

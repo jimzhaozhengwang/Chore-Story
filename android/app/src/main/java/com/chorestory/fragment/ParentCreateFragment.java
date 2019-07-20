@@ -2,13 +2,11 @@ package com.chorestory.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
-
-import com.chorestory.app.MainActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.speech.RecognizerIntent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,14 +18,18 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import androidx.viewpager.widget.ViewPager;
 
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.adapter.HomeAdapter;
 import com.chorestory.app.App;
+import com.chorestory.app.MainActivity;
 import com.chorestory.helpers.QuestCreationHandler;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
@@ -35,10 +37,12 @@ import com.chorestory.templates.AccountResponse;
 import com.chorestory.templates.AccountResponse.Data.Child;
 import com.chorestory.templates.QuestCreateRequest;
 import com.chorestory.templates.QuestCreateResponse;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -49,23 +53,27 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ParentCreateFragment extends ChoreStoryFragment {
+
+    private final int SPEECH_REQUEST_CODE = 100;
 
     @Inject
     RetrofitInterface retrofitInterface;
     @Inject
     TokenHandler tokenHandler;
 
-
     private Spinner childSpinner;
-    private Spinner questSpinner;
+    private ImageButton micImageButton;
+    private EditText questEditText;
     private TextView expTextView;
     private TextView dateTextView;
     private Button selectDateButton;
     private TextView timeTextView;
     private Button selectTimeButton;
     private Spinner recurrenceSpinner;
-    private CheckBox mandatoryCheckBox;
+    private CheckBox needsVerificationCheckBox;
     private EditText descriptionEditText;
     private FloatingActionButton createQuestFab;
 
@@ -80,7 +88,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
     private int mHour;
     private int mMinute;
     private String recurrenceType;
-    private boolean mandatory;
+    private boolean needsVerification;
     private String description;
     private ViewPager viewPager;
 
@@ -106,12 +114,15 @@ public class ParentCreateFragment extends ChoreStoryFragment {
         mHour = -1;
         mMinute = -1;
         recurrenceType = null;
+        needsVerification = false;
         description = "";
 
         childSpinner = view.findViewById(R.id.child_spinner);
         viewPager = getActivity().findViewById(R.id.view_pager);
 
-        questSpinner = view.findViewById(R.id.quest_spinner);
+        micImageButton = view.findViewById(R.id.mic_button);
+
+        questEditText = view.findViewById(R.id.quest_edit_text);
 
         expTextView = view.findViewById(R.id.exp_text_view);
         expTextView.setText("");
@@ -126,38 +137,49 @@ public class ParentCreateFragment extends ChoreStoryFragment {
 
         recurrenceSpinner = view.findViewById(R.id.recurrence_spinner);
 
-        mandatoryCheckBox = view.findViewById(R.id.mandatory_check_box);
+        needsVerificationCheckBox = view.findViewById(R.id.needs_verification_check_box);
 
         descriptionEditText = view.findViewById(R.id.description_edit_text);
 
         createQuestFab = view.findViewById(R.id.create_quest_fab);
 
+        views = Arrays.asList(selectDateButton, selectTimeButton, createQuestFab);
+
         populateChildrenList();
 
-        ArrayAdapter<CharSequence> questSpinnerAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.quest_array, R.layout.spinner_item);
-
-        questSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        questSpinner.setAdapter(questSpinnerAdapter);
-
-        questSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        micImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                questType = (String) parent.getItemAtPosition(position);
+            public void onClick(View v) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 
-                if (questType != null && !questType.equals(getString(R.string.select_a_quest))) {
-                    exp = 30; // TODO: figure out an appropriate exp for each quest
-                    String expString = exp + " Exp";
-                    expTextView.setText(expString);
-                } else {
-                    exp = -1;
-                    expTextView.setText("");
-                }
+                startActivityForResult(intent, SPEECH_REQUEST_CODE);
+            }
+        });
+
+        questEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                questType = null;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                questType = s.toString();
+                if (questType.isEmpty()) {
+                    exp = -1;
+                    expTextView.setText("");
+                } else {
+                    exp = 2;
+                    String expString = exp + " Exp";
+                    expTextView.setText(expString);
+                }
             }
         });
 
@@ -240,10 +262,10 @@ public class ParentCreateFragment extends ChoreStoryFragment {
             }
         });
 
-        mandatoryCheckBox.setOnClickListener(new View.OnClickListener() {
+        needsVerificationCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mandatory = mandatoryCheckBox.isChecked();
+                needsVerification = needsVerificationCheckBox.isChecked();
             }
         });
 
@@ -288,7 +310,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                                 exp,
                                 timestamp,
                                 dueDate.getTime() / 1000,
-                                mandatory
+                                needsVerification
                         );
 
                         Call<QuestCreateResponse> questCreateQuery = retrofitInterface.create_quest(
@@ -307,14 +329,14 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                                     homeAdapter.getItem(2).onResume();
                                 } else {
                                     Toaster.showToast(getContext(), "Something went wrong.");
-                                    // TODO: re-enable buttons
+                                    enableViews();
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<QuestCreateResponse> call, Throwable t) {
                                 Toaster.showToast(getContext(), "Something went wrong.");
-                                // TODO: re-enable buttons
+                                enableViews();
                             }
                         });
 
@@ -329,20 +351,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
     @Override
     public void onResume() {
         super.onResume();
-        enableButtons();
-    }
-
-    // TODO: create ChoreStoryFragment as super class
-    private void disableButtons() {
-        selectDateButton.setEnabled(false);
-        selectTimeButton.setEnabled(false);
-        createQuestFab.setEnabled(false);
-    }
-
-    private void enableButtons() {
-        selectDateButton.setEnabled(true);
-        selectTimeButton.setEnabled(true);
-        createQuestFab.setEnabled(true);
+        enableViews();
     }
 
     private void populateChildrenList() {
@@ -378,10 +387,9 @@ public class ParentCreateFragment extends ChoreStoryFragment {
 
                             @Override
                             public void onNothingSelected(AdapterView<?> parent) {
-                                selectedChildId = 0;
+                                selectedChildId = -1;
                             }
                         });
-
                     }
                 }
 
@@ -420,7 +428,19 @@ public class ParentCreateFragment extends ChoreStoryFragment {
             default:
                 timestamp = -1;
         }
-
         return timestamp;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            String spokenText = results.get(0);
+
+            Toaster.showToast(getContext(), spokenText);
+        } else {
+            Toaster.showToast(getContext(), getString(R.string.unable_to_recognize_speech));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
