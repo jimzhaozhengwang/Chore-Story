@@ -10,9 +10,9 @@ import androidx.annotation.Nullable;
 import com.chorestory.R;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
+import com.chorestory.services.NotificationService;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
-import com.chorestory.services.NotificationService;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;

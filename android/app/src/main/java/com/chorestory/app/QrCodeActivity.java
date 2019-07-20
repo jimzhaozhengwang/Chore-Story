@@ -10,7 +10,6 @@ import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
-import com.chorestory.templates.AccountResponse;
 import com.chorestory.templates.SingleResponse;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -20,7 +19,6 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

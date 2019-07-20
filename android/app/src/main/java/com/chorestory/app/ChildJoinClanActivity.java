@@ -11,7 +11,6 @@ import com.chorestory.R;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.templates.ChildRequest;
-import com.chorestory.templates.ChildResponse;
 import com.chorestory.templates.SingleResponse;
 
 import java.util.Collections;

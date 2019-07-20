@@ -2,7 +2,6 @@ package com.chorestory.Interface;
 
 import com.chorestory.templates.AccountResponse;
 import com.chorestory.templates.ChildRequest;
-import com.chorestory.templates.ChildResponse;
 import com.chorestory.templates.ClanChildrenResponse;
 import com.chorestory.templates.ClanResponse;
 import com.chorestory.templates.FriendsResponse;
@@ -10,10 +9,9 @@ import com.chorestory.templates.GetQuestsResponse;
 import com.chorestory.templates.LoginRequest;
 import com.chorestory.templates.QuestCreateRequest;
 import com.chorestory.templates.QuestCreateResponse;
-import com.chorestory.templates.SingleResponse;
 import com.chorestory.templates.RegisterRequest;
+import com.chorestory.templates.SingleResponse;
 
-import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
