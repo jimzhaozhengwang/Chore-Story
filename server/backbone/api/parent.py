@@ -733,5 +733,6 @@ def get_all_quests_in_window(start, lookahead):
     all_quests = []
     for child in current_user.clan.children:
         all_quests.extend([{'owner': {'id': child.id, 'name': child.name},
-                            **generate_qst_resp(q)} for q in get_childs_quest_with_window(child, start, lookahead)])
+                            **generate_qst_resp(q, ts)} for q, ts in
+                           get_childs_quest_with_window(child, start, lookahead)])
     return json_return(all_quests)
