@@ -64,7 +64,7 @@ public class MainActivity extends ChoreStoryActivity {
                 resultCode == CommonStatusCodes.SUCCESS &&
                 data != null) {
 
-            Barcode barCode = new Barcode();//data.getParcelableExtra(getString(R.string.qr_code));
+            Barcode barCode = data.getParcelableExtra(getString(R.string.qr_code));
 
             if (barCode != null && !barCode.displayValue.isEmpty()) {
 
