@@ -67,8 +67,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
     TokenHandler tokenHandler;
 
     private Spinner childSpinner;
-    private ImageButton
-            micImageButton;
+    private ImageButton micImageButton;
     private EditText questEditText;
     private TextView expTextView;
     private TextView dateTextView;
@@ -158,7 +157,6 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                         RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 
                 startActivityForResult(intent, SPEECH_REQUEST_CODE);
-
             }
         });
 
