@@ -90,7 +90,7 @@ public class ParentQuestsFragment extends ChoreStoryFragment {
             if (tokenHandler.isParentToken(token)) {
                 long currentTime = System.currentTimeMillis() / 1000;
                 long start = currentTime - SECONDS_IN_WEEK;
-                long lookahead = SECONDS_IN_WEEK * 1;
+                long lookahead = SECONDS_IN_WEEK * 2;
                 Call<GetQuestsResponse> getQuestsQuery = retrofitInterface.get_all_quests(token, start + ".0", lookahead + ".0");
                 getQuestsQuery.enqueue(new Callback<GetQuestsResponse>() {
                     @Override
