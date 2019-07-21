@@ -1,6 +1,8 @@
 package com.chorestory.app;
 
 import android.os.Bundle;
+
+import com.chorestory.services.NotificationService;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -11,6 +13,7 @@ import com.chorestory.fragment.ChildClanFragment;
 import com.chorestory.fragment.ChildFriendsFragment;
 import com.chorestory.fragment.ChildProfileFragment;
 import com.chorestory.fragment.ChildQuestsFragment;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +44,12 @@ public class ChildHomeActivity extends ChoreStoryActivity {
         super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
         setContentView(R.layout.activity_child_home);
+
+        // Create Notification Channel and send registration id to server
+        NotificationService notificationService = new NotificationService();
+        notificationService.createNotificationChannel(getBaseContext(), getString(R.string.notification_channel_id));
+        String token = FirebaseInstanceId.getInstance().getToken();
+        notificationService.sendRegistrationToServer(token, getApplicationContext());
 
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);

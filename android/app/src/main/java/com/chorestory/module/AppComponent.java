@@ -23,6 +23,7 @@ import com.chorestory.fragment.ParentClanFragment;
 import com.chorestory.fragment.ParentCreateFragment;
 import com.chorestory.fragment.ParentProfileFragment;
 import com.chorestory.fragment.ParentQuestsFragment;
+import com.chorestory.services.NotificationService;
 
 import javax.inject.Singleton;
 
@@ -44,6 +45,8 @@ public interface AppComponent {
     void inject(ParentCreateClanActivity activity);
 
     void inject(QuestRecyclerViewAdapter adapter);
+
+    void inject(NotificationService notificationService);
 
     // Parent pages
     void inject(ParentLoginSignUpActivity activity);
