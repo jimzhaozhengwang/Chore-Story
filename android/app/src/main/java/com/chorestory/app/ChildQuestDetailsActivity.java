@@ -113,7 +113,6 @@ public class ChildQuestDetailsActivity extends ChoreStoryActivity {
 
         // Description
         questDescriptionTextView.setText(quest.getDescription());
-
     }
 
     @Override
@@ -152,7 +151,7 @@ public class ChildQuestDetailsActivity extends ChoreStoryActivity {
     }
 
     private String getDateText() {
-        return mDay + "-" + (mMonth+1) + "-" + mYear;
+        return mDay + "-" + (mMonth + 1) + "-" + mYear;
     }
 
     private String getTimeText() {
