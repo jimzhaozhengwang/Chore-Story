@@ -14,6 +14,7 @@ public class QuestRecyclerViewItem {
     private String name;
     private int exp;
     private String owner;
+    private int ownerId;
     private String description;
     private boolean mandatory;
     private int dueDate;
@@ -25,7 +26,7 @@ public class QuestRecyclerViewItem {
     private int verifiedOn;
     private int timestamp;
 
-    public static List<QuestRecyclerViewItem> getData(ArrayList<QuestParcelable> questParcelables) {
+    public static List<QuestRecyclerViewItem> getData(List<QuestParcelable> questParcelables) {
         List<QuestRecyclerViewItem> dataList = new ArrayList<>();
         for (int i = 0; i < questParcelables.size(); i++) {
             QuestRecyclerViewItem item = new QuestRecyclerViewItem(questParcelables.get(i));
@@ -38,6 +39,7 @@ public class QuestRecyclerViewItem {
         this.name = quest.getTitle();
         this.exp = quest.getReward();
         this.owner = quest.getOwnerName();
+        this.ownerId = quest.getOwnerId();
         this.description = quest.getDescription();
         this.mandatory = true;
         this.dueDate = quest.getDue();
@@ -70,7 +72,7 @@ public class QuestRecyclerViewItem {
     }
 
     private boolean stringContainsItemFromList(String inputStr, String[] items) {
-        for(int i =0; i < items.length; i++) {
+        for (int i = 0; i < items.length; i++) {
             if (inputStr.contains(items[i])) {
                 return true;
             }
@@ -81,24 +83,42 @@ public class QuestRecyclerViewItem {
     public int getImageId() {
         String lowerName = name.toLowerCase();
         int imageId;
-        if (stringContainsItemFromList(lowerName, new String[]{"laundry", "washer", "dryer"})) imageId = R.drawable.washing_machine;
-        else if (stringContainsItemFromList(lowerName, new String[]{"fold"})) imageId = R.drawable.laundry;
-        else if (stringContainsItemFromList(lowerName, new String[]{"dish"})) imageId = R.drawable.washing_plate;
-        else if (stringContainsItemFromList(lowerName, new String[]{"meal", "food"})) imageId = R.drawable.dish;
-        else if (stringContainsItemFromList(lowerName, new String[]{"dust"})) imageId = R.drawable.dusting;
-        else if (stringContainsItemFromList(lowerName, new String[]{"mop"})) imageId = R.drawable.floor_mop;
-        else if (stringContainsItemFromList(lowerName, new String[]{"paint"})) imageId = R.drawable.paint;
-        else if (stringContainsItemFromList(lowerName, new String[]{"garbage", "trash", "rubbish", "recycl", "throw"})) imageId = R.drawable.garbage;
-        else if (stringContainsItemFromList(lowerName, new String[]{"plant", "garden"})) imageId = R.drawable.garden_hose;
-        else if (stringContainsItemFromList(lowerName, new String[]{"iron", "press"})) imageId = R.drawable.iron;
-        else if (stringContainsItemFromList(lowerName, new String[]{"lawn", "grass", "mow"})) imageId = R.drawable.lawn_mower;
-        else if (stringContainsItemFromList(lowerName, new String[]{"paint"})) imageId = R.drawable.paint;
-        else if (stringContainsItemFromList(lowerName, new String[]{"shower"})) imageId = R.drawable.shower;
-        else if (stringContainsItemFromList(lowerName, new String[]{"rak"})) imageId = R.drawable.rake;
-        else if (stringContainsItemFromList(lowerName, new String[]{"toilet", "washroom", "bathroom"})) imageId = R.drawable.toilet;
-        else if (stringContainsItemFromList(lowerName, new String[]{"vacuum"})) imageId = R.drawable.vacuum;
-        else if (stringContainsItemFromList(lowerName, new String[]{"sweep", "broom"})) imageId = R.drawable.broom;
-        else if (stringContainsItemFromList(lowerName, new String[]{"room", "tidy"})) imageId = R.drawable.room;
+        if (stringContainsItemFromList(lowerName, new String[]{"laundry", "washer", "dryer"}))
+            imageId = R.drawable.washing_machine;
+        else if (stringContainsItemFromList(lowerName, new String[]{"fold"}))
+            imageId = R.drawable.laundry;
+        else if (stringContainsItemFromList(lowerName, new String[]{"dish"}))
+            imageId = R.drawable.washing_plate;
+        else if (stringContainsItemFromList(lowerName, new String[]{"meal", "food"}))
+            imageId = R.drawable.dish;
+        else if (stringContainsItemFromList(lowerName, new String[]{"dust"}))
+            imageId = R.drawable.dusting;
+        else if (stringContainsItemFromList(lowerName, new String[]{"mop"}))
+            imageId = R.drawable.floor_mop;
+        else if (stringContainsItemFromList(lowerName, new String[]{"paint"}))
+            imageId = R.drawable.paint;
+        else if (stringContainsItemFromList(lowerName, new String[]{"garbage", "trash", "rubbish", "recycl", "throw"}))
+            imageId = R.drawable.garbage;
+        else if (stringContainsItemFromList(lowerName, new String[]{"plant", "garden"}))
+            imageId = R.drawable.garden_hose;
+        else if (stringContainsItemFromList(lowerName, new String[]{"iron", "press"}))
+            imageId = R.drawable.iron;
+        else if (stringContainsItemFromList(lowerName, new String[]{"lawn", "grass", "mow"}))
+            imageId = R.drawable.lawn_mower;
+        else if (stringContainsItemFromList(lowerName, new String[]{"paint"}))
+            imageId = R.drawable.paint;
+        else if (stringContainsItemFromList(lowerName, new String[]{"shower"}))
+            imageId = R.drawable.shower;
+        else if (stringContainsItemFromList(lowerName, new String[]{"rak"}))
+            imageId = R.drawable.rake;
+        else if (stringContainsItemFromList(lowerName, new String[]{"toilet", "washroom", "bathroom"}))
+            imageId = R.drawable.toilet;
+        else if (stringContainsItemFromList(lowerName, new String[]{"vacuum"}))
+            imageId = R.drawable.vacuum;
+        else if (stringContainsItemFromList(lowerName, new String[]{"sweep", "broom"}))
+            imageId = R.drawable.broom;
+        else if (stringContainsItemFromList(lowerName, new String[]{"room", "tidy"}))
+            imageId = R.drawable.room;
         else imageId = R.drawable.house;
         return imageId;
     }
@@ -111,6 +131,10 @@ public class QuestRecyclerViewItem {
         return owner;
     }
 
+    public int getOwnerId() {
+        return ownerId;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -119,9 +143,17 @@ public class QuestRecyclerViewItem {
         return mandatory;
     }
 
-    public boolean getRecurring() { return recurring; }
+    public boolean getRecurring() {
+        return recurring;
+    }
 
-    public int getTimestamp() { return timestamp; }
+    public boolean getNeedsVerification() {
+        return needsVerification;
+    }
+
+    public int getTimestamp() {
+        return timestamp;
+    }
 
     public String getRecurrenceText() {
         int timestamp = getTimestamp();
@@ -142,12 +174,14 @@ public class QuestRecyclerViewItem {
     public int getDueDate() {
         if (recurring) {
             return nextOccurrence;
-        } else{
+        } else {
             return dueDate;
         }
     }
 
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
     public String getDueDateString() {
         long currentTime = System.currentTimeMillis();

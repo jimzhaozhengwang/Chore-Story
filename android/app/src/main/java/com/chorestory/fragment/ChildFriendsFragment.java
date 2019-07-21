@@ -125,11 +125,11 @@ public class ChildFriendsFragment extends ChoreStoryFragment {
 
                     @Override
                     public void onFailure(Call<ClanChildrenResponse> call, Throwable t) {
-                        // TODO: delete the token we have stored and redirect the user to the login page?
+                        deleteTokenNavigateMain(getContext());
                     }
                 });
             } else {
-                // TODO: redirect to login page
+                deleteTokenNavigateMain(getContext());
             }
         }
     }

@@ -95,7 +95,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
     private ViewPager viewPager;
 
     private String token;
-    private List<Child> fragmentChildList;
+    private List<Child> childList;
 
     final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
@@ -360,19 +360,20 @@ public class ParentCreateFragment extends ChoreStoryFragment {
     }
 
     private void populateChildrenList() {
-
         if (token != null && tokenHandler.isParentToken(token)) {
             Call<AccountResponse> accountQuery = retrofitInterface.me(token);
             accountQuery.enqueue(new Callback<AccountResponse>() {
                 @Override
                 public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
-                    if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                    if (response.isSuccessful() &&
+                            response.body() != null &&
+                            response.body().hasResponse()) {
 
                         AccountResponse.Data respData = response.body().getData();
-                        fragmentChildList = respData.getChildren();
+                        childList = respData.getChildren();
 
                         List<String> childNameList = new ArrayList<>();
-                        for (Child child : fragmentChildList) {
+                        for (Child child : childList) {
                             childNameList.add(child.getName());
                         }
 
@@ -383,8 +384,8 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                         childSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                if (position < fragmentChildList.size()) {
-                                    selectedChildId = fragmentChildList.get(position).getId();
+                                if (position < childList.size()) {
+                                    selectedChildId = childList.get(position).getId();
                                 } else {
                                     Log.d("BUG", "Our child list is inconsistent somehow.");
                                 }

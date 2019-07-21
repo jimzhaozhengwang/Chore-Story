@@ -66,10 +66,12 @@
     <string name="sign_up_to_join_your_clan">Sign up to join your clan!</string>
     <string name="qid">qid</string>
     <string name="owner_name">owner_name</string>
+    <string name="owner_id">owner_id</string>
     <string name="ts">ts</string>
     <string name="all_quests">all_quests</string>
     <string name="welcome_to_the">Welcome to the</string>
     <string name="add_friend">Add Friend</string>
+    <string name="log_in_child">Log In Child</string>
 
 
     <string-array name="recurrence_array">

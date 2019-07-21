@@ -1,8 +1,6 @@
 package com.chorestory.adapter;
 
 import android.content.Intent;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +51,7 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
                 }
                 intent.putExtra(activity.getResources().getString(R.string.qid), currentItem.getId());
                 intent.putExtra(activity.getResources().getString(R.string.owner_name), currentItem.getOwner());
+                intent.putExtra(activity.getResources().getString(R.string.owner_id), currentItem.getOwnerId());
                 if (currentItem.getRecurring()) {
                     intent.putExtra(activity.getResources().getString(R.string.ts), currentItem.getDueDate());
                 }
@@ -65,7 +64,7 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.quest_recycler_view_item, viewGroup, false);
-      
+
         return new MyViewHolder(view);
     }
 
@@ -78,8 +77,10 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
         // Quest name
         myViewHolder.questNameTextView.setText(currentItem.getName());
         // Quest owner
-        String owner = currentItem.getOwner() + "'s quest";
-        myViewHolder.questOwnerTextView.setText(owner);
+        if (currentItem.getOwner() != null) {
+            String owner = currentItem.getOwner() + "'s quest";
+            myViewHolder.questOwnerTextView.setText(owner);
+        }
         // Quest Exp
         String exp = currentItem.getExp() + " Exp";
         myViewHolder.questExpTextView.setText(exp);

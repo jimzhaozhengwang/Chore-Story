@@ -6,10 +6,27 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.helpers.QuestCompletion;
+import com.chorestory.model.QuestRecyclerViewItem;
+import com.chorestory.templates.GetQuestResponse;
+import com.chorestory.helpers.TokenHandler;
+
+import java.util.Calendar;
+
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChildQuestDetailsActivity extends ChoreStoryActivity {
+
+    @Inject
+    RetrofitInterface retrofitInference;
+    @Inject
+    TokenHandler tokenHandler;
 
     private TextView questNameTextView;
     private ImageView questImageView;
@@ -26,7 +43,7 @@ public class ChildQuestDetailsActivity extends ChoreStoryActivity {
     private int mDay;
     private int mHour;
     private int mMinute;
-    private String questName;
+    private QuestRecyclerViewItem quest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,38 +65,29 @@ public class ChildQuestDetailsActivity extends ChoreStoryActivity {
         timeTextView = findViewById(R.id.quest_time_text_view);
         recurrenceTextView = findViewById(R.id.recurrence_text_view);
         questDescriptionTextView = findViewById(R.id.quest_description_text_view);
+    }
 
-        // TODO set all initial values to actual quest info
-        mYear = 1996;
-        mMonth = 11;
-        mDay = 29;
-        mHour = 5;
-        mMinute = 30;
+    private void populateFields() {
 
         // Quest Name
-        // TODO: fetch actual value
-        questName = "Sweep kitchen floor";
-        questNameTextView.setText(questName);
+        questNameTextView.setText(quest.getName());
 
         // Quest icon
-        // TODO: fetch quest icon based on name
-        int icon = R.drawable.cleaner;
-        questImageView.setImageResource(icon);
+        questImageView.setImageResource(quest.getImageId());
 
         // Quest Exp
-        // TODO: fetch actual value
-        expTextView.setText("20");
+        expTextView.setText(Integer.toString(quest.getExp()));
 
         // status
-        // TODO: fetch actual value and possibly hide button
-        int statusText = R.string.pending_approval;
-        QuestCompletion questStatus = QuestCompletion.PENDING;
-        statusTextView.setText(getString(statusText));
+        QuestCompletion status = quest.getStatus();
+        String statusString = quest.getQuestCompletionString(status);
+
+        statusTextView.setText(statusString);
         int statusImage;
-        if (questStatus == QuestCompletion.PENDING) {
+        if (status == QuestCompletion.PENDING) {
             statusImage = R.drawable.yellow_check_mark;
             addProofButton.setVisibility(addProofButton.GONE);
-        } else if (questStatus == QuestCompletion.COMPLETED) {
+        } else if (status == QuestCompletion.COMPLETED) {
             statusImage = R.drawable.green_check_mark;
             addProofButton.setVisibility(addProofButton.GONE);
         } else {
@@ -87,21 +95,63 @@ public class ChildQuestDetailsActivity extends ChoreStoryActivity {
         }
         statusImageView.setImageResource(statusImage);
 
-        // Date
-        dateTextView.setText(getDateText());
+        // Date and Time
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis((long) quest.getDueDate() * 1000);
 
-        // Time
+        mYear = cal.get(Calendar.YEAR);
+        mMonth = cal.get(Calendar.MONTH);
+        mDay = cal.get(Calendar.DAY_OF_MONTH);
+        mHour = cal.get(Calendar.HOUR_OF_DAY);
+        mMinute = cal.get(Calendar.MINUTE);
+
+        dateTextView.setText(getDateText());
         timeTextView.setText(getTimeText());
 
         // Recurrence
-        recurrenceTextView.setText("Repeat once a week");
+        recurrenceTextView.setText(quest.getRecurrenceText());
 
-        // TODO: fetch actual value
-        questDescriptionTextView.setText("This is the description of the quest");
+        // Description
+        questDescriptionTextView.setText(quest.getDescription());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String token = tokenHandler.getToken(this);
+        if (token != null) {
+            if (tokenHandler.isChildToken(token)) {
+                int qid = getIntent().getIntExtra(getResources().getString(R.string.qid), 1);
+                int ts = getIntent().getIntExtra(getResources().getString(R.string.ts), -1);
+                Call<GetQuestResponse> getQuestQuery;
+                if (ts == -1) {
+                    getQuestQuery = retrofitInference.get_quest(token, qid);
+                } else {
+                    ts -= 60 * 5; // the response uses math.round so subtract 5 minutes to be safe
+                    getQuestQuery = retrofitInference.get_quest_ts(token, qid, ts + ".0");
+                }
+                getQuestQuery.enqueue(new Callback<GetQuestResponse>() {
+                    @Override
+                    public void onResponse(Call<GetQuestResponse> call, Response<GetQuestResponse> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                            quest = new QuestRecyclerViewItem(response.body().getQuest());
+                            populateFields();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetQuestResponse> call, Throwable t) {
+                        // TODO: delete the token we have stored and redirect the user to the login page?
+                    }
+                });
+            } else {
+                // TODO: redirect to login page
+            }
+        }
     }
 
     private String getDateText() {
-        return mDay + "-" + mMonth + "-" + mYear;
+        return mDay + "-" + (mMonth + 1) + "-" + mYear;
     }
 
     private String getTimeText() {
