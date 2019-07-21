@@ -29,6 +29,7 @@ import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.adapter.HomeAdapter;
 import com.chorestory.app.App;
+import com.chorestory.app.MainActivity;
 import com.chorestory.helpers.QuestCreationHandler;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
@@ -395,11 +396,11 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                 @Override
                 public void onFailure(Call<AccountResponse> call, Throwable t) {
                     Toaster.showToast(getContext(), "Internal error occurred.");
-                    // TODO: delete the token we have stored and redirect the user to the login page
+                    deleteTokenNavigateMain(getContext());
                 }
             });
         } else {
-            // TODO: delete the token and redirect user to login page?
+            deleteTokenNavigateMain(getContext());
         }
     }
 

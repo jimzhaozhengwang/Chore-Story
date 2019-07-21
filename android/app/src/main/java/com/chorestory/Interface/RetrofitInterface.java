@@ -11,8 +11,8 @@ import com.chorestory.templates.GetQuestsResponse;
 import com.chorestory.templates.LoginRequest;
 import com.chorestory.templates.QuestCreateRequest;
 import com.chorestory.templates.QuestCreateResponse;
-import com.chorestory.templates.SingleResponse;
 import com.chorestory.templates.RegisterRequest;
+import com.chorestory.templates.SingleResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -41,10 +41,21 @@ public interface RetrofitInterface {
             @Header("Authorization") String auth
     );
 
+    @GET("me")
+    Call<ChildResponse> me_child(
+            @Header("Authorization") String auth
+    );
+
     @Headers("Content-Type: application/json")
     @POST("child")
-    Call<ChildResponse> create_child(
-            @Header("Authorization") String auth,
+    Call<SingleResponse<String>> get_child_clan_token(
+            @Header("Authorization") String auth
+    );
+
+    @Headers("Content-Type: application/json")
+    @POST("child/{cid}")
+    Call<SingleResponse<String>> create_child(
+            @Path("cid") String cid,
             @Body ChildRequest childRequest
     );
 
