@@ -2,13 +2,23 @@ package com.chorestory.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.fragment.app.Fragment;
+
 import android.view.View;
+
+import com.chorestory.app.MainActivity;
+import com.chorestory.helpers.TokenHandler;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 abstract public class ChoreStoryFragment extends Fragment {
     List<View> views;
+
+    @Inject
+    TokenHandler tokenHandler;
 
     @Override
     public void onResume() {
@@ -40,5 +50,10 @@ abstract public class ChoreStoryFragment extends Fragment {
         Intent intent = new Intent(context, toClass);
         intent.putExtra(key, value);
         startActivity(intent);
+    }
+
+    protected void deleteTokenNavigateMain(Context context) {
+        tokenHandler.deleteStoredToken(context);
+        navigateTo(context, MainActivity.class);
     }
 }

@@ -1,14 +1,15 @@
 package com.chorestory.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
@@ -28,22 +29,22 @@ import retrofit2.Response;
 
 public class ParentProfileFragment extends ChoreStoryFragment {
 
-    ImageView parentImageView;
-    TextView parentNameTextView;
-    TextView clanNameTextView;
-    Button addParentGuardianButton;
-    Button addChildButton;
-    TextView parentEmailTextView;
+    private ImageView parentImageView;
+    private TextView parentNameTextView;
+    private TextView clanNameTextView;
+    private Button addParentGuardianButton;
+    private Button addChildButton;
+    private TextView parentEmailTextView;
+    private Button logoutButton;
 
     @Inject
-    RetrofitInterface retrofitInference;
+    RetrofitInterface retrofitInterface;
     @Inject
     TokenHandler tokenHandler;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_profile, container, false);
-
         App.getAppComponent().inject(this);
 
         parentImageView = view.findViewById(R.id.parent_image_view);
@@ -52,14 +53,13 @@ public class ParentProfileFragment extends ChoreStoryFragment {
         addParentGuardianButton = view.findViewById(R.id.add_parent_guardian_button);
         addChildButton = view.findViewById(R.id.add_child_button);
         parentEmailTextView = view.findViewById(R.id.parent_email_text_view);
+        logoutButton = view.findViewById(R.id.logout_parent_button);
 
-        // TODO: fetch parent info; replace mocked
-        parentImageView.setImageResource(R.drawable.king_color);
-        parentNameTextView.setText("David");
-        clanNameTextView.setText("CS449");
-
-        views = Arrays.asList(addParentGuardianButton, addChildButton);
+        views = Arrays.asList(addParentGuardianButton, addChildButton, logoutButton);
         enableViews();
+
+        // TODO: need to add a child selection dropdown somewhere here
+        //          so we can generate the child login token for the qr code
 
         addParentGuardianButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +83,13 @@ public class ParentProfileFragment extends ChoreStoryFragment {
             }
         });
 
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteTokenNavigateMain(getContext());
+            }
+        });
+
         return view;
     }
 
@@ -93,7 +100,7 @@ public class ParentProfileFragment extends ChoreStoryFragment {
         String token = tokenHandler.getToken(getContext());
         if (token != null) {
             if (tokenHandler.isParentToken(token)) {
-                Call<AccountResponse> accountQuery = retrofitInference.me(token);
+                Call<AccountResponse> accountQuery = retrofitInterface.me(token);
                 accountQuery.enqueue(new Callback<AccountResponse>() {
                     @Override
                     public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
@@ -105,19 +112,20 @@ public class ParentProfileFragment extends ChoreStoryFragment {
                             parentNameTextView.setText(respData.getName());
                             clanNameTextView.setText(respData.getClanName());
                             parentEmailTextView.setText(respData.getEmail());
-
-                            parentImageView.setImageResource(R.drawable.king_color); // TODO: get image id
+                            parentImageView.setImageResource(R.drawable.king_color); // TODO: get image id (currently not being set)
+                        } else {
+                            deleteTokenNavigateMain(getContext());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<AccountResponse> call, Throwable t) {
                         Toaster.showToast(getContext(), "Internal error occurred.");
-                        // TODO: delete the token we have stored and redirect the user to the login page
+                        deleteTokenNavigateMain(getContext());
                     }
                 });
             } else {
-                // TODO: redirect to login page
+                deleteTokenNavigateMain(getContext());
             }
         }
     }

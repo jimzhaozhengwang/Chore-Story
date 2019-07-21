@@ -31,7 +31,7 @@ import retrofit2.Response;
 public class ParentQuestsFragment extends ChoreStoryFragment {
 
     @Inject
-    RetrofitInterface retrofitInference;
+    RetrofitInterface retrofitInterface;
     @Inject
     TokenHandler tokenHandler;
 
@@ -91,7 +91,7 @@ public class ParentQuestsFragment extends ChoreStoryFragment {
                 long currentTime = System.currentTimeMillis() / 1000;
                 long start = currentTime - SECONDS_IN_WEEK;
                 long lookahead = SECONDS_IN_WEEK * 2;
-                Call<GetQuestsResponse> getQuestsQuery = retrofitInference.get_all_quests(token, start + ".0", lookahead + ".0");
+                Call<GetQuestsResponse> getQuestsQuery = retrofitInterface.get_all_quests(token, start + ".0", lookahead + ".0");
                 getQuestsQuery.enqueue(new Callback<GetQuestsResponse>() {
                     @Override
                     public void onResponse(Call<GetQuestsResponse> call, Response<GetQuestsResponse> response) {
@@ -109,11 +109,11 @@ public class ParentQuestsFragment extends ChoreStoryFragment {
                     @Override
                     public void onFailure(Call<GetQuestsResponse> call, Throwable t) {
                         Toaster.showToast(getContext(), "Internal error occurred.");
-                        // TODO: delete the token we have stored and redirect the user to the login page?
+                        deleteTokenNavigateMain(getContext());
                     }
                 });
             } else {
-                // TODO: redirect to login page
+                deleteTokenNavigateMain(getContext());
             }
         }
     }

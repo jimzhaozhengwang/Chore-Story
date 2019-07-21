@@ -14,6 +14,8 @@ import com.chorestory.app.ParentQuestDetailsActivity;
 import com.chorestory.app.ParentSignUpActivity;
 import com.chorestory.app.QrCodeActivity;
 import com.chorestory.app.SplashActivity;
+import com.chorestory.fragment.ChildClanFragment;
+import com.chorestory.fragment.ChildProfileFragment;
 import com.chorestory.fragment.ChildFriendsFragment;
 import com.chorestory.fragment.ParentClanFragment;
 import com.chorestory.fragment.ParentCreateFragment;
@@ -27,25 +29,30 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppModule.class, NetModule.class, AuthModule.class})
 public interface AppComponent {
+
+    // General pages
     void inject(MainActivity activity);
 
+    void inject(SplashActivity activity);
+
+    void inject(QrCodeActivity activity);
+
+    void inject(CameraActivity activity);
+
+    void inject(CreateClanActivity activity);
+
+    void inject(QuestRecyclerViewAdapter adapter);
+
+    // Parent pages
     void inject(ParentLoginSignUpActivity activity);
 
     void inject(ParentLoginActivity activity);
 
     void inject(ParentSignUpActivity activity);
 
-    void inject(CreateClanActivity activity);
-
     void inject(ParentHomeActivity activity);
 
-    void inject(ChildJoinClanActivity activity);
-
-    void inject(ChildHomeActivity activity);
-
     void inject(ParentQuestDetailsActivity activity);
-
-    void inject(ChildQuestDetailsActivity activity);
 
     void inject(ParentClanFragment fragment);
 
@@ -55,13 +62,16 @@ public interface AppComponent {
 
     void inject(ParentQuestsFragment fragment);
 
-    void inject(SplashActivity activity);
+    // Child pages
+    void inject(ChildJoinClanActivity activity);
 
-    void inject(QuestRecyclerViewAdapter adapter);
+    void inject(ChildHomeActivity activity);
 
-    void inject(QrCodeActivity activity);
+    void inject(ChildQuestDetailsActivity activity);
 
-    void inject(CameraActivity activity);
+    void inject(ChildClanFragment fragment);
+
+    void inject(ChildProfileFragment fragment);
 
     void inject(ChildFriendsFragment fragment);
 }
