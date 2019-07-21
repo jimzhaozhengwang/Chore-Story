@@ -2,53 +2,57 @@ package com.chorestory.templates;
 
 import android.util.Log;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
+
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeTemplate {
-    private String year;
-    private String month;
-    private String day;
+    private int year;
+    private int month;
+    private int day;
 
-    private String hour;
-    private String minute;
+    private int hour;
+    private int minute;
 
     public TimeTemplate(String time, String format) {
-        SimpleDateFormat formatter = new SimpleDateFormat(format);
-        Date formattedDate = new Date(); // use today as a failsafe
+        DateFormat formatter = new SimpleDateFormat(format);
+        DateTime formattedDate = new DateTime(); // use today as a failsafe
 
         try {
-            formattedDate = formatter.parse(time);
-        } catch (ParseException e) {
+            formattedDate = ISODateTimeFormat.dateTimeParser().parseDateTime(time);
+        } catch (Exception e) {
             Log.d("BUG", "Retrofit time parsing error");
             Log.d("BUG", e.getMessage());
         }
 
-        year = new SimpleDateFormat("yyyy").format(formattedDate);
-        month = new SimpleDateFormat("MM").format(formattedDate);
-        day = new SimpleDateFormat("dd").format(formattedDate);
-        hour = new SimpleDateFormat("HH").format(formattedDate);
-        minute = new SimpleDateFormat("mm").format(formattedDate);
+        year = formattedDate.getYear();
+        month = formattedDate.getMonthOfYear();
+        day = formattedDate.getDayOfMonth();
+        hour = formattedDate.getHourOfDay();
+        minute = formattedDate.getMinuteOfHour();
     }
 
-    public String getYear() {
+    public int getYear() {
         return year;
     }
 
-    public String getMonth() {
+    public int getMonth() {
         return month;
     }
 
-    public String getDay() {
+    public int getDay() {
         return day;
     }
 
-    public String getHour() {
+    public int getHour() {
         return hour;
     }
 
-    public String getMinute() {
+    public int getMinute() {
         return minute;
     }
 }

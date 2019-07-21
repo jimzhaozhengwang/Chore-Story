@@ -27,7 +27,7 @@ public class QuestDialogFlowResponse {
         }
 
         public boolean hasChild() {
-            return child != null && !child.equals("");
+            return child != null && !child.isEmpty();
         }
 
         public Object getExp() {
@@ -46,11 +46,15 @@ public class QuestDialogFlowResponse {
         }
 
         public boolean hasQuest() {
-            return quest != null && !quest.equals("");
+            return quest != null && !quest.isEmpty();
         }
 
         public Time getTime() {
             return time;
+        }
+
+        public boolean hasTime() {
+            return time != null;
         }
 
         public class Time {
@@ -58,11 +62,11 @@ public class QuestDialogFlowResponse {
             private String startDateTime;
 
             private TimeTemplate formatTime(String time) {
-                if (time == null || time.equals("")) {
+                if (time == null || time.isEmpty()) {
                     return null;
                 }
 
-                return new TimeTemplate(time, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+                return new TimeTemplate(time, "yyyy-MM-dd'T'HH:mm:ss:SS");
             }
 
             public TimeTemplate getEndDateTime() {

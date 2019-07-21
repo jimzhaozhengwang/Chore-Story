@@ -449,7 +449,8 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                         if (respData.hasChild()) {
                             int position = 0;
                             for (Child child : fragmentChildList) {
-                                if (child.getName().equals(respData.getChild())) {
+                                String currentName = child.getName().toLowerCase();
+                                if (currentName.equals(respData.getChild().toLowerCase())) {
                                     childSpinner.setSelection(position);
                                 }
                                 position++;
@@ -467,21 +468,37 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                         }
 
                         // Set end date
-                        TimeTemplate endDate = respData.getTime().getEndDateTime();
-                        if (endDate != null) {
-                            dateTextView.setText(
-                                    endDate.getDay() + "-" +
-                                            endDate.getMonth() + "-" +
-                                            endDate.getYear());
-                            timeTextView.setText(endDate.getHour() + ":" + endDate.getMinute());
+                        if (respData.hasTime()) {
+                            TimeTemplate endDate = respData.getTime().getEndDateTime();
+                            if (endDate != null) {
+                                dateTextView.setText(
+                                        endDate.getDay() + "-" +
+                                        endDate.getMonth() + "-" +
+                                        endDate.getYear());
+                                timeTextView.setText(
+                                        endDate.getHour() + ":" +
+                                        endDate.getMinute());
 
-                            // Set the globals because parsing a text box is worse
-                            mDay = Integer.parseInt(endDate.getDay());
-                            mMonth = Integer.parseInt(endDate.getMonth());
-                            mYear = Integer.parseInt(endDate.getYear());
+                                // Set the values for form submission
+                                yearDateStandard = String.format(
+                                        "%02d-%02d-%02d",
+                                        endDate.getYear(),
+                                        endDate.getMonth(),
+                                        endDate.getDay());
+                                timeDateStandard = String.format(
+                                        "%02d:%02d:%02d",
+                                        endDate.getHour(),
+                                        endDate.getMinute(),
+                                        0);
 
-                            mHour = Integer.parseInt(endDate.getHour());
-                            mMinute = Integer.parseInt(endDate.getMinute());
+                                // Set the values for error checking
+                                mDay = endDate.getDay();
+                                mMonth = endDate.getMonth();
+                                mYear = endDate.getYear();
+
+                                mHour = endDate.getHour();
+                                mMinute = endDate.getMinute();
+                            }
                         }
 
                     } else {
@@ -501,6 +518,8 @@ public class ParentCreateFragment extends ChoreStoryFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callDialogFlow("Add a quest to draw an octahedron on Tuesday evening for John for 5 points");
+
         if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
