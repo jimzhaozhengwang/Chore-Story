@@ -25,7 +25,7 @@ public class QuestRecyclerViewItem {
     private int verifiedOn;
     private int timestamp;
 
-    public static List<QuestRecyclerViewItem> getData(ArrayList<QuestParcelable> questParcelables) {
+    public static List<QuestRecyclerViewItem> getData(List<QuestParcelable> questParcelables) {
         List<QuestRecyclerViewItem> dataList = new ArrayList<>();
         for (int i = 0; i < questParcelables.size(); i++) {
             QuestRecyclerViewItem item = new QuestRecyclerViewItem(questParcelables.get(i));
