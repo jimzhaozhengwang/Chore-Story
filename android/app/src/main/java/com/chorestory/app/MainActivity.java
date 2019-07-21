@@ -9,16 +9,22 @@ import androidx.annotation.Nullable;
 
 import com.chorestory.R;
 import com.chorestory.helpers.Toaster;
+import com.chorestory.helpers.TokenHandler;
+import com.chorestory.services.NotificationService;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
-import com.chorestory.services.NotificationService;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
 public class MainActivity extends ChoreStoryActivity {
 
     final int REQUEST_CODE = 100;
+
+    @Inject
+    TokenHandler tokenHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +73,9 @@ public class MainActivity extends ChoreStoryActivity {
             Barcode barCode = data.getParcelableExtra(getString(R.string.qr_code));
 
             if (barCode != null) {
-                Toaster.showToast(this, barCode.displayValue); // TODO: remove this line
-
-                // TODO: if QR code is for child sign up
-//                navigateTo(ChildJoinClanActivity.class);
+                // Send the child to join the clan that the token belongs to
+                tokenHandler.setChildCreationToken(barCode.displayValue);
+                navigateTo(ChildJoinClanActivity.class);
 
                 // TODO: if QR code is for child login
 //                navigateTo(ChildHomeActivity.class);

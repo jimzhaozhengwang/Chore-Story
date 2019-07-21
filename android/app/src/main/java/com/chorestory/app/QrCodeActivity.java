@@ -6,14 +6,29 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
+import com.chorestory.helpers.Toaster;
+import com.chorestory.helpers.TokenHandler;
+import com.chorestory.templates.SingleResponse;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class QrCodeActivity extends ChoreStoryActivity {
+
+    @Inject
+    RetrofitInterface retrofitInterface;
+    @Inject
+    TokenHandler tokenHandler;
 
     TextView addAPersonTextView;
     ImageView qrCodeImageView;
@@ -33,8 +48,33 @@ public class QrCodeActivity extends ChoreStoryActivity {
             addAPersonTextView.setText(addAPerson);
         }
 
-        String qrContent = "1234-5678-91011"; // TODO: change this
+        String token = tokenHandler.getToken(getApplicationContext());
+        if (tokenHandler.isParentToken(token)) {
+            Call<SingleResponse<String>> childTokenQuery = retrofitInterface.get_child_clan_token(token);
+            childTokenQuery.enqueue(new Callback<SingleResponse<String>>() {
+                @Override
+                public void onResponse(Call<SingleResponse<String>> call,
+                                       Response<SingleResponse<String>> response) {
+                    if (response.isSuccessful() &&
+                            response.body() != null &&
+                            response.body().hasResponse()) {
+                        String qrContent = response.body().getData();
 
+                        createQRCode(qrContent);
+                    } else {
+                        Toaster.showToast(getApplicationContext(), "Internal error occurred.");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SingleResponse<String>> call, Throwable t) {
+                    Toaster.showToast(getApplicationContext(), "Internal error occurred.");
+                }
+            });
+        }
+    }
+
+    private void createQRCode(String qrContent) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         try {
             BitMatrix bitMatrix = qrCodeWriter.encode(qrContent,
