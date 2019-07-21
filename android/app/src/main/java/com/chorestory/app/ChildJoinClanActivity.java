@@ -109,7 +109,6 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
                                         "Unable to create account!");
                             }
                         });
-
                     }
                     navigateTo(ChildHomeActivity.class);
                 }
