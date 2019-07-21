@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.app.App;
-import com.chorestory.app.MainActivity;
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.templates.ChildResponse;
 
@@ -55,9 +54,7 @@ public class ChildProfileFragment extends ChoreStoryFragment {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // delete the token we have stored and redirect the user to the login page
-                tokenHandler.deleteStoredToken(getContext());
-                navigateTo(getContext(), MainActivity.class);
+                deleteTokenNavigateMain(getContext());
             }
         });
 
@@ -67,7 +64,6 @@ public class ChildProfileFragment extends ChoreStoryFragment {
     }
 
     public void populateProfile() {
-
         String token = tokenHandler.getToken(getContext());
         if (token != null && tokenHandler.isChildToken(token)) {
             Call<ChildResponse> accountQuery = retrofitInterface.me_child(token);
@@ -75,7 +71,9 @@ public class ChildProfileFragment extends ChoreStoryFragment {
                 @Override
                 public void onResponse(Call<ChildResponse> call, Response<ChildResponse> response) {
 
-                    if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                    if (response.isSuccessful() &&
+                            response.body() != null &&
+                            response.body().hasResponse()) {
                         ChildResponse.Data respData = response.body().getData();
 
                         childImageView.setImageResource(R.drawable.king_color); // TODO: get actual id once it's set
@@ -85,23 +83,17 @@ public class ChildProfileFragment extends ChoreStoryFragment {
                         childExpTextView.setText(String.format(Locale.CANADA, "%d", respData.getExp()));
 
                     } else {
-                        // delete the token we have stored and redirect the user to the login page
-                        tokenHandler.deleteStoredToken(getContext());
-                        navigateTo(getContext(), MainActivity.class);
+                        deleteTokenNavigateMain(getContext());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ChildResponse> call, Throwable t) {
-                    // delete the token we have stored and redirect the user to the login page
-                    tokenHandler.deleteStoredToken(getContext());
-                    navigateTo(getContext(), MainActivity.class);
+                    deleteTokenNavigateMain(getContext());
                 }
             });
         } else {
-            // delete the token we have stored and redirect the user to the login page
-            tokenHandler.deleteStoredToken(getContext());
-            navigateTo(getContext(), MainActivity.class);
+            deleteTokenNavigateMain(getContext());
         }
     }
 }

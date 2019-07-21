@@ -396,16 +396,11 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                 @Override
                 public void onFailure(Call<AccountResponse> call, Throwable t) {
                     Toaster.showToast(getContext(), "Internal error occurred.");
-
-                    // delete the token we have stored and redirect the user to the login page
-                    tokenHandler.deleteStoredToken(getContext());
-                    navigateTo(getContext(), MainActivity.class);
+                    deleteTokenNavigateMain(getContext());
                 }
             });
         } else {
-            // delete the token we have stored and redirect the user to the login page
-            tokenHandler.deleteStoredToken(getContext());
-            navigateTo(getContext(), MainActivity.class);
+            deleteTokenNavigateMain(getContext());
         }
     }
 

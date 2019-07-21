@@ -16,7 +16,6 @@ import com.chorestory.R;
 import com.chorestory.adapter.ChildRecyclerViewAdapter;
 import com.chorestory.adapter.ParentRecyclerViewAdapter;
 import com.chorestory.app.App;
-import com.chorestory.app.MainActivity;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.templates.ClanChildrenResponse;
@@ -95,10 +94,7 @@ public class ChildClanFragment extends ChoreStoryFragment {
                 @Override
                 public void onFailure(Call<ClanResponse> call, Throwable t) {
                     Toaster.showToast(getContext(), "Internal error occurred.");
-
-                    // delete the token we have stored and redirect the user to the login page
-                    tokenHandler.deleteStoredToken(getContext());
-                    navigateTo(getContext(), MainActivity.class);
+                    deleteTokenNavigateMain(getContext());
                 }
             });
 
@@ -106,24 +102,23 @@ public class ChildClanFragment extends ChoreStoryFragment {
             Call<ClanChildrenResponse> clanChildrenQuery = retrofitInterface.get_clan_children(token);
             clanChildrenQuery.enqueue(new Callback<ClanChildrenResponse>() {
                 @Override
-                public void onResponse(Call<ClanChildrenResponse> call, Response<ClanChildrenResponse> response) {
-                    if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                public void onResponse(Call<ClanChildrenResponse> call,
+                                       Response<ClanChildrenResponse> response) {
+                    if (response.isSuccessful() &&
+                            response.body() != null &&
+                            response.body().hasResponse()) {
 
                         // Set the child list
                         List<ClanChildrenResponse.Children> childrenList = response.body().getChildren();
                         childAdapter = new ChildRecyclerViewAdapter(childrenList);
                         childRecyclerView.setAdapter(childAdapter);
-
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ClanChildrenResponse> call, Throwable t) {
                     Toaster.showToast(getContext(), "Internal error occurred.");
-
-                    // delete the token we have stored and redirect the user to the login page
-                    tokenHandler.deleteStoredToken(getContext());
-                    navigateTo(getContext(), MainActivity.class);
+                    deleteTokenNavigateMain(getContext());
                 }
             });
         }

@@ -12,18 +12,18 @@ public class ChildResponse {
         return data;
     }
 
-    public Boolean hasResponse() {
+    public boolean hasResponse() {
         return (data != null);
     }
 
     public class Data {
         @SerializedName("clan_name")
         private String clanName;
-        private Integer id;
-        private Integer level;
+        private int id;
+        private int level;
         private String name;
         @SerializedName("xp")
-        private Integer exp;
+        private int exp;
         private String username;
         private String type;
         private List<Parent> parents;
@@ -32,11 +32,11 @@ public class ChildResponse {
             return clanName;
         }
 
-        public Integer getId() {
+        public int getId() {
             return id;
         }
 
-        public Integer getLevel() {
+        public int getLevel() {
             return level;
         }
 
@@ -44,7 +44,7 @@ public class ChildResponse {
             return name;
         }
 
-        public Integer getExp() {
+        public int getExp() {
             return exp;
         }
 
@@ -61,11 +61,11 @@ public class ChildResponse {
         }
 
         public class Parent {
-            Integer id;
+            int id;
             String name;
-            Integer picture;
+            int picture;
 
-            public Integer getId() {
+            public int getId() {
                 return id;
             }
 
@@ -73,7 +73,7 @@ public class ChildResponse {
                 return name;
             }
 
-            public Integer getPicture() {
+            public int getPicture() {
                 return picture;
             }
         }

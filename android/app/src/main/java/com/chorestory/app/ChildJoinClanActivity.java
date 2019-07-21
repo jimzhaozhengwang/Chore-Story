@@ -47,7 +47,7 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
         setContentView(R.layout.activity_child_join_clan);
 
         welcomeTextView = findViewById(R.id.welcome_text_view);
-        welcomeTextView.setText("Sign up to join your Clan!"); // TODO: fetch clan name
+        welcomeTextView.setText(getString(R.string.sign_up_to_join_your_clan));
 
         emailEditText = findViewById(R.id.email_edit_text);
         emailEditText.setVisibility(View.GONE);
@@ -77,9 +77,9 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
                 if (username.isEmpty() || name.isEmpty()) {
                     enableButtons();
                     // TODO: think of message
-                    Toaster.showToast(getApplicationContext(), "Missing sign up information!");
+                    Toaster.showToast(ChildJoinClanActivity.this,
+                            "Missing sign up information!");
                 } else {
-
                     if (tokenHandler.hasChildCreationToken()) {
 
                         ChildRequest childRequest = new ChildRequest(name, username);
@@ -89,8 +89,11 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
                                 childRequest);
                         childTokenQuery.enqueue(new Callback<SingleResponse<String>>() {
                             @Override
-                            public void onResponse(Call<SingleResponse<String>> call, Response<SingleResponse<String>> response) {
-                                if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                            public void onResponse(Call<SingleResponse<String>> call,
+                                                   Response<SingleResponse<String>> response) {
+                                if (response.isSuccessful() &&
+                                        response.body() != null &&
+                                        response.body().hasResponse()) {
 
                                     String childToken = response.body().getData();
                                     tokenHandler.setChildToken(childToken, getApplicationContext());
@@ -101,12 +104,13 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
 
                             @Override
                             public void onFailure(Call<SingleResponse<String>> call, Throwable t) {
-
+                                enableButtons();
+                                Toaster.showToast(ChildJoinClanActivity.this,
+                                        "Unable to create account!");
                             }
                         });
 
                     }
-
                     navigateTo(ChildHomeActivity.class);
                 }
             }

@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.app.App;
-import com.chorestory.app.MainActivity;
 import com.chorestory.app.QrCodeActivity;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
@@ -30,13 +29,13 @@ import retrofit2.Response;
 
 public class ParentProfileFragment extends ChoreStoryFragment {
 
-    ImageView parentImageView;
-    TextView parentNameTextView;
-    TextView clanNameTextView;
-    Button addParentGuardianButton;
-    Button addChildButton;
-    TextView parentEmailTextView;
-    Button logoutButton;
+    private ImageView parentImageView;
+    private TextView parentNameTextView;
+    private TextView clanNameTextView;
+    private Button addParentGuardianButton;
+    private Button addChildButton;
+    private TextView parentEmailTextView;
+    private Button logoutButton;
 
     @Inject
     RetrofitInterface retrofitInterface;
@@ -56,7 +55,7 @@ public class ParentProfileFragment extends ChoreStoryFragment {
         parentEmailTextView = view.findViewById(R.id.parent_email_text_view);
         logoutButton = view.findViewById(R.id.logout_parent_button);
 
-        views = Arrays.asList(addParentGuardianButton, addChildButton);
+        views = Arrays.asList(addParentGuardianButton, addChildButton, logoutButton);
         enableViews();
 
         // TODO: need to add a child selection dropdown somewhere here
@@ -87,9 +86,7 @@ public class ParentProfileFragment extends ChoreStoryFragment {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // delete the token we have stored and redirect the user to the login page
-                tokenHandler.deleteStoredToken(getContext());
-                navigateTo(getContext(), MainActivity.class);
+                deleteTokenNavigateMain(getContext());
             }
         });
 
@@ -117,25 +114,18 @@ public class ParentProfileFragment extends ChoreStoryFragment {
                             parentEmailTextView.setText(respData.getEmail());
                             parentImageView.setImageResource(R.drawable.king_color); // TODO: get image id (currently not being set)
                         } else {
-                            // delete the token we have stored and redirect the user to the login page
-                            tokenHandler.deleteStoredToken(getContext());
-                            navigateTo(getContext(), MainActivity.class);
+                            deleteTokenNavigateMain(getContext());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<AccountResponse> call, Throwable t) {
                         Toaster.showToast(getContext(), "Internal error occurred.");
-
-                        // delete the token we have stored and redirect the user to the login page
-                        tokenHandler.deleteStoredToken(getContext());
-                        navigateTo(getContext(), MainActivity.class);
+                        deleteTokenNavigateMain(getContext());
                     }
                 });
             } else {
-                // delete the token we have stored and redirect the user to the login page
-                tokenHandler.deleteStoredToken(getContext());
-                navigateTo(getContext(), MainActivity.class);
+                deleteTokenNavigateMain(getContext());
             }
         }
     }

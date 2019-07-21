@@ -53,8 +53,11 @@ public class QrCodeActivity extends ChoreStoryActivity {
             Call<SingleResponse<String>> childTokenQuery = retrofitInterface.get_child_clan_token(token);
             childTokenQuery.enqueue(new Callback<SingleResponse<String>>() {
                 @Override
-                public void onResponse(Call<SingleResponse<String>> call, Response<SingleResponse<String>> response) {
-                    if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                public void onResponse(Call<SingleResponse<String>> call,
+                                       Response<SingleResponse<String>> response) {
+                    if (response.isSuccessful() &&
+                            response.body() != null &&
+                            response.body().hasResponse()) {
                         String qrContent = response.body().getData();
 
                         createQRCode(qrContent);

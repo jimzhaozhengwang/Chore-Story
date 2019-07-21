@@ -31,7 +31,7 @@ public class TokenHandler {
     }
 
     public boolean hasChildCreationToken() {
-        return this.childCreationToken != null && this.childCreationToken != "";
+        return this.childCreationToken != null && !this.childCreationToken.isEmpty();
     }
 
     public void setParentToken(String token, Context context) {
