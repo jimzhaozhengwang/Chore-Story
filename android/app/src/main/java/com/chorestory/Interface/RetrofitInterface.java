@@ -127,6 +127,7 @@ public interface RetrofitInterface {
     Call<SingleResponse<Boolean>> delete_quest(
             @Header("Authorization") String auth,
             @Path("qid") Integer qid
+    );
       
     @POST("me/registration_id")
     Call<SingleResponse<Boolean>> save_registration_id(
