@@ -13,8 +13,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/broom"/>
+            android:layout_marginBottom="20dp" />
 
         <EditText
             android:id="@+id/quest_name_edit_text"
@@ -24,36 +23,36 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/border"
             android:gravity="center"
-            android:textColor="@color/gray"/>
+            android:textColor="@color/gray" />
 
         <EditText
             android:id="@+id/quest_exp_edit_text"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:background="@drawable/border"
             android:layout_below="@id/quest_name_edit_text"
-            android:gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="25dp"
-            android:textColor="@color/gray"/>
+            android:background="@drawable/border"
+            android:gravity="center"
+            android:textColor="@color/gray" />
 
         <TextView
             android:id="@+id/exp_text_view"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/quest_name_edit_text"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/quest_exp_edit_text"
-            android:text="@string/exp"
             android:gravity="center"
+            android:text="@string/exp"
             android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/quest_status_image_view"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_below="@+id/quest_exp_edit_text"
+            android:layout_below="@id/quest_exp_edit_text"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
@@ -63,7 +62,7 @@
             android:id="@+id/quest_status_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/quest_exp_edit_text"
+            android:layout_below="@id/quest_exp_edit_text"
             android:layout_marginStart="60dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
@@ -75,7 +74,7 @@
             android:id="@+id/view_proof_button"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_below="@+id/quest_exp_edit_text"
+            android:layout_below="@id/quest_exp_edit_text"
             android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
@@ -157,20 +156,20 @@
             android:layout_height="100dp"
             android:layout_below="@id/quest_owner_text_view"
             android:layout_marginTop="10dp"
-            android:gravity="top|left"
             android:background="@drawable/border"
+            android:gravity="top|left"
             android:inputType="textMultiLine"
             android:padding="10dp"
-            android:textColor="@color/gray"/>
+            android:textColor="@color/gray" />
 
         <Button
             android:id="@+id/cancel_button"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/description_edit_text"
+            android:layout_alignParentLeft="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_round_light"
-            android:layout_alignParentLeft="true"
             android:text="@string/cancel" />
 
         <Button
@@ -178,8 +177,8 @@
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/description_edit_text"
-            android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
             android:background="@drawable/btn_round"
             android:text="@string/save" />
 
@@ -188,8 +187,8 @@
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/description_edit_text"
-            android:layout_marginTop="10dp"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
             android:background="@drawable/btn_round_red"
             android:text="@string/delete" />
 
