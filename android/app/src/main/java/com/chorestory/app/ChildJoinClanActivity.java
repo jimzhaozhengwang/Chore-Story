@@ -49,7 +49,6 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
         welcomeTextView = findViewById(R.id.welcome_text_view);
         welcomeTextView.setText(getString(R.string.sign_up_to_join_your_clan));
 
-
         emailEditText = findViewById(R.id.email_edit_text);
         emailEditText.setVisibility(View.GONE);
 
