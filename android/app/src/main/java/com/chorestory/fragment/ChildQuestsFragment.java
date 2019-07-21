@@ -106,10 +106,11 @@ public class ChildQuestsFragment extends ChoreStoryFragment {
                     @Override
                     public void onFailure(Call<GetQuestsResponse> call, Throwable t) {
                         Toaster.showToast(getContext(), "Internal error occurred.");
+                        deleteTokenNavigateMain(getContext());
                     }
                 });
             } else {
-                // TODO: redirect to login page
+                deleteTokenNavigateMain(getContext());
             }
         }
     }
