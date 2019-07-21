@@ -5,9 +5,9 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -18,11 +18,18 @@ import android.widget.TimePicker;
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.helpers.QuestCompletion;
+import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.model.QuestRecyclerViewItem;
 import com.chorestory.templates.GetQuestResponse;
+import com.chorestory.templates.QuestCreateResponse;
+import com.chorestory.templates.QuestModifyRequest;
+import com.chorestory.templates.SingleResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -57,11 +64,14 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
     private int mDay;
     private int mHour;
     private int mMinute;
+    private String standardDate;
+    private String standardTime;
     private String questName;
     private String recurrence;
     private Activity activity = this;
     private QuestRecyclerViewItem quest;
     private String questOwnerName;
+    private int questOwnerId;
 
 
     @Override
@@ -93,7 +103,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         selectDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableButtons(); // ?
+                disableButtons();
                 final Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
@@ -105,6 +115,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
                         mDay = dayOfMonth;
                         mMonth = month;
                         mYear = year;
+                        standardDate = String.format("%02d-%02d-%02d", mYear, mMonth + 1, mDay);
                         selectDateButton.setText(getDateText());
                     }
                 };
@@ -132,6 +143,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
                                 // TODO: consider using AM/PM instead
                                 mHour = hourOfDay;
                                 mMinute = minute;
+                                standardTime = String.format("%02d:%02d", mHour, mMinute);
                                 selectTimeButton.setText(getTimeText());
                             }
                         },
@@ -144,28 +156,29 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
             }
         });
 
-        // TODO: Recurrence Spinner
-
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                disableButtons();
                 onBackPressed();
             }
         });
 
-        // TODO: send modify quest request
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                disableButtons();
                 onBackPressed();
+                onSaveClick();
             }
         });
 
-        // TODO: send delete quest request
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                disableButtons();
                 onBackPressed();
+                onDeleteClick();
             }
         });
     }
@@ -190,6 +203,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         if (status == QuestCompletion.PENDING) {
             statusImage = R.drawable.yellow_check_mark;
         } else if (status == QuestCompletion.COMPLETED) {
+            viewProofButton.setVisibility(viewProofButton.GONE);
             statusImage = R.drawable.green_check_mark;
         } else {
             viewProofButton.setVisibility(viewProofButton.GONE);
@@ -206,9 +220,10 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         mDay = cal.get(Calendar.DAY_OF_MONTH);
         mHour = cal.get(Calendar.HOUR_OF_DAY);
         mMinute = cal.get(Calendar.MINUTE);
+        standardTime = String.format("%02d:%02d", mHour, mMinute);
+        standardDate = String.format("%02d-%02d-%02d", mYear, mMonth + 1, mDay);
 
         selectDateButton.setText(getDateText());
-
         selectTimeButton.setText(getTimeText());
 
         // TODO: make this a dropdown so you can edit it
@@ -224,6 +239,87 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
 
     }
 
+    public void onSaveClick() {
+        // name
+        String newQuestName = questNameEditText.getText().toString();
+
+        //exp
+        int newExp = Integer.parseInt(expEditText.getText().toString());
+
+        // DueDate
+        String standardDateTime = standardDate + " " + standardTime;
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dueDate = new Date();
+        try {
+            dueDate = format.parse(standardDateTime);
+        } catch (ParseException e) {
+            Log.d("BUG", "Parse exception: ");
+            Log.d("BUG", e.getMessage());
+        }
+        long newDueDate = dueDate.getTime() / 1000;
+
+        // Description
+        String newDescription = descriptionEditText.getText().toString();
+
+        // Create the retrofit request containing all quest information
+        QuestModifyRequest questModifyRequest = new QuestModifyRequest(
+                questOwnerId,
+                newQuestName,
+                newDescription,
+                newExp,
+                quest.getNeedsVerification(),
+                quest.getTimestamp(),
+                newDueDate
+        );
+        String token = tokenHandler.getToken(this);
+        Call<QuestCreateResponse> questModifyQuery = retrofitInference.modify_quest(
+                token,
+                quest.getId(),
+                questModifyRequest
+        );
+
+        questModifyQuery.enqueue(new Callback<QuestCreateResponse>() {
+            @Override
+            public void onResponse(Call<QuestCreateResponse> call, Response<QuestCreateResponse> response) {
+                if (response.isSuccessful()) {
+                    Toaster.showToast(getApplicationContext(), "Successfully modified quest!");
+                } else {
+                    Toaster.showToast(getApplicationContext(), "Something went wrong.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<QuestCreateResponse> call, Throwable t) {
+                Toaster.showToast(getApplicationContext(), "Something went wrong.");
+            }
+        });
+    }
+
+    private void onDeleteClick() {
+        String token = tokenHandler.getToken(this);
+
+        Call<SingleResponse<Boolean>> questDeleteQuery = retrofitInference.delete_quest(
+                token,
+                quest.getId()
+        );
+
+        questDeleteQuery.enqueue(new Callback<SingleResponse<Boolean>>() {
+            @Override
+            public void onResponse(Call<SingleResponse<Boolean>> call, Response<SingleResponse<Boolean>> response) {
+                if (response.isSuccessful()) {
+                    Toaster.showToast(getApplicationContext(), "Successfully deleted quest!");
+                } else {
+                    Toaster.showToast(getApplicationContext(), "Something went wrong.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SingleResponse<Boolean>> call, Throwable t) {
+                Toaster.showToast(getApplicationContext(), "Something went wrong.");
+            }
+        });
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -232,6 +328,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
             if (tokenHandler.isParentToken(token)) {
                 int qid = getIntent().getIntExtra(getResources().getString(R.string.qid), 1);
                 questOwnerName = getIntent().getStringExtra(getResources().getString(R.string.owner_name));
+                questOwnerId = getIntent().getIntExtra(getResources().getString(R.string.owner_id), 1);
                 int ts = getIntent().getIntExtra(getResources().getString(R.string.ts), -1);
                 Call<GetQuestResponse> getQuestQuery;
                 if (ts == -1) {
