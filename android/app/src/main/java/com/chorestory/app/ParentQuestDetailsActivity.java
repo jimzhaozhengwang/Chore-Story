@@ -62,7 +62,6 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
     private Activity activity = this;
     private QuestRecyclerViewItem quest;
     private String questOwnerName;
-    private final int SECONDS_IN_5_MINUTES = 300;
 
 
     @Override
@@ -240,7 +239,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
                 if (ts == -1) {
                     getQuestQuery = retrofitInference.get_quest(token, qid);
                 } else {
-                    ts -= SECONDS_IN_5_MINUTES; // the response uses math.round so subtract 5 minutes to be safe
+                    ts -= 60 * 5; // the response uses math.round so subtract 5 minutes to be safe
                     getQuestQuery = retrofitInference.get_quest_ts(token, qid, ts + ".0");
                 }
                 getQuestQuery.enqueue(new Callback<GetQuestResponse>() {
