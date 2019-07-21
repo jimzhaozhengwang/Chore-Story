@@ -29,7 +29,6 @@ import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.adapter.HomeAdapter;
 import com.chorestory.app.App;
-import com.chorestory.app.MainActivity;
 import com.chorestory.helpers.QuestCreationHandler;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
