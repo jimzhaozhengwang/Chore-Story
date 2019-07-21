@@ -7,7 +7,7 @@
     android:focusable="true"
     android:layout_marginStart="10dp"
     android:layout_marginTop="10dp"
-    android:backgroundTint="@color/light_gray">
+    android:backgroundTint="@color/very_light_blue">
 
     <ImageView
         android:id="@+id/parent_image_view"

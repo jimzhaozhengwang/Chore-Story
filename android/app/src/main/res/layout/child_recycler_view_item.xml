@@ -10,7 +10,7 @@
     android:layout_marginEnd="10dp"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    android:backgroundTint="@color/light_gray"
+    android:backgroundTint="@color/very_light_blue"
     >
 
     <ImageView
