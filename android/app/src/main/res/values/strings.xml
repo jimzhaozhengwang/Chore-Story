@@ -65,6 +65,7 @@
     <string name="qid">qid</string>
     <string name="ownerName">ownerName</string>
     <string name="ts">ts</string>
+    <string name="all_quests">all_quests</string>
 
 
     <string-array name="recurrence_array">
