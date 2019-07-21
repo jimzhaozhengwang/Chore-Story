@@ -83,6 +83,13 @@ public interface RetrofitInterface {
             @Path("lookahead") String lookahead
     );
 
+    @GET("quest/{start}/{lookahead}")
+    Call<GetQuestsResponse> child_get_quests(
+            @Header("Authorization") String auth,
+            @Path("start") String start,
+            @Path("lookahead") String lookahead
+    );
+
     @GET("quest/{qid}")
     Call<GetQuestResponse> get_quest(
             @Header("Authorization") String auth,

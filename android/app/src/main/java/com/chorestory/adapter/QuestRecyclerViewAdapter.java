@@ -78,8 +78,10 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
         // Quest name
         myViewHolder.questNameTextView.setText(currentItem.getName());
         // Quest owner
-        String owner = currentItem.getOwner() + "'s quest";
-        myViewHolder.questOwnerTextView.setText(owner);
+        if (currentItem.getOwner() != null) {
+            String owner = currentItem.getOwner() + "'s quest";
+            myViewHolder.questOwnerTextView.setText(owner);
+        }
         // Quest Exp
         String exp = currentItem.getExp() + " Exp";
         myViewHolder.questExpTextView.setText(exp);
