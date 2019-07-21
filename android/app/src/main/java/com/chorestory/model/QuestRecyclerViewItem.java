@@ -4,6 +4,7 @@ import android.text.format.DateUtils;
 
 import com.chorestory.R;
 import com.chorestory.helpers.QuestCompletion;
+import com.chorestory.templates.GetQuestsResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,11 @@ public class QuestRecyclerViewItem {
     private int dueDate;
     private boolean recurring;
     private int nextOccurrence;
+    private int id;
+    private boolean needsVerification;
+    private int completedOn;
+    private int verifiedOn;
+    private int timestamp;
 
     public static List<QuestRecyclerViewItem> getData(ArrayList<QuestParcelable> questParcelables) {
         List<QuestRecyclerViewItem> dataList = new ArrayList<>();
@@ -37,6 +43,26 @@ public class QuestRecyclerViewItem {
         this.dueDate = quest.getDue();
         this.recurring = quest.getReccurring();
         this.nextOccurrence = quest.getNextOccurrence();
+        this.id = quest.getId();
+        this.needsVerification = quest.getNeedsVerification();
+        this.completedOn = quest.getCompletedOn();
+        this.verifiedOn = quest.getVerifiedOn();
+    }
+
+    public QuestRecyclerViewItem(GetQuestsResponse.Quest quest) {
+        this.name = quest.getTitle();
+        this.exp = quest.getReward();
+        this.owner = null;
+        this.description = quest.getDescription();
+        this.mandatory = true;
+        this.dueDate = quest.getDue();
+        this.recurring = quest.getRecurring();
+        this.nextOccurrence = quest.getNextOccurrence();
+        this.timestamp = quest.getTimestamp();
+        this.id = quest.getId();
+        this.needsVerification = quest.getNeedsVerification();
+        this.completedOn = quest.getCompletedOn();
+        this.verifiedOn = quest.getVerifiedOn();
     }
 
     public String getName() {
@@ -67,7 +93,7 @@ public class QuestRecyclerViewItem {
         else if (stringContainsItemFromList(lowerName, new String[]{"iron", "press"})) imageId = R.drawable.iron;
         else if (stringContainsItemFromList(lowerName, new String[]{"lawn", "grass", "mow"})) imageId = R.drawable.lawn_mower;
         else if (stringContainsItemFromList(lowerName, new String[]{"paint"})) imageId = R.drawable.paint;
-        else if (stringContainsItemFromList(lowerName, new String[]{"shower, teeth"})) imageId = R.drawable.shower;
+        else if (stringContainsItemFromList(lowerName, new String[]{"shower"})) imageId = R.drawable.shower;
         else if (stringContainsItemFromList(lowerName, new String[]{"rak"})) imageId = R.drawable.rake;
         else if (stringContainsItemFromList(lowerName, new String[]{"toilet", "washroom", "bathroom"})) imageId = R.drawable.toilet;
         else if (stringContainsItemFromList(lowerName, new String[]{"vacuum"})) imageId = R.drawable.vacuum;
@@ -93,18 +119,67 @@ public class QuestRecyclerViewItem {
         return mandatory;
     }
 
-    public int getDueDate() {
-        return dueDate;
+    public boolean getRecurring() { return recurring; }
+
+    public int getTimestamp() { return timestamp; }
+
+    public String getRecurrenceText() {
+        int timestamp = getTimestamp();
+        switch (timestamp) {
+            case 60 * 60 * 24:
+                return "Daily";
+            case (60 * 60 * 24) * 7:
+                return "Weekly";
+            case ((60 * 60 * 24) * 7) * 4:
+                return "Monthly";
+            case (((60 * 60 * 24) * 7) * 4) * 12:
+                return "Yearly";
+            default:
+                return "Only once";
+        }
     }
+
+    public int getDueDate() {
+        if (recurring) {
+            return nextOccurrence;
+        } else{
+            return dueDate;
+        }
+    }
+
+    public int getId() { return id; }
 
     public String getDueDateString() {
         long currentTime = System.currentTimeMillis();
-        long dueDateMilli;
-        if (recurring) {
-            dueDateMilli = ((long) nextOccurrence) * 1000;
-        } else{
-            dueDateMilli = ((long) dueDate) * 1000;
-        }
+        long dueDateMilli = (long) getDueDate() * 1000;
         return (String) DateUtils.getRelativeTimeSpanString(dueDateMilli, currentTime, 0L, DateUtils.FORMAT_ABBREV_ALL);
+    }
+
+    public QuestCompletion getStatus() {
+        long currentTime = System.currentTimeMillis();
+        long dueDateMilli = (long) getDueDate() * 1000;
+        if ((completedOn > 0 && (!needsVerification) || verifiedOn > 0)) {
+            return QuestCompletion.COMPLETED;
+        }
+        if (completedOn > 0) {
+            return QuestCompletion.PENDING;
+        }
+        if (dueDateMilli > currentTime) {
+            return QuestCompletion.UPCOMING;
+        }
+        return QuestCompletion.OVERDUE;
+    }
+
+    public String getQuestCompletionString(QuestCompletion status) {
+        switch (status) {
+            case OVERDUE:
+                return "Overdue";
+            case PENDING:
+                return "Pending";
+            case UPCOMING:
+                return "Upcoming";
+            default:
+                return "Completed";
+        }
     }
 }

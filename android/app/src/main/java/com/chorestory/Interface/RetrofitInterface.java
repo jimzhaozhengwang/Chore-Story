@@ -6,6 +6,7 @@ import com.chorestory.templates.ChildRequest;
 import com.chorestory.templates.ChildResponse;
 import com.chorestory.templates.ClanChildrenResponse;
 import com.chorestory.templates.ClanResponse;
+import com.chorestory.templates.GetQuestResponse;
 import com.chorestory.templates.GetQuestsResponse;
 import com.chorestory.templates.LoginRequest;
 import com.chorestory.templates.QuestCreateRequest;
@@ -80,5 +81,18 @@ public interface RetrofitInterface {
             @Header("Authorization") String auth,
             @Path("start") String start,
             @Path("lookahead") String lookahead
+    );
+
+    @GET("quest/{qid}")
+    Call<GetQuestResponse> get_quest(
+            @Header("Authorization") String auth,
+            @Path("qid") Integer qid
+    );
+
+    @GET("quest/{qid}/{ts}")
+    Call<GetQuestResponse> get_quest_ts(
+            @Header("Authorization") String auth,
+            @Path("qid") Integer qid,
+            @Path("ts") String ts
     );
 }

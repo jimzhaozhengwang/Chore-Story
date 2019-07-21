@@ -1,13 +1,15 @@
 package com.chorestory.adapter;
 
+import android.content.Intent;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chorestory.R;
 import com.chorestory.app.App;
@@ -29,30 +31,41 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
 
     private List<QuestRecyclerViewItem> itemList;
     private ChoreStoryActivity activity;
+    private View.OnClickListener onItemClickListener;
 
     public QuestRecyclerViewAdapter(List<QuestRecyclerViewItem> itemList, ChoreStoryActivity activity) {
         this.itemList = itemList;
         this.activity = activity;
         App.getAppComponent().inject(this);
+        onItemClickListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                int position = viewHolder.getAdapterPosition();
+                QuestRecyclerViewItem currentItem = itemList.get(position);
+                int id = currentItem.getId();
+
+                Intent intent;
+                String token = tokenHandler.getToken(activity);
+                if (tokenHandler.isParentToken(token)) {
+                    intent = new Intent(activity, ParentQuestDetailsActivity.class);
+                } else {
+                    intent = new Intent(activity, ChildQuestDetailsActivity.class);
+                }
+                intent.putExtra(activity.getResources().getString(R.string.qid), currentItem.getId());
+                intent.putExtra(activity.getResources().getString(R.string.owner_name), currentItem.getOwner());
+                if (currentItem.getRecurring()) {
+                    intent.putExtra(activity.getResources().getString(R.string.ts), currentItem.getDueDate());
+                }
+                activity.startActivity(intent);
+            }
+        };
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.quest_recycler_view_item, viewGroup, false);
-
-        view.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                String token = tokenHandler.getToken(activity);
-                // NOTE: this doesn't work yet because child tokens aren't set up
-                if (tokenHandler.isParentToken(token)) {
-                    activity.navigateTo(ParentQuestDetailsActivity.class);
-                } else {
-                    activity.navigateTo(ChildQuestDetailsActivity.class);
-                }
-            }
-        });
-
+      
         return new MyViewHolder(view);
     }
 
@@ -90,6 +103,8 @@ public class QuestRecyclerViewAdapter extends RecyclerView.Adapter<QuestRecycler
 
         MyViewHolder(View itemView) {
             super(itemView);
+            itemView.setTag(this);
+            itemView.setOnClickListener(onItemClickListener);
             questImageView = itemView.findViewById(R.id.quest_image_view);
             questNameTextView = itemView.findViewById(R.id.quest_name_text_view);
             questOwnerTextView = itemView.findViewById(R.id.quest_owner_text_view);
