@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ParentRecyclerViewAdapter extends RecyclerView.Adapter<ParentRecyclerViewAdapter.MyViewHolder> {
 
-    private ArrayList<ParentRecyclerViewItem> parentList = new ArrayList<ParentRecyclerViewItem>();
+    private List<ParentRecyclerViewItem> parentList = new ArrayList<>();
 
     public ParentRecyclerViewAdapter(List<Parent> parentList) {
 
