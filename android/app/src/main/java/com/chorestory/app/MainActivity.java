@@ -33,12 +33,6 @@ public class MainActivity extends ChoreStoryActivity {
 
         setContentView(R.layout.activity_main);
 
-        // Register Notification Channel
-        NotificationService notificationService = new NotificationService();
-        notificationService.createNotificationChannel(getBaseContext(), getString(R.string.notification_channel_id));
-        String token = FirebaseInstanceId.getInstance().getToken();
-        notificationService.sendRegistrationToServer(token);
-
         Button parentGuardianButton = findViewById(R.id.parent_guardian_button);
         Button childButton = findViewById(R.id.child_button);
         buttons = Arrays.asList(parentGuardianButton, childButton);

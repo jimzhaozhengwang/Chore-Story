@@ -1,11 +1,15 @@
 package com.chorestory.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +23,9 @@ import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.templates.AccountResponse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -34,6 +40,8 @@ public class ParentProfileFragment extends ChoreStoryFragment {
     private TextView clanNameTextView;
     private Button addParentGuardianButton;
     private Button addChildButton;
+    private Spinner childSpinner;
+    private Button logInChildButton;
     private TextView parentEmailTextView;
     private Button logoutButton;
 
@@ -42,24 +50,30 @@ public class ParentProfileFragment extends ChoreStoryFragment {
     @Inject
     TokenHandler tokenHandler;
 
+    private int selectedChildId;
+    private String token;
+    private List<AccountResponse.Data.Child> childList;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_profile, container, false);
         App.getAppComponent().inject(this);
+
+        selectedChildId = -1;
+        token = tokenHandler.getToken(getContext());
 
         parentImageView = view.findViewById(R.id.parent_image_view);
         parentNameTextView = view.findViewById(R.id.parent_name_text_view);
         clanNameTextView = view.findViewById(R.id.clan_name_text_view);
         addParentGuardianButton = view.findViewById(R.id.add_parent_guardian_button);
         addChildButton = view.findViewById(R.id.add_child_button);
+        childSpinner = view.findViewById(R.id.child_spinner);
+        logInChildButton = view.findViewById(R.id.log_in_child_button);
         parentEmailTextView = view.findViewById(R.id.parent_email_text_view);
         logoutButton = view.findViewById(R.id.logout_parent_button);
 
-        views = Arrays.asList(addParentGuardianButton, addChildButton, logoutButton);
+        views = Arrays.asList(addParentGuardianButton, addChildButton, logInChildButton, logoutButton);
         enableViews();
-
-        // TODO: need to add a child selection dropdown somewhere here
-        //          so we can generate the child login token for the qr code
 
         addParentGuardianButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,14 +97,77 @@ public class ParentProfileFragment extends ChoreStoryFragment {
             }
         });
 
+        logInChildButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                disableViews();
+                if (selectedChildId != -1) {
+                    // TODO: navigate to QRCodeActivity & generate log in QR code
+                } else {
+                    enableViews();
+                    Toaster.showToast(getContext(), "Please select a child!");
+                }
+            }
+        });
+
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteTokenNavigateMain(getContext());
             }
         });
-
         return view;
+    }
+
+    private void populateChildrenList() {
+        if (token != null && tokenHandler.isParentToken(token)) {
+            Call<AccountResponse> accountQuery = retrofitInterface.me(token);
+            accountQuery.enqueue(new Callback<AccountResponse>() {
+                @Override
+                public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
+                    if (response.isSuccessful() &&
+                            response.body() != null &&
+                            response.body().hasResponse()) {
+
+                        AccountResponse.Data respData = response.body().getData();
+                        childList = respData.getChildren();
+
+                        List<String> childNameList = new ArrayList<>();
+                        for (AccountResponse.Data.Child child : childList) {
+                            childNameList.add(child.getName());
+                        }
+
+                        ArrayAdapter<String> childSpinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, childNameList);
+                        childSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        childSpinner.setAdapter(childSpinnerAdapter);
+
+                        childSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                if (position < childList.size()) {
+                                    selectedChildId = childList.get(position).getId();
+                                } else {
+                                    Log.d("BUG", "Our child list is inconsistent somehow.");
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+                                selectedChildId = -1;
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AccountResponse> call, Throwable t) {
+                    Toaster.showToast(getContext(), "Internal error occurred.");
+                    deleteTokenNavigateMain(getContext());
+                }
+            });
+        } else {
+            deleteTokenNavigateMain(getContext());
+        }
     }
 
     @Override
@@ -128,5 +205,16 @@ public class ParentProfileFragment extends ChoreStoryFragment {
                 deleteTokenNavigateMain(getContext());
             }
         }
+
+        populateChildrenList();
+
+        // TODO: show/hide child log in
+//        if (childList != null && !childList.isEmpty()) {
+//            childSpinner.setVisibility(View.VISIBLE);
+//            logInChildButton.setVisibility(View.VISIBLE);
+//        } else {
+//            childSpinner.setVisibility(View.GONE);
+//            logInChildButton.setVisibility(View.GONE);
+//        }
     }
 }

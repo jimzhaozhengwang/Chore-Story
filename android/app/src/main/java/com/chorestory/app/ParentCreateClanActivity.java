@@ -20,7 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CreateClanActivity extends ChoreStoryActivity {
+public class ParentCreateClanActivity extends ChoreStoryActivity {
 
     @Inject
     RetrofitInterface retrofitInterface;
@@ -44,7 +44,7 @@ public class CreateClanActivity extends ChoreStoryActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
-        setContentView(R.layout.activity_create_clan);
+        setContentView(R.layout.activity_parent_create_clan);
 
         emailEditText = findViewById(R.id.email_edit_text);
 

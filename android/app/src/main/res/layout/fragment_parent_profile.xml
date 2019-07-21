@@ -81,7 +81,7 @@
             android:paddingStart="25dp"
             android:paddingEnd="25dp"
             android:text="@string/add_a_parent_guardian"
-            android:textSize="25sp" /> <!-- TODO: add image -->
+            android:textSize="25sp" />
 
         <Button
             android:id="@+id/add_child_button"
@@ -92,13 +92,34 @@
             android:paddingStart="25dp"
             android:paddingEnd="25dp"
             android:text="@string/add_a_child"
-            android:textSize="25sp" /> <!-- TODO: add image -->
+            android:textSize="25sp" />
+
+        <Spinner
+            android:id="@+id/child_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_child_button"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="25dp"
+            android:prompt="@string/select_a_child" />
+
+        <Button
+            android:id="@+id/log_in_child_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/child_spinner"
+            android:layout_marginTop="20dp"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
+            android:text="@string/log_in_child"
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/account_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/add_child_button"
+            android:layout_below="@id/log_in_child_button"
             android:layout_marginTop="20dp"
             android:background="@color/gray"
             android:paddingStart="25dp"

@@ -1,4 +1,5 @@
 package com.chorestory.model;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -32,8 +33,13 @@ public class QuestParcelable implements Parcelable {
         } else { // nextOccurrence is null so add dummy value
             this.nextOccurrence = 0;
         }
-        this.ownerName = quest.getOwner().getName();
-        this.ownerId = quest.getOwner().getId();
+        if (quest.getOwner() != null) {
+            this.ownerName = quest.getOwner().getName();
+            this.ownerId = quest.getOwner().getId();
+        } else {
+            this.ownerName = null;
+            this.ownerId = -1;
+        }
         this.recurring = quest.getRecurring();
         this.reward = quest.getReward();
         this.title = quest.getTitle();
@@ -101,7 +107,7 @@ public class QuestParcelable implements Parcelable {
     }
 
     public String getOwnerName() {
-        return  ownerName;
+        return ownerName;
     }
 
     public int getOwnerId() {

@@ -13,6 +13,7 @@ import com.chorestory.templates.QuestCreateRequest;
 import com.chorestory.templates.QuestCreateResponse;
 import com.chorestory.templates.QuestModifyRequest;
 import com.chorestory.templates.RegisterRequest;
+import com.chorestory.templates.SaveRegistrationIdRequest;
 import com.chorestory.templates.SingleResponse;
 
 import retrofit2.Call;
@@ -95,6 +96,13 @@ public interface RetrofitInterface {
             @Path("lookahead") String lookahead
     );
 
+    @GET("quest/{start}/{lookahead}")
+    Call<GetQuestsResponse> child_get_quests(
+            @Header("Authorization") String auth,
+            @Path("start") String start,
+            @Path("lookahead") String lookahead
+    );
+
     @GET("quest/{qid}")
     Call<GetQuestResponse> get_quest(
             @Header("Authorization") String auth,
@@ -119,5 +127,10 @@ public interface RetrofitInterface {
     Call<SingleResponse<Boolean>> delete_quest(
             @Header("Authorization") String auth,
             @Path("qid") Integer qid
+      
+    @POST("me/registration_id")
+    Call<SingleResponse<Boolean>> save_registration_id(
+            @Header("Authorization") String auth,
+            @Body SaveRegistrationIdRequest saveRegistrationIdRequest
     );
 }
