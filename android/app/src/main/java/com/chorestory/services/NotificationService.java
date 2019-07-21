@@ -4,17 +4,31 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
-
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
+import com.chorestory.app.App;
+import com.chorestory.helpers.TokenHandler;
+import com.chorestory.templates.SaveRegistrationIdRequest;
+import com.chorestory.templates.SingleResponse;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class NotificationService extends FirebaseMessagingService {
+    @Inject
+    RetrofitInterface retrofitInference;
+    @Inject
+    TokenHandler tokenHandler;
 
     private final String TAG = getClass().getName();
 
@@ -68,19 +82,25 @@ public class NotificationService extends FirebaseMessagingService {
         }
     }
 
-    /**
-     * Called if InstanceID token is updated. This may occur if the security of
-     * the previous token had been compromised. Note that this is called when the InstanceID token
-     * is initially generated so this is where you would retrieve the token.
-     */
-    @Override
-    public void onNewToken(String token) {
-        Log.d(TAG, "Refreshed token: " + token);
-        sendRegistrationToServer(token);
-    }
+    public void sendRegistrationToServer(String registrationId, Context context) {
+        Log.d(TAG, "sending registration ID to server: " + registrationId);
+        App.getAppComponent().inject(this);
+        String token = tokenHandler.getToken(context);
 
-    // TODO: send token to server
-    public void sendRegistrationToServer(String token) {
-        Log.d(TAG, "Sending token to server: " + token);
+        SaveRegistrationIdRequest saveRegistrationIdRequest = new SaveRegistrationIdRequest(registrationId);
+        Call<SingleResponse<Boolean>> saveRegistrationId = retrofitInference.save_registration_id(token, saveRegistrationIdRequest);
+
+        saveRegistrationId.enqueue(new Callback<SingleResponse<Boolean>>() {
+            @Override
+            public void onResponse(Call<SingleResponse<Boolean>> call, Response<SingleResponse<Boolean>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                    Log.d(TAG, "save registration ID succeeded");
+                }
+            }
+            @Override
+            public void onFailure(Call<SingleResponse<Boolean>> call, Throwable t) {
+                Log.d(TAG, "save registration ID failed");
+            }
+        });
     }
 }

@@ -12,6 +12,7 @@ import com.chorestory.templates.LoginRequest;
 import com.chorestory.templates.QuestCreateRequest;
 import com.chorestory.templates.QuestCreateResponse;
 import com.chorestory.templates.RegisterRequest;
+import com.chorestory.templates.SaveRegistrationIdRequest;
 import com.chorestory.templates.SingleResponse;
 
 import retrofit2.Call;
@@ -105,5 +106,11 @@ public interface RetrofitInterface {
             @Header("Authorization") String auth,
             @Path("qid") Integer qid,
             @Path("ts") String ts
+    );
+
+    @POST("me/registration_id")
+    Call<SingleResponse<Boolean>> save_registration_id(
+            @Header("Authorization") String auth,
+            @Body SaveRegistrationIdRequest saveRegistrationIdRequest
     );
 }
