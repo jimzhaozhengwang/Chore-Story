@@ -63,7 +63,7 @@
     <string name="unable_to_recognize_speech">Unable to recognize speech</string>
     <string name="debug">debug</string>
     <string name="qid">qid</string>
-    <string name="ownerName">ownerName</string>
+    <string name="owner_name">owner_name</string>
     <string name="ts">ts</string>
 
 

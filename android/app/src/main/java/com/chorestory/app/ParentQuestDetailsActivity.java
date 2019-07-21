@@ -182,8 +182,6 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         expEditText.setText(Integer.toString(quest.getExp()));
 
         // status
-        System.out.println(quest.getStatus());
-
         QuestCompletion status = quest.getStatus();
         String statusString = quest.getQuestCompletionString(status);
 
@@ -233,7 +231,7 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         if (token != null) {
             if (tokenHandler.isParentToken(token)) {
                 int qid = getIntent().getIntExtra(getResources().getString(R.string.qid), 1);
-                questOwnerName = getIntent().getStringExtra(getResources().getString(R.string.ownerName));
+                questOwnerName = getIntent().getStringExtra(getResources().getString(R.string.owner_name));
                 int ts = getIntent().getIntExtra(getResources().getString(R.string.ts), -1);
                 Call<GetQuestResponse> getQuestQuery;
                 if (ts == -1) {
