@@ -4,7 +4,10 @@
     android:layout_height="wrap_content"
     android:background="@drawable/border"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="10dp"
+    android:backgroundTint="@color/light_gray">
 
     <ImageView
         android:id="@+id/parent_image_view"
