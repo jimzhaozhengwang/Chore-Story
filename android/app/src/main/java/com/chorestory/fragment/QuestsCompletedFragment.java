@@ -16,6 +16,7 @@ import com.chorestory.model.QuestParcelable;
 import com.chorestory.model.QuestRecyclerViewItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class QuestsCompletedFragment extends ChoreStoryFragment {
@@ -51,6 +52,7 @@ public class QuestsCompletedFragment extends ChoreStoryFragment {
                 completedQuests.add(quest);
             }
         }
+        Collections.sort(completedQuests);
         return completedQuests;
     }
 }

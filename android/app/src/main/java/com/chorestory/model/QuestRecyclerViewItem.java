@@ -9,7 +9,7 @@ import com.chorestory.templates.GetQuestsResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestRecyclerViewItem {
+public class QuestRecyclerViewItem implements Comparable<QuestRecyclerViewItem> {
 
     private String name;
     private int exp;
@@ -215,5 +215,16 @@ public class QuestRecyclerViewItem {
             default:
                 return "Completed";
         }
+    }
+
+    @Override
+    public int compareTo(QuestRecyclerViewItem otherQuest) {
+        if (this.getDueDate() < otherQuest.getDueDate()) {
+            return -1;
+        }
+        if (this.getDueDate() == otherQuest.getDueDate()) {
+            return 0;
+        }
+        return 1;
     }
 }

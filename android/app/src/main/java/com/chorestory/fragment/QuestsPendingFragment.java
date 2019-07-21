@@ -15,6 +15,7 @@ import com.chorestory.model.QuestParcelable;
 import com.chorestory.model.QuestRecyclerViewItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class QuestsPendingFragment extends ChoreStoryFragment {
@@ -49,6 +50,7 @@ public class QuestsPendingFragment extends ChoreStoryFragment {
                 pendingQuests.add(quest);
             }
         }
+        Collections.sort(pendingQuests);
         return pendingQuests;
     }
 }

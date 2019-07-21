@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="20dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,53 +16,60 @@
                 android:id="@+id/new_quest_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
                 android:text="@string/new_quest"
-                android:textSize="40sp" />
+                android:textSize="25sp" />
 
             <ImageButton
                 android:id="@+id/mic_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
                 android:src="@drawable/ic_mic_black_24dp" />
 
-            <Spinner
-                android:id="@+id/child_spinner"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:id="@+id/child_spinner_wrapper"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/new_quest_text_view"
-                android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:prompt="@string/select_a_child" />
+                android:background="@drawable/border">
+
+                <Spinner
+                    android:id="@+id/child_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:prompt="@string/select_a_child" />
+            </RelativeLayout>
 
             <EditText
                 android:id="@+id/quest_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/child_spinner"
-                android:layout_marginStart="5dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/child_spinner_wrapper"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
                 android:background="@drawable/border"
                 android:hint="@string/enter_a_quest"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:paddingLeft="15dp"
+                android:textColor="@color/gray" />
 
             <TextView
                 android:id="@+id/exp_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_below="@id/quest_edit_text"
-                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:textSize="25sp" />
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/select_date_button"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/exp_text_view"
+                android:layout_marginTop="10dp"
+                android:text="@string/select_date" />
 
             <TextView
                 android:id="@+id/date_text_view"
@@ -69,83 +77,79 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/exp_text_view"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="15dp"
-                android:textSize="25sp" />
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@id/select_date_button"
+                android:textSize="20sp" />
+
 
             <Button
-                android:id="@+id/select_date_button"
-                android:layout_width="wrap_content"
+                android:id="@+id/select_time_button"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/exp_text_view"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="5dp"
+                android:layout_below="@id/select_date_button"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:text="@string/select_date" />
+                android:text="@string/select_time" />
 
             <TextView
                 android:id="@+id/time_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/date_text_view"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="25dp"
-                android:textSize="25sp" />
-
-            <Button
-                android:id="@+id/select_time_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_below="@id/select_date_button"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:text="@string/select_time" />
-
-            <Spinner
-                android:id="@+id/recurrence_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/select_time_button"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:prompt="@string/does_not_repeat" />
-
-            <TextView
-                android:id="@+id/needs_verification_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/recurrence_spinner"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/verification_required"
-                android:textSize="25sp" />
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@id/select_time_button"
+                android:textSize="20sp" />
 
             <CheckBox
                 android:id="@+id/needs_verification_check_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/recurrence_spinner"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="5dp"
+                android:layout_below="@id/select_time_button"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:checked="false" />
+                android:checked="false"
+                android:scaleX="1.4"
+                android:scaleY="1.4" />
+
+            <TextView
+                android:id="@+id/needs_verification_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/select_time_button"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/needs_verification_check_box"
+                android:text="@string/verification_required"
+                android:textSize="20sp" />
+
+            <RelativeLayout
+                android:id="@+id/recurrence_spinner_wrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/needs_verification_text_view"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border">
+
+                <Spinner
+                    android:id="@+id/recurrence_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:prompt="@string/does_not_repeat" />
+            </RelativeLayout>
+
 
             <EditText
                 android:id="@+id/description_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/needs_verification_text_view"
-                android:layout_marginStart="5dp"
+                android:layout_height="140dp"
+                android:layout_below="@id/recurrence_spinner_wrapper"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
                 android:layout_marginBottom="100dp"
                 android:background="@drawable/border"
+                android:gravity="top|left"
                 android:hint="@string/description"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:padding="10dp"
+                android:textColor="@color/gray" />
         </RelativeLayout>
     </ScrollView>
 

@@ -49,15 +49,6 @@ public class ChildRecyclerViewAdapter extends RecyclerView.Adapter<ChildRecycler
         String exp = currChild.getExp() + " Exp";
         myViewHolder.childExpTextView.setText(exp);
 
-        String quest;
-        if (currChild.getQuest() == 1) {
-            quest = currChild.getQuest() + " Quest Completed";
-        } else {
-            quest = currChild.getQuest() + " Quests Completed";
-        }
-
-        myViewHolder.childQuestTextView.setText(quest);
-
         // TODO: handle click events
     }
 
@@ -72,7 +63,6 @@ public class ChildRecyclerViewAdapter extends RecyclerView.Adapter<ChildRecycler
         private TextView childNameTextView;
         private TextView childLevelTextView;
         private TextView childExpTextView;
-        private TextView childQuestTextView;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,7 +70,6 @@ public class ChildRecyclerViewAdapter extends RecyclerView.Adapter<ChildRecycler
             childNameTextView = itemView.findViewById(R.id.child_name_text_view);
             childLevelTextView = itemView.findViewById(R.id.child_level_text_view);
             childExpTextView = itemView.findViewById(R.id.child_exp_text_view);
-            childQuestTextView = itemView.findViewById(R.id.child_quest_text_view);
         }
     }
 }

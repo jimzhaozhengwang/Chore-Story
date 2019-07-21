@@ -48,7 +48,6 @@ public class ChildQuestsFragment extends ChoreStoryFragment {
         viewPager = view.findViewById(R.id.view_pager);
         tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setSelectedTabIndicatorHeight(0);
 
         return view;
     }

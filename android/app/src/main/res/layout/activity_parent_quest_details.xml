@@ -5,43 +5,46 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="25dp">
 
         <ImageView
             android:id="@+id/quest_image_view"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp" />
+            android:layout_marginBottom="20dp" />
 
         <EditText
             android:id="@+id/quest_name_edit_text"
             android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:layout_height="40dp"
             android:layout_below="@id/quest_image_view"
             android:layout_centerHorizontal="true"
-            android:gravity="center" />
+            android:background="@drawable/border"
+            android:gravity="center"
+            android:textColor="@color/gray" />
 
         <EditText
             android:id="@+id/quest_exp_edit_text"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_below="@id/quest_name_edit_text"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:layout_marginStart="120dp"
-            android:gravity="center"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="25dp" />
+            android:layout_marginEnd="25dp"
+            android:background="@drawable/border"
+            android:gravity="center"
+            android:textColor="@color/gray" />
 
         <TextView
             android:id="@+id/exp_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_below="@id/quest_name_edit_text"
-            android:layout_marginLeft="250dp"
             android:layout_marginTop="10dp"
-            android:paddingEnd="25dp"
+            android:layout_toRightOf="@id/quest_exp_edit_text"
+            android:gravity="center"
             android:text="@string/exp"
             android:textSize="20sp" />
 
@@ -52,6 +55,7 @@
             android:layout_below="@id/quest_exp_edit_text"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:src="@drawable/yellow_check_mark" />
 
         <TextView
@@ -61,6 +65,7 @@
             android:layout_below="@id/quest_exp_edit_text"
             android:layout_marginStart="60dp"
             android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
             android:paddingStart="10dp"
             android:paddingEnd="25dp"
             android:textSize="20sp" />
@@ -68,10 +73,11 @@
         <Button
             android:id="@+id/view_proof_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@id/quest_exp_edit_text"
-            android:layout_marginStart="280dp"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/view_proof" />
 
         <TextView
@@ -80,17 +86,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_status_text_view"
             android:layout_marginTop="20dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
             android:text="@string/due_date"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/quest_select_date_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
             android:layout_below="@id/quest_status_text_view"
-            android:layout_marginStart="130dp"
+            android:layout_marginStart="160dp"
             android:layout_marginTop="10dp" />
 
         <TextView
@@ -99,17 +103,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_due_date_text_view"
             android:layout_marginTop="20dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
             android:text="@string/due_time"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/quest_select_time_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
             android:layout_below="@id/quest_due_date_text_view"
-            android:layout_marginStart="130dp"
+            android:layout_marginStart="160dp"
             android:layout_marginTop="10dp" />
 
         <TextView
@@ -118,8 +120,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_due_time_text_view"
             android:layout_marginTop="20dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
             android:text="@string/recurrence"
             android:textSize="20sp" />
 
@@ -128,9 +128,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_due_time_text_view"
-            android:layout_marginStart="150dp"
+            android:layout_marginStart="160dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="5dp"
             android:textSize="20sp" />
 
         <TextView
@@ -139,8 +138,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_recurrence_text_view"
             android:layout_marginTop="20dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
             android:text="@string/child"
             android:textSize="20sp" />
 
@@ -149,9 +146,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_recurrence_text_view"
-            android:layout_marginStart="100dp"
+            android:layout_marginStart="160dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="5dp"
             android:textSize="20sp" />
 
         <EditText
@@ -159,18 +155,19 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_below="@id/quest_owner_text_view"
-            android:layout_marginStart="25dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="25dp"
             android:background="@drawable/border"
-            android:inputType="textMultiLine" />
+            android:gravity="top|left"
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            android:textColor="@color/gray" />
 
         <Button
             android:id="@+id/cancel_button"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/description_edit_text"
-            android:layout_marginStart="25dp"
+            android:layout_alignParentLeft="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_round_light"
             android:text="@string/cancel" />
@@ -180,7 +177,7 @@
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/description_edit_text"
-            android:layout_marginStart="150dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_round"
             android:text="@string/save" />
@@ -190,7 +187,7 @@
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/description_edit_text"
-            android:layout_marginStart="275dp"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_round_red"
             android:text="@string/delete" />
