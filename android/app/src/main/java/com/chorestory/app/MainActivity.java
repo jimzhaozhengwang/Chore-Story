@@ -70,8 +70,6 @@ public class MainActivity extends ChoreStoryActivity {
 
                 if (barCode.displayValue.endsWith(getString(R.string.child_login_identifier))) {
 
-                    barCode.displayValue = "31ede8f6-5eae-474e-904e-1488944a71ad:childLogin";
-
                     // The token can be used by the child to login
                     tokenHandler.setChildToken(
                             barCode.displayValue.replace(getString(R.string.child_login_identifier), ""),
@@ -84,7 +82,7 @@ public class MainActivity extends ChoreStoryActivity {
 
                     // Send the child to join the clan that the token belongs to
                     tokenHandler.setChildCreationToken(
-                            barCode.displayValue.replace(getString(R.string.child_login_identifier), ""));
+                            barCode.displayValue.replace(getString(R.string.child_register_identifier), ""));
                     navigateTo(ChildJoinClanActivity.class);
 
                 }
