@@ -6,7 +6,6 @@ import com.chorestory.templates.ChildRequest;
 import com.chorestory.templates.ChildResponse;
 import com.chorestory.templates.ClanChildrenResponse;
 import com.chorestory.templates.ClanResponse;
-import com.chorestory.templates.FriendsResponse;
 import com.chorestory.templates.GetQuestResponse;
 import com.chorestory.templates.GetQuestsResponse;
 import com.chorestory.templates.LoginRequest;
