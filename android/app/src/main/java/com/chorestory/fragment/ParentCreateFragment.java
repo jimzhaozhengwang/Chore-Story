@@ -36,6 +36,9 @@ import com.chorestory.templates.AccountResponse;
 import com.chorestory.templates.AccountResponse.Data.Child;
 import com.chorestory.templates.QuestCreateRequest;
 import com.chorestory.templates.QuestCreateResponse;
+import com.chorestory.templates.QuestDialogFlowRequest;
+import com.chorestory.templates.QuestDialogFlowResponse;
+import com.chorestory.templates.TimeTemplate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
@@ -64,7 +67,8 @@ public class ParentCreateFragment extends ChoreStoryFragment {
     TokenHandler tokenHandler;
 
     private Spinner childSpinner;
-    private ImageButton micImageButton;
+    private ImageButton
+            micImageButton;
     private EditText questEditText;
     private TextView expTextView;
     private TextView dateTextView;
@@ -154,6 +158,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                         RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 
                 startActivityForResult(intent, SPEECH_REQUEST_CODE);
+
             }
         });
 
@@ -328,8 +333,11 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                                     homeAdapter.getItem(2).onResume();
                                 } else {
                                     Toaster.showToast(getContext(), "Something went wrong.");
-                                    enableViews();
                                 }
+
+                                // Enable the views otherwise we wont be able to click when returning from
+                                //      the quest view fragment if android caches this page
+                                enableViews();
                             }
 
                             @Override
@@ -425,11 +433,81 @@ public class ParentCreateFragment extends ChoreStoryFragment {
         return timestamp;
     }
 
+    private void callDialogFlow(String dialogText) {
+        if (token != null && tokenHandler.isParentToken(token)) {
+            QuestDialogFlowRequest questDialogFlowRequest = new QuestDialogFlowRequest(dialogText);
+
+            Call<QuestDialogFlowResponse> questDialogQuery = retrofitInterface.get_quest_dialog_flow(token, questDialogFlowRequest);
+            questDialogQuery.enqueue(new Callback<QuestDialogFlowResponse>() {
+                @Override
+                public void onResponse(Call<QuestDialogFlowResponse> call, Response<QuestDialogFlowResponse> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+
+                        QuestDialogFlowResponse.Data respData = response.body().getData();
+
+                        // Populate the fields we can find in the response
+
+                        // Check for child name
+                        if (respData.hasChild()) {
+                            int position = 0;
+                            for (Child child : fragmentChildList) {
+                                if (child.getName().equals(respData.getChild())) {
+                                    childSpinner.setSelection(position);
+                                }
+                                position++;
+                            }
+                        }
+
+                        // Check for quest description
+                        if (respData.hasQuest()) {
+                            questEditText.setText(respData.getQuest());
+                        }
+
+                        // Check for exp value
+                        if (respData.hasExp()) {
+                            expTextView.setText(respData.getExp().toString());
+                        }
+
+                        // Set end date
+                        TimeTemplate endDate = respData.getTime().getEndDateTime();
+                        if (endDate != null) {
+                            dateTextView.setText(
+                                    endDate.getDay() + "-" +
+                                            endDate.getMonth() + "-" +
+                                            endDate.getYear());
+                            timeTextView.setText(endDate.getHour() + ":" + endDate.getMinute());
+
+                            // Set the globals because parsing a text box is worse
+                            mDay = Integer.parseInt(endDate.getDay());
+                            mMonth = Integer.parseInt(endDate.getMonth());
+                            mYear = Integer.parseInt(endDate.getYear());
+
+                            mHour = Integer.parseInt(endDate.getHour());
+                            mMinute = Integer.parseInt(endDate.getMinute());
+                        }
+
+                    } else {
+                        Toaster.showToast(getContext(), "Internal error occurred.");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<QuestDialogFlowResponse> call, Throwable t) {
+                    Toaster.showToast(getContext(), "Internal error occurred.");
+                }
+            });
+        } else {
+            deleteTokenNavigateMain(getContext());
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
+
+            callDialogFlow(spokenText);
 
             Toaster.showToast(getContext(), spokenText);
         } else {

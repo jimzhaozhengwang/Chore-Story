@@ -11,6 +11,8 @@ import com.chorestory.templates.GetQuestsResponse;
 import com.chorestory.templates.LoginRequest;
 import com.chorestory.templates.QuestCreateRequest;
 import com.chorestory.templates.QuestCreateResponse;
+import com.chorestory.templates.QuestDialogFlowRequest;
+import com.chorestory.templates.QuestDialogFlowResponse;
 import com.chorestory.templates.RegisterRequest;
 import com.chorestory.templates.SingleResponse;
 
@@ -105,5 +107,11 @@ public interface RetrofitInterface {
             @Header("Authorization") String auth,
             @Path("qid") Integer qid,
             @Path("ts") String ts
+    );
+
+    @POST("quest/text")
+    Call<QuestDialogFlowResponse> get_quest_dialog_flow(
+            @Header("Authorization") String auth,
+            @Body QuestDialogFlowRequest questDialogFlowRequest
     );
 }
