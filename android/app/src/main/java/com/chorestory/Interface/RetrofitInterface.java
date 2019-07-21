@@ -11,6 +11,7 @@ import com.chorestory.templates.GetQuestsResponse;
 import com.chorestory.templates.LoginRequest;
 import com.chorestory.templates.QuestCreateRequest;
 import com.chorestory.templates.QuestCreateResponse;
+import com.chorestory.templates.QuestModifyRequest;
 import com.chorestory.templates.RegisterRequest;
 import com.chorestory.templates.SingleResponse;
 
@@ -105,5 +106,18 @@ public interface RetrofitInterface {
             @Header("Authorization") String auth,
             @Path("qid") Integer qid,
             @Path("ts") String ts
+    );
+
+    @POST("quest/{qid}")
+    Call<QuestCreateResponse> modify_quest(
+            @Header("Authorization") String auth,
+            @Path("qid") Integer qid,
+            @Body QuestModifyRequest questModifyRequest
+    );
+
+    @POST("quest/{qid}/delete")
+    Call<SingleResponse<Boolean>> delete_quest(
+            @Header("Authorization") String auth,
+            @Path("qid") Integer qid
     );
 }
