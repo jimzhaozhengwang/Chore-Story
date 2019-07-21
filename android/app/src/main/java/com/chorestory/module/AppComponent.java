@@ -5,9 +5,10 @@ import com.chorestory.app.CameraActivity;
 import com.chorestory.app.ChildHomeActivity;
 import com.chorestory.app.ChildJoinClanActivity;
 import com.chorestory.app.ChildQuestDetailsActivity;
-import com.chorestory.app.CreateClanActivity;
+import com.chorestory.app.ParentCreateClanActivity;
 import com.chorestory.app.MainActivity;
 import com.chorestory.app.ParentHomeActivity;
+import com.chorestory.app.ParentJoinClanActivity;
 import com.chorestory.app.ParentLoginActivity;
 import com.chorestory.app.ParentLoginSignUpActivity;
 import com.chorestory.app.ParentQuestDetailsActivity;
@@ -35,7 +36,7 @@ public interface AppComponent {
 
     void inject(ParentSignUpActivity activity);
 
-    void inject(CreateClanActivity activity);
+    void inject(ParentCreateClanActivity activity);
 
     void inject(ParentHomeActivity activity);
 
@@ -64,4 +65,6 @@ public interface AppComponent {
     void inject(CameraActivity activity);
 
     void inject(ChildFriendsFragment fragment);
+
+    void inject(ParentJoinClanActivity activity);
 }

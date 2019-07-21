@@ -17,11 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity
+            android:name=".app.ParentJoinClanActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.gms.vision"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
@@ -29,7 +31,6 @@
         <activity
             android:name=".app.CameraActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".app.QrCodeActivity"
             android:screenOrientation="portrait" />
@@ -63,7 +64,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".app.CreateClanActivity"
+            android:name=".app.ParentCreateClanActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".app.ParentSignUpActivity"
