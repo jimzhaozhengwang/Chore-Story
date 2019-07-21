@@ -449,7 +449,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                         // Check for child name
                         if (respData.hasChild()) {
                             int position = 0;
-                            for (Child child : fragmentChildList) {
+                            for (Child child : childList) {
                                 String currentName = child.getName().toLowerCase();
                                 if (currentName.equals(respData.getChild().toLowerCase())) {
                                     childSpinner.setSelection(position);
