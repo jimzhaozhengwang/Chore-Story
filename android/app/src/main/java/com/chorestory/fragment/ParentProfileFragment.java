@@ -22,6 +22,7 @@ import com.chorestory.app.QrCodeActivity;
 import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
 import com.chorestory.templates.AccountResponse;
+import com.chorestory.templates.SingleResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,10 +91,11 @@ public class ParentProfileFragment extends ChoreStoryFragment {
             @Override
             public void onClick(View v) {
                 disableViews();
-                navigateTo(getContext(),
+                navigateToQRContext(getContext(),
                         QrCodeActivity.class,
                         getString(R.string.qr_code),
-                        getString(R.string.child));
+                        getString(R.string.child),
+                        "");
             }
         });
 
@@ -102,7 +104,35 @@ public class ParentProfileFragment extends ChoreStoryFragment {
             public void onClick(View v) {
                 disableViews();
                 if (selectedChildId != -1) {
-                    // TODO: navigate to QRCodeActivity & generate log in QR code
+
+                    // Get the childs login token to be passed to the QR activity
+                    String parentToken = tokenHandler.getToken(getContext());
+                    if (parentToken != null && tokenHandler.isParentToken(parentToken)) {
+                        Call<SingleResponse<String>> childTokenRequest = retrofitInterface.get_child_login_token(parentToken, String.valueOf(selectedChildId));
+
+                        childTokenRequest.enqueue(new Callback<SingleResponse<String>>() {
+                            @Override
+                            public void onResponse(Call<SingleResponse<String>> call, Response<SingleResponse<String>> response) {
+                                if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                                    String childToken = response.body().getData();
+
+                                    navigateToQRContext(getContext(),
+                                            QrCodeActivity.class,
+                                            getString(R.string.qr_code),
+                                            getString(R.string.child),
+                                            childToken);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SingleResponse<String>> call, Throwable t) {
+                                Toaster.showToast(getContext(), "Internal error occurred.");
+                                enableViews();
+                            }
+                        });
+                    } else {
+                        deleteTokenNavigateMain(getContext());
+                    }
                 } else {
                     enableViews();
                     Toaster.showToast(getContext(), "Please select a child!");

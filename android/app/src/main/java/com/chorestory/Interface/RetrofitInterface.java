@@ -61,6 +61,13 @@ public interface RetrofitInterface {
             @Body ChildRequest childRequest
     );
 
+    @Headers("Content-Type: application/json")
+    @GET("child/{cid}/login")
+    Call<SingleResponse<String>> get_child_login_token(
+            @Header("Authorization") String auth,
+            @Path("cid") String cid
+    );
+
     @GET("friend")
     Call<ClanChildrenResponse> list_friends(
             @Header("Authorization") String auth

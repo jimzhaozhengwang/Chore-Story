@@ -72,6 +72,9 @@
     <string name="welcome_to_the">Welcome to the</string>
     <string name="add_friend">Add Friend</string>
     <string name="log_in_child">Log In Child</string>
+    <string name="token_identifier">tokenIdentifier</string>
+    <string name="child_login_identifier">:childLogin</string>
+    <string name="child_register_identifier">:childRegister</string>
 
 
     <string-array name="recurrence_array">

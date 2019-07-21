@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import android.view.View;
 
+import com.chorestory.R;
 import com.chorestory.app.MainActivity;
 import com.chorestory.helpers.TokenHandler;
 
@@ -49,6 +50,13 @@ abstract public class ChoreStoryFragment extends Fragment {
     protected void navigateTo(Context context, Class<?> toClass, String key, String value) {
         Intent intent = new Intent(context, toClass);
         intent.putExtra(key, value);
+        startActivity(intent);
+    }
+
+    protected void navigateToQRContext(Context context, Class<?> toClass, String key, String value, String token) {
+        Intent intent = new Intent(context, toClass);
+        intent.putExtra(key, value);
+        intent.putExtra(getString(R.string.token_identifier), token);
         startActivity(intent);
     }
 
