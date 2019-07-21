@@ -44,8 +44,9 @@ public class ParentHomeActivity extends ChoreStoryActivity {
         App.getAppComponent().inject(this);
         setContentView(R.layout.activity_parent_home);
 
-        // Send registration id to server
+        // Create Notification Channel and send registration id to server
         NotificationService notificationService = new NotificationService();
+        notificationService.createNotificationChannel(getBaseContext(), getString(R.string.notification_channel_id));
         String token = FirebaseInstanceId.getInstance().getToken();
         notificationService.sendRegistrationToServer(token, getApplicationContext());
 
