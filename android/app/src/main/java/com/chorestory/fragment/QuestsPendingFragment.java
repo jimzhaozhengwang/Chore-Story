@@ -15,6 +15,7 @@ import com.chorestory.model.QuestParcelable;
 import com.chorestory.model.QuestRecyclerViewItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuestsPendingFragment extends ChoreStoryFragment {
 
@@ -27,16 +28,27 @@ public class QuestsPendingFragment extends ChoreStoryFragment {
         View view = inflater.inflate(R.layout.fragment_quests_pending, container, false);
 
         Bundle bundle = this.getArguments();
-        ArrayList<QuestParcelable> questParcelables = bundle.getParcelableArrayList("all_quests");
+        ArrayList<QuestParcelable> questParcelables = bundle.getParcelableArrayList(getString(R.string.all_quests));
 
         // Pending Quests
         pendingQuestsRecyclerView = view.findViewById(R.id.pending_quests_recycler_view);
         pendingQuestsLayoutManager = new LinearLayoutManager(getActivity());
         pendingQuestsRecyclerView.setLayoutManager(pendingQuestsLayoutManager);
 
-        pendingQuestsAdapter = new QuestRecyclerViewAdapter(QuestRecyclerViewItem.getData(questParcelables), (ChoreStoryActivity) getActivity());
+        List<QuestRecyclerViewItem> pendingQuests = getPendingQuests(QuestRecyclerViewItem.getData(questParcelables));
+        pendingQuestsAdapter = new QuestRecyclerViewAdapter(pendingQuests, (ChoreStoryActivity) getActivity());
         pendingQuestsRecyclerView.setAdapter(pendingQuestsAdapter);
 
         return view;
+    }
+
+    private List<QuestRecyclerViewItem> getPendingQuests(List<QuestRecyclerViewItem> allQuests) {
+        List<QuestRecyclerViewItem> pendingQuests = new ArrayList<>();
+        for (QuestRecyclerViewItem quest : allQuests) {
+            if (quest.getStatus() == QuestCompletion.PENDING) {
+                pendingQuests.add(quest);
+            }
+        }
+        return pendingQuests;
     }
 }

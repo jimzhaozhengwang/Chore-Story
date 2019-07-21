@@ -59,7 +59,7 @@ public class ParentQuestsFragment extends ChoreStoryFragment {
 
     private void setupViewPager() {
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("all_quests", questParcelables);
+        bundle.putParcelableArrayList(getString(R.string.all_quests), questParcelables);
 
         QuestsUpcomingFragment questsUpcomingFragment = new QuestsUpcomingFragment();
         questsUpcomingFragment.setArguments(bundle);

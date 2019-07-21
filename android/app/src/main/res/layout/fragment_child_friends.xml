@@ -6,4 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".fragment.ChildFriendsFragment">
 
+    <EditText
+        android:id="@+id/add_friend_edit_text"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="70dp"
+        android:gravity="center_horizontal"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:hint="username"
+        />
+
+    <Button
+        android:id="@+id/add_friend_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_toRightOf="@+id/add_friend_edit_text"
+        android:background="@drawable/btn_round_light"
+        android:text="Add Friend"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/child_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:scrollbars="vertical"
+        android:layout_below="@+id/add_friend_edit_text"/>
+
 </RelativeLayout>
