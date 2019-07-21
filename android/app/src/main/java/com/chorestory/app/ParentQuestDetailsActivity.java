@@ -198,6 +198,9 @@ public class ParentQuestDetailsActivity extends ChoreStoryActivity {
         QuestCompletion status = quest.getStatus();
         String statusString = quest.getQuestCompletionString(status);
 
+        // hiding this because we're not doing proof for now
+        viewProofButton.setVisibility(viewProofButton.GONE);
+
         statusTextView.setText(statusString);
         int statusImage;
         if (status == QuestCompletion.PENDING) {
