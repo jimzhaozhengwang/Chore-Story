@@ -470,7 +470,7 @@ def delete_quest(qid):
     if not quest:
         raise BackboneException(404, "Quest not found")
     owner = Child.query.filter_by(id=quest.owner).first()
-    if not owner or owner not in current_user.children:
+    if not child_is_my_child(owner):
         raise BackboneException(404, "Quest not found")
     db.session.delete(quest)
     db.session.commit()
@@ -619,7 +619,7 @@ def get_child_quests_window(cid, start, lookahead):
     if not child_is_my_child(child):
         raise BackboneException(404, "Child not found")
     quests = get_childs_quest_with_window(child, start, lookahead)
-    return json_return([generate_qst_resp(q) for q in quests])
+    return json_return([generate_qst_resp(q, ts) for q, ts in quests])
 
 
 @api_bp.route('/quest/<int:qid>/verify', methods=['POST'], defaults={'ts': None})
@@ -733,5 +733,6 @@ def get_all_quests_in_window(start, lookahead):
     all_quests = []
     for child in current_user.clan.children:
         all_quests.extend([{'owner': {'id': child.id, 'name': child.name},
-                            **generate_qst_resp(q)} for q in get_childs_quest_with_window(child, start, lookahead)])
+                            **generate_qst_resp(q, ts)} for q, ts in
+                           get_childs_quest_with_window(child, start, lookahead)])
     return json_return(all_quests)

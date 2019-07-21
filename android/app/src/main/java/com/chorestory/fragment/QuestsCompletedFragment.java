@@ -29,7 +29,7 @@ public class QuestsCompletedFragment extends ChoreStoryFragment {
         View view = inflater.inflate(R.layout.fragment_quests_completed, container, false);
 
         Bundle bundle = this.getArguments();
-        ArrayList<QuestParcelable> questParcelables = bundle.getParcelableArrayList("all_quests");
+        ArrayList<QuestParcelable> questParcelables = bundle.getParcelableArrayList(getString(R.string.all_quests));
 
         // Completed Quests
         completedQuestsRecyclerView = view.findViewById(R.id.completed_quests_recycler_view);

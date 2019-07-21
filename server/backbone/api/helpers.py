@@ -50,6 +50,8 @@ def generate_qst_resp(qst, ts=datetime.utcnow()):
     d = {}
     for e in ['title', 'description', 'reward', 'due', 'id', 'recurring', 'needs_verification']:
         d[e] = getattr(qst, e)
+    # Add timestamps
+    d['timestamps'] = [t.value for t in qst.timestamps]
     # Add extra values that we don't store in database
     looking_for = find_next_time(qst, ts) if qst.recurring else qst.due
     d['due'] = datetime.timestamp(d['due'])
@@ -118,6 +120,8 @@ def child_is_me_or_my_friend(child_obj):
 
 def find_next_time(qst, time_now=datetime.utcnow()):
     """Helper function to find next occurrence of a quest"""
+    if isinstance(time_now, float):
+        time_now = datetime.fromtimestamp(time_now)
     if not qst.recurring:
         return qst.due
     time = qst.due
@@ -171,16 +175,22 @@ def generate_unique_api_key_for(cls):
 
 
 def get_childs_quest_with_window(child, start, lookahead):
-    """This helper function generates a list of the descriptions of a child's quests due in the time window."""
-    start = datetime.utcfromtimestamp(start)
+    """This helper function generates a list of the descriptions of a child's quests due in the time window with
+    their due times."""
+    start = datetime.fromtimestamp(start)
     end = start + timedelta(seconds=lookahead)
 
     # Get one time quests in window
-    one_time_relevants = [q for q in child.quests if not q.recurring and start <= q.due <= end]
+    one_time_relevants = [(q, q.due) for q in child.quests if not q.recurring and start <= q.due <= end]
 
     # Get reoccurring time quests in window
-    recurring_relevants = [q for q in child.quests if q.recurring and
-                           start <= find_next_time(q, start) <= end]
+    recurring_relevants = []
+    for q in child.quests:
+        if q.recurring:
+            next_occurence = find_next_time(q, start)
+            while start <= next_occurence < end:
+                recurring_relevants.append((q, next_occurence))
+                next_occurence = find_next_time(q, next_occurence + timedelta(seconds=1))
 
     return one_time_relevants + recurring_relevants
 

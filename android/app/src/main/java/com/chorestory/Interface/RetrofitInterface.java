@@ -1,6 +1,7 @@
 package com.chorestory.Interface;
 
 import com.chorestory.templates.AccountResponse;
+import com.chorestory.templates.AddFriendResponse;
 import com.chorestory.templates.ChildRequest;
 import com.chorestory.templates.ChildResponse;
 import com.chorestory.templates.ClanChildrenResponse;
@@ -48,9 +49,15 @@ public interface RetrofitInterface {
             @Body ChildRequest childRequest
     );
 
-    @POST("friend")
-    Call<FriendsResponse> list_friends(
+    @GET("friend")
+    Call<ClanChildrenResponse> list_friends(
             @Header("Authorization") String auth
+    );
+
+    @POST("friend/{username}")
+    Call<AddFriendResponse> add_friend(
+            @Header("Authorization") String auth,
+            @Path("username") String username
     );
 
     @GET("clan")
