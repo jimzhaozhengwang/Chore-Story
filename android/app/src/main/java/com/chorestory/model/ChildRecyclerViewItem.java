@@ -50,4 +50,8 @@ public class ChildRecyclerViewItem implements Comparable<ChildRecyclerViewItem> 
     public int getImageId() {
         return imageId;
     }
+
+    public void setImageId(int image) {
+        imageId = image;
+    }
 }

@@ -81,6 +81,8 @@ public class ChildHomeActivity extends ChoreStoryActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tab.setIcon(tabSelectedIcons[tab.getPosition()]);
+                int i = tab.getPosition();
+                if (i == 2) fragmentList.get(i).onResume();
             }
 
             @Override

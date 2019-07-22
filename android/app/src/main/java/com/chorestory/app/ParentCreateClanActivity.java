@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
@@ -39,6 +40,8 @@ public class ParentCreateClanActivity extends ChoreStoryActivity {
     private EditText nameEditText;
     private EditText passwordEditText;
     private Button signUpButton;
+    private ImageView kingImageView;
+    private ImageView queenImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +53,28 @@ public class ParentCreateClanActivity extends ChoreStoryActivity {
 
         clanNameEditText = findViewById(R.id.clan_name_edit_text);
 
-        usernameEditText = findViewById(R.id.username_edit_text);
-        usernameEditText.setVisibility(View.GONE);
-
         nameEditText = findViewById(R.id.name_edit_text);
 
         passwordEditText = findViewById(R.id.password_edit_text);
+
+        // default to king
+        picture = R.drawable.king_color;
+        kingImageView = findViewById(R.id.avatar_king);
+        queenImageView = findViewById(R.id.avatar_queen);
+        kingImageView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                kingImageView.setImageResource(R.drawable.king_color);
+                queenImageView.setImageResource(R.drawable.queen_bw);
+                picture = R.drawable.king_color;
+            }
+        });
+        queenImageView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                kingImageView.setImageResource(R.drawable.king_bw);
+                queenImageView.setImageResource(R.drawable.queen_color);
+                picture = R.drawable.queen_color;
+            }
+        });
 
         signUpButton = findViewById(R.id.sign_up_button);
         buttons = Collections.singletonList(signUpButton);
@@ -71,7 +90,6 @@ public class ParentCreateClanActivity extends ChoreStoryActivity {
                 clanName = clanNameEditText.getText().toString();
                 name = nameEditText.getText().toString();
                 password = passwordEditText.getText().toString();
-                picture = R.drawable.king_color; // TODO: Let the user select this when the option is created
 
                 if (email.isEmpty() || clanName.isEmpty() || name.isEmpty() || password.isEmpty()) {
                     enableButtons();

@@ -24,6 +24,7 @@ public class AccountResponse {
         @SerializedName("clan_name")
         String clanName;
         String type;
+        Integer picture;
 
         public Integer getId() {
             return id;
@@ -48,6 +49,8 @@ public class AccountResponse {
         public String getType() {
             return type;
         }
+
+        public Integer getPicture() { return picture; }
 
         public class Child {
             Integer id;

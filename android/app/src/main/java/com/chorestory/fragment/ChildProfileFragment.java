@@ -76,7 +76,7 @@ public class ChildProfileFragment extends ChoreStoryFragment {
                             response.body().hasResponse()) {
                         ChildResponse.Data respData = response.body().getData();
 
-                        childImageView.setImageResource(R.drawable.king_color); // TODO: get actual id once it's set
+                        childImageView.setImageResource(R.drawable.joker_color); // TODO: get actual id once it's set
                         childUsernameTextView.setText(respData.getUsername());
                         childNameTextView.setText(respData.getName());
                         childLevelTextView.setText(String.format(Locale.CANADA, "%d", respData.getLevel()));

@@ -10,7 +10,7 @@ public class ParentRecyclerViewItem {
 
     public ParentRecyclerViewItem(Parent parent) {
         this.name = parent.getName();
-        this.imageId = R.drawable.king_color; // TODO: use this when the response is ready: parent.getPicture();
+        this.imageId = parent.getPicture();
     }
 
     public String getName() {

@@ -8,9 +8,9 @@
     tools:context=".app.ParentCreateClanActivity">
 
     <include
-        layout="@layout/register_user"
+        layout="@layout/register_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp" />
+        android:layout_marginTop="20dp" />
 
 </RelativeLayout>

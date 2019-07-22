@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/parent_image_view"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
             android:textSize="25sp" />
 
         <TextView
@@ -29,137 +28,164 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/parent_name_text_view"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:background="@color/gray"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
+            android:layout_marginStart="20dp"
             android:text="@string/clan"
-            android:textSize="25sp" />
+            android:textColor="@color/black"
+            android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/name_text_view"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/clan_section"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/clan_text_view"
-            android:layout_marginTop="20dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:text="@string/name"
-            android:textSize="25sp" />
+            android:background="@color/very_light_blue"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
-        <TextView
-            android:id="@+id/clan_name_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/clan_text_view"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_toEndOf="@id/name_text_view"
-            android:textAlignment="center"
-            android:textSize="25sp" />
+            <TextView
+                android:id="@+id/name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/name"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/clan_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:textSize="25sp" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/members_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/name_text_view"
+            android:layout_below="@id/clan_section"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:background="@color/gray"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
             android:text="@string/members"
-            android:textSize="25sp" />
+            android:textColor="@color/black"
+            android:textSize="30sp" />
 
-        <Button
-            android:id="@+id/add_parent_guardian_button"
+        <RelativeLayout
+            android:id="@+id/members_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/members_text_view"
-            android:layout_marginTop="20dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:text="@string/add_a_parent_guardian"
-            android:textSize="25sp" />
+            android:background="@color/very_light_blue"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
-        <Button
-            android:id="@+id/add_child_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/add_parent_guardian_button"
-            android:layout_marginTop="20dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:text="@string/add_a_child"
-            android:textSize="25sp" />
+            <RelativeLayout
+                android:id="@+id/button_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true">
 
-        <Spinner
-            android:id="@+id/child_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/add_child_button"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="25dp"
-            android:prompt="@string/select_a_child" />
+                <Button
+                    android:id="@+id/add_parent_guardian_button"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/btn_round"
+                    android:text="@string/add_a_parent_guardian"
+                    android:textSize="15sp" />
 
-        <Button
-            android:id="@+id/log_in_child_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/child_spinner"
-            android:layout_marginTop="20dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:text="@string/log_in_child"
-            android:textSize="25sp" />
+                <Button
+                    android:id="@+id/add_child_button"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_toRightOf="@+id/add_parent_guardian_button"
+                    android:background="@drawable/btn_round"
+                    android:text="@string/add_a_child"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/log_in_child_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/button_section"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp">
+
+                <RelativeLayout
+                    android:id="@+id/spinner_wrapper"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:layout_marginEnd="20dp">
+                    <Spinner
+                        android:id="@+id/child_spinner"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:prompt="@string/select_a_child" />
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/log_in_child_button"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_toRightOf="@id/spinner_wrapper"
+                    android:background="@drawable/btn_round"
+                    android:text="@string/log_in_child"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/account_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/log_in_child_button"
+            android:layout_below="@id/members_section"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:background="@color/gray"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
             android:text="@string/account"
-            android:textSize="25sp" />
+            android:textColor="@color/black"
+            android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/email_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/account_text_view"
-            android:layout_marginTop="20dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:text="@string/email"
-            android:textSize="25sp" />
-
-        <TextView
-            android:id="@+id/parent_email_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/account_text_view"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_toEndOf="@id/email_text_view"
-            android:textAlignment="center"
-            android:textSize="25sp" />
-
-        <Button
-            android:id="@+id/logout_parent_button"
+        <RelativeLayout
+            android:id="@+id/account_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/parent_email_text_view"
-            android:layout_marginTop="20dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:text="@string/logout"
-            android:textSize="25sp" />
+            android:layout_below="@id/account_text_view"
+            android:background="@color/very_light_blue"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:id="@+id/email_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/parent_email_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="5dp"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/logout_parent_button"
+                android:layout_width="170dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/parent_email_text_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_round_red"
+                android:text="@string/logout"
+                android:textSize="15sp" />
+        </RelativeLayout>
     </RelativeLayout>
 </ScrollView>
