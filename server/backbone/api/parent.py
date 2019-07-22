@@ -13,6 +13,7 @@ from .. import db
 from ..decorators import backbone_error_handle, parent_login_required, json_return, json_content_only
 from ..exceptions import BackboneException
 from ..models import Child, Quest, Parent, QuestTimes, Clan, QuestVerifications
+from ..notifications import NewQuestNotification
 from ..views import api_bp
 
 
@@ -41,7 +42,7 @@ def register(cp_code, email, name, password, clan_name, picture):
         "name": "backbone",
         "password": "backbone",
         "clan_name": "clan_name",
-        "parent": "1"
+        "picture": "1"
         }
 
     **Example return**:
@@ -309,6 +310,9 @@ def add_quest(cid, title, description, reward, due, needs_verification, timestam
         db.session.add(ts)
     db.session.add(new_quest)
     db.session.commit()
+
+    NewQuestNotification(child, title).send_notification()
+
     return generate_qst_resp(new_quest)
 
 

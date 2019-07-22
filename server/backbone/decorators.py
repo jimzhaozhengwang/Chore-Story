@@ -3,6 +3,7 @@ import inspect
 from flask import abort, request, json
 from flask_login import current_user, login_required
 from functools import wraps
+from sqlalchemy import inspect as sa_inspect
 
 from .exceptions import BackboneException
 from .models import Parent, Child
@@ -32,7 +33,7 @@ def parent_login_required(func):
     @login_required
     @wraps(func)
     def decorated_view(*args, **kwargs):
-        if isinstance(current_user, Parent):
+        if not isinstance(sa_inspect(current_user).object, Parent):
             abort(404)
         return func(*args, **kwargs)
 
@@ -45,7 +46,7 @@ def child_login_required(func):
     @login_required
     @wraps(func)
     def decorated_view(*args, **kwargs):
-        if isinstance(current_user, Child):
+        if not isinstance(sa_inspect(current_user).object, Child):
             abort(404)
         return func(*args, **kwargs)
 
