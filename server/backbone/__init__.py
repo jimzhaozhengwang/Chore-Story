@@ -35,6 +35,9 @@ def grab_secret_key():
 def grab_project_id():
     return grab_file_content('project_id.txt', False)
 
+def grab_notif_api_key():
+    return grab_file_content('notif_api_key.txt', False)
+
 
 def create_app():
     app = Flask(__name__)
@@ -42,6 +45,9 @@ def create_app():
     project_id = grab_project_id()
     if project_id:
         app.config['DIALOGFLOW_PROJECT_ID'] = project_id
+    notif_api_key = grab_notif_api_key()
+    if notif_api_key:
+        app.config['NOTIF_API_KEY'] = notif_api_key
     app.config['SECRET_KEY'] = grab_secret_key()
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
