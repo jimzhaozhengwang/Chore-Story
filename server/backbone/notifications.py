@@ -20,7 +20,6 @@ class Notification(ABC):
   
   def send_notification(self):
     if (self.should_send_notification()):
-      print(self.api_key)
       return FCMNotification(api_key=self.api_key).notify_single_device(registration_id=self.receiver.registration_id,
                                                                         message_title=self.message_title,
                                                                         message_body=self.message_body)
