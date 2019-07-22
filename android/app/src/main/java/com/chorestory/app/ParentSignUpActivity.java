@@ -9,10 +9,13 @@ import androidx.annotation.Nullable;
 
 import com.chorestory.R;
 import com.chorestory.helpers.Toaster;
+import com.chorestory.helpers.TokenHandler;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.Arrays;
+
+import javax.inject.Inject;
 
 public class ParentSignUpActivity extends ChoreStoryActivity {
 
@@ -20,6 +23,9 @@ public class ParentSignUpActivity extends ChoreStoryActivity {
 
     private Button createNewClanButton;
     private Button joinExistingClanButton;
+
+    @Inject
+    TokenHandler tokenHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,22 +60,28 @@ public class ParentSignUpActivity extends ChoreStoryActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_CODE &&
-                resultCode == CommonStatusCodes.SUCCESS &&
-                data != null) {
+//        if (requestCode == REQUEST_CODE &&
+//                resultCode == CommonStatusCodes.SUCCESS &&
+//                data != null) {
+//
+//            Barcode barCode = data.getParcelableExtra(getString(R.string.qr_code));
+//
+//            if (barCode != null && !barCode.displayValue.isEmpty()) {
+//
+//                if (barCode.displayValue.endsWith(getString(R.string.parent_register_identifier))) {
 
-            Barcode barCode = data.getParcelableExtra(getString(R.string.qr_code));
+                    // The token can be used by the child to login
+                    tokenHandler.setParentRegistrationToken(
+                            "31f056a8-d760-491d-abd1-31b3e87dd90e:parentRegister".replace(getString(R.string.parent_register_identifier), ""));
+                    navigateTo(ParentJoinClanActivity.class);
 
-            if (barCode != null) {
-                Toaster.showToast(this, barCode.displayValue); // TODO: remove this line
-
-                // TODO cristian: join existing clan, set clan name
-                navigateTo(ParentJoinClanActivity.class);
-            } else {
-                Toaster.showToast(this, this.getString(R.string.unable_to_detect_qr_code));
-            }
-        } else {
-            Toaster.showToast(this, this.getString(R.string.unable_to_detect_qr_code));
-        }
+//                }
+//
+//            } else {
+//                Toaster.showToast(this, this.getString(R.string.unable_to_detect_qr_code));
+//            }
+//        } else {
+//            Toaster.showToast(this, this.getString(R.string.unable_to_detect_qr_code));
+//        }
     }
 }

@@ -33,6 +33,13 @@ public interface RetrofitInterface {
     );
 
     @Headers("Content-Type: application/json")
+    @POST("register/{cpid}")
+    Call<SingleResponse<String>> register_co_parent(
+            @Path("cpid") String cpid,
+            @Body RegisterRequest registerRequest
+    );
+
+    @Headers("Content-Type: application/json")
     @POST("login")
     Call<SingleResponse<String>> login(
             @Body LoginRequest loginRequest
@@ -66,6 +73,12 @@ public interface RetrofitInterface {
     Call<SingleResponse<String>> get_child_login_token(
             @Header("Authorization") String auth,
             @Path("cid") String cid
+    );
+
+    @Headers("Content-Type: application/json")
+    @POST("parent")
+    Call<SingleResponse<String>> get_parent_register_token(
+            @Header("Authorization") String auth
     );
 
     @GET("friend")

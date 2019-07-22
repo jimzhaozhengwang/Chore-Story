@@ -8,6 +8,7 @@ public class TokenHandler {
     private final String PREFERENCES_KEY = "token";
 
     private String childCreationToken;
+    private String parentRegistrationToken;
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -32,6 +33,23 @@ public class TokenHandler {
 
     public boolean hasChildCreationToken() {
         return this.childCreationToken != null && !this.childCreationToken.isEmpty();
+    }
+
+    public void setParentRegistrationToken(String token) {
+        if (token == null) {
+            token = "";
+        }
+        this.parentRegistrationToken = token;
+    }
+
+    public String getParentRegistrationToken() {
+        String parentRegistrationToken = this.parentRegistrationToken;
+        this.parentRegistrationToken = "";
+        return parentRegistrationToken;
+    }
+
+    public boolean hasParentRegistrationToken() {
+        return this.parentRegistrationToken != null && !this.parentRegistrationToken.isEmpty();
     }
 
     public void setParentToken(String token, Context context) {
