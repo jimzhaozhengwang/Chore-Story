@@ -172,7 +172,7 @@ def get_quest(qid, ts):
     else:
         ts = datetime.fromtimestamp(ts)
     quest = Quest.query.filter_by(id=qid).first()
-    if not child_is_me_or_my_child(Child.query.filter_by(id=quest.owner).first()):
+    if not quest or not child_is_me_or_my_child(Child.query.filter_by(id=quest.owner).first()):
         raise BackboneException(404, "Quest not found")
     return json_return(generate_qst_resp(quest, ts))
 
