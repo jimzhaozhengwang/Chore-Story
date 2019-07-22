@@ -6,10 +6,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.helpers.Toaster;
+import com.chorestory.helpers.TokenHandler;
+import com.chorestory.templates.RegisterRequest;
+import com.chorestory.templates.SingleResponse;
 
 import java.util.Collections;
+
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static java.security.AccessController.getContext;
 
 public class ParentJoinClanActivity extends ChoreStoryActivity {
 
@@ -26,6 +38,11 @@ public class ParentJoinClanActivity extends ChoreStoryActivity {
     private EditText passwordEditText;
     private Button signUpButton;
 
+    @Inject
+    TokenHandler tokenHandler;
+    @Inject
+    RetrofitInterface retrofitInterface;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,9 +50,7 @@ public class ParentJoinClanActivity extends ChoreStoryActivity {
         setContentView(R.layout.activity_parent_join_clan);
 
         welcomeTextView = findViewById(R.id.welcome_text_view);
-        String welcomeText = getString(R.string.welcome_to_the) +
-                " " + "CS449" + " " +  // TODO: fetch clan name
-                getString(R.string.clan) + "!";
+        String welcomeText = getString(R.string.sign_up_to_join_your_clan);
         welcomeTextView.setText(welcomeText);
 
         emailEditText = findViewById(R.id.email_edit_text);
@@ -70,10 +85,42 @@ public class ParentJoinClanActivity extends ChoreStoryActivity {
                     enableButtons();
                     Toaster.showToast(getApplicationContext(), "Missing sign up information!");
                 } else {
-                    // TODO cristian: make request, refer to ParentCreateClanActivity
 
-                    // TODO cristian: make sure ParentHome shows the clan name
-                    navigateTo(ParentHomeActivity.class);
+                    if (tokenHandler.hasParentRegistrationToken()) {
+
+                        RegisterRequest registerRequest = new RegisterRequest(
+                                email,
+                                "",
+                                name,
+                                password,
+                                picture
+                        );
+
+                        String parentRegistrationToken = tokenHandler.getParentRegistrationToken();
+                        Call<SingleResponse<String>> parentRegistrationQuery = retrofitInterface.register_co_parent(
+                                parentRegistrationToken,
+                                registerRequest);
+                        parentRegistrationQuery.enqueue(new Callback<SingleResponse<String>>() {
+                            @Override
+                            public void onResponse(Call<SingleResponse<String>> call, Response<SingleResponse<String>> response) {
+                                if(response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
+                                    String parentToken = response.body().getData();
+
+                                    tokenHandler.setParentToken(parentToken, getApplicationContext());
+
+                                    navigateTo(ParentHomeActivity.class);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SingleResponse<String>> call, Throwable t) {
+                                Toaster.showToast(getApplicationContext(), "Internal error occurred.");
+                            }
+                        });
+
+                    } else {
+                        deleteTokenNavigateMain(getApplicationContext());
+                    }
                 }
             }
         });
