@@ -65,6 +65,17 @@
             android:textSize="20sp" />
 
         <Button
+            android:id="@+id/complete_quest_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/exp_text_view"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@id/quest_status_text_view"
+            android:text="@string/complete_quest" />
+
+        <Button
             android:id="@+id/add_proof_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -152,7 +163,7 @@
             android:layout_below="@id/description_text_view"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/border"
             android:paddingStart="10dp"
             android:paddingTop="10dp"

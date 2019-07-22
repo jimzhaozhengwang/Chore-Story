@@ -1,6 +1,7 @@
 package com.chorestory.app;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -9,10 +10,13 @@ import android.widget.TextView;
 import com.chorestory.Interface.RetrofitInterface;
 import com.chorestory.R;
 import com.chorestory.helpers.QuestCompletion;
-import com.chorestory.model.QuestRecyclerViewItem;
-import com.chorestory.templates.GetQuestResponse;
+import com.chorestory.helpers.Toaster;
 import com.chorestory.helpers.TokenHandler;
+import com.chorestory.model.QuestRecyclerViewItem;
+import com.chorestory.templates.CompleteQuestResponse;
+import com.chorestory.templates.GetQuestResponse;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 import javax.inject.Inject;
@@ -38,6 +42,7 @@ public class ChildQuestDetailsActivity extends ChoreStoryActivity {
     private TextView timeTextView;
     private TextView recurrenceTextView;
     private TextView questDescriptionTextView;
+    private Button completeQuestButton;
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -65,6 +70,53 @@ public class ChildQuestDetailsActivity extends ChoreStoryActivity {
         timeTextView = findViewById(R.id.quest_time_text_view);
         recurrenceTextView = findViewById(R.id.recurrence_text_view);
         questDescriptionTextView = findViewById(R.id.quest_description_text_view);
+        completeQuestButton = findViewById(R.id.complete_quest_button);
+
+        buttons = Arrays.asList(addProofButton, completeQuestButton);
+
+        completeQuestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                disableButtons();
+
+                String token = tokenHandler.getToken(getApplicationContext());
+                if (token != null && tokenHandler.isChildToken(token)) {
+                    Call<CompleteQuestResponse> completeQuestQuery = retrofitInference.complete_quest(
+                            token,
+                            quest.getId()
+                    );
+
+                    completeQuestQuery.enqueue(new Callback<CompleteQuestResponse>() {
+                        @Override
+                        public void onResponse(Call<CompleteQuestResponse> call, Response<CompleteQuestResponse> response) {
+                            if (response.isSuccessful() &&
+                                    response.body() != null &&
+                                    response.body().hasResponse()) {
+
+                                CompleteQuestResponse.Data responseData = response.body().getData();
+                                if (responseData.isCompletedNow()) {
+                                    Toaster.showToast(getApplicationContext(), "Quest successfully completed.");
+                                } else {
+                                    Toaster.showToast(getApplicationContext(), "Internal error occurred.");
+                                }
+                                if (responseData.isLvledUp()) {
+                                    Toaster.showToast(getApplicationContext(), "Congratulations! You have leveled up!");
+                                }
+                            } else {
+                                Toaster.showToast(getApplicationContext(), "Internal error occurred.");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<CompleteQuestResponse> call, Throwable t) {
+                            Toaster.showToast(getApplicationContext(), "Internal error occurred.");
+                        }
+                    });
+                } else {
+                    deleteTokenNavigateMain(getApplicationContext());
+                }
+            }
+        });
     }
 
     private void populateFields() {
@@ -139,6 +191,11 @@ public class ChildQuestDetailsActivity extends ChoreStoryActivity {
                         if (response.isSuccessful() && response.body() != null && response.body().hasResponse()) {
                             quest = new QuestRecyclerViewItem(response.body().getQuest());
                             populateFields();
+
+                            if (quest.getStatus() == QuestCompletion.PENDING ||
+                                    quest.getStatus() == QuestCompletion.COMPLETED) {
+                                completeQuestButton.setVisibility(View.GONE);
+                            }
                         }
                     }
 
