@@ -125,7 +125,6 @@ public class ChildFriendsFragment extends ChoreStoryFragment {
 
                     @Override
                     public void onFailure(Call<ClanChildrenResponse> call, Throwable t) {
-                        deleteTokenNavigateMain(getContext());
                     }
                 });
             } else {

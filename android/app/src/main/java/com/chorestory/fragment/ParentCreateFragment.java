@@ -402,7 +402,6 @@ public class ParentCreateFragment extends ChoreStoryFragment {
                 @Override
                 public void onFailure(Call<AccountResponse> call, Throwable t) {
                     Toaster.showToast(getContext(), "Internal error occurred.");
-                    deleteTokenNavigateMain(getContext());
                 }
             });
         } else {

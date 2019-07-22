@@ -94,7 +94,6 @@ public class ChildClanFragment extends ChoreStoryFragment {
                 @Override
                 public void onFailure(Call<ClanResponse> call, Throwable t) {
                     Toaster.showToast(getContext(), "Internal error occurred.");
-                    deleteTokenNavigateMain(getContext());
                 }
             });
 
@@ -118,7 +117,6 @@ public class ChildClanFragment extends ChoreStoryFragment {
                 @Override
                 public void onFailure(Call<ClanChildrenResponse> call, Throwable t) {
                     Toaster.showToast(getContext(), "Internal error occurred.");
-                    deleteTokenNavigateMain(getContext());
                 }
             });
         }
