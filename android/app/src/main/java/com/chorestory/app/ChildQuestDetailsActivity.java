@@ -80,37 +80,41 @@ public class ChildQuestDetailsActivity extends ChoreStoryActivity {
                 disableButtons();
 
                 String token = tokenHandler.getToken(getApplicationContext());
-                Call<CompleteQuestResponse> completeQuestQuery = retrofitInference.complete_quest(
-                        token,
-                        quest.getId()
-                );
+                if (token != null && tokenHandler.isChildToken(token)) {
+                    Call<CompleteQuestResponse> completeQuestQuery = retrofitInference.complete_quest(
+                            token,
+                            quest.getId()
+                    );
 
-                completeQuestQuery.enqueue(new Callback<CompleteQuestResponse>() {
-                    @Override
-                    public void onResponse(Call<CompleteQuestResponse> call, Response<CompleteQuestResponse> response) {
-                        if (response.isSuccessful() &&
-                                response.body() != null &&
-                                response.body().hasResponse()) {
+                    completeQuestQuery.enqueue(new Callback<CompleteQuestResponse>() {
+                        @Override
+                        public void onResponse(Call<CompleteQuestResponse> call, Response<CompleteQuestResponse> response) {
+                            if (response.isSuccessful() &&
+                                    response.body() != null &&
+                                    response.body().hasResponse()) {
 
-                            CompleteQuestResponse.Data responseData = response.body().getData();
-                            if (responseData.isCompletedNow()) {
-                                Toaster.showToast(getApplicationContext(), "Quest successfully completed.");
+                                CompleteQuestResponse.Data responseData = response.body().getData();
+                                if (responseData.isCompletedNow()) {
+                                    Toaster.showToast(getApplicationContext(), "Quest successfully completed.");
+                                } else {
+                                    Toaster.showToast(getApplicationContext(), "Internal error occurred.");
+                                }
+                                if (responseData.isLvledUp()) {
+                                    Toaster.showToast(getApplicationContext(), "Congratulations! You have leveled up!");
+                                }
                             } else {
                                 Toaster.showToast(getApplicationContext(), "Internal error occurred.");
                             }
-                            if (responseData.isLvledUp()) {
-                                Toaster.showToast(getApplicationContext(), "Congratulations! You have leveled up!");
-                            }
-                        } else {
+                        }
+
+                        @Override
+                        public void onFailure(Call<CompleteQuestResponse> call, Throwable t) {
                             Toaster.showToast(getApplicationContext(), "Internal error occurred.");
                         }
-                    }
-
-                    @Override
-                    public void onFailure(Call<CompleteQuestResponse> call, Throwable t) {
-                        Toaster.showToast(getApplicationContext(), "Internal error occurred.");
-                    }
-                });
+                    });
+                } else {
+                    deleteTokenNavigateMain(getApplicationContext());
+                }
             }
         });
     }
