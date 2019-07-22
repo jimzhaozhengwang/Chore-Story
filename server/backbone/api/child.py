@@ -51,6 +51,7 @@ def add_friend(username):
     **Errors**:
 
     404, Child not found - child id is invalid
+    405, Already friends - child is already your friend
 
     **Example Return**:
 
@@ -64,8 +65,10 @@ def add_friend(username):
     :return: whether friend was added
     """
     potential_friend = Child.query.filter_by(username=username).first()
-    if not potential_friend:
+    if not potential_friend or potential_friend == current_user:
         raise BackboneException(404, "Child not found")
+    if potential_friend in current_user.all_friends:
+        raise BackboneException(405, "Already friends")
     current_user.added_friends.append(potential_friend)
     db.session.commit()
     return json_return(potential_friend in current_user.all_friends)
