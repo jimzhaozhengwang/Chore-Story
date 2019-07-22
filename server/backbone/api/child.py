@@ -167,7 +167,7 @@ def complete_quest(qid, ts):
         quest_completion = QuestCompletions(value=ts, ts=datetime.utcnow())
         quest.completions.append(quest_completion)
         if not quest.needs_verification:
-            lvl_up = award_xp_to_child(current_user, quest.award)
+            lvl_up = award_xp_to_child(current_user, quest.reward)
         db.session.commit()
     resp = {
         'completed_now': completed_now,
