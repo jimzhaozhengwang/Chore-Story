@@ -518,8 +518,6 @@ public class ParentCreateFragment extends ChoreStoryFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callDialogFlow("Add a quest to draw an octahedron on Tuesday evening for John for 5 points");
-
         if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
