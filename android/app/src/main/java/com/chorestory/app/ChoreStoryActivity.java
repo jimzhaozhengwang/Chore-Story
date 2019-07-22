@@ -1,5 +1,6 @@
 package com.chorestory.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,14 +9,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
+import com.chorestory.helpers.TokenHandler;
+
 import java.util.List;
 import java.util.Objects;
+
+import javax.inject.Inject;
 
 abstract public class ChoreStoryActivity extends AppCompatActivity {
 
     List<Button> buttons;
 
     InputMethodManager inputMethodManager;
+
+    @Inject
+    TokenHandler tokenHandler;
 
     @Override
     protected void onResume() {
@@ -45,6 +53,10 @@ abstract public class ChoreStoryActivity extends AppCompatActivity {
         setButtons(false);
     }
 
+    protected void navigateTo(Context context, Class<?> toClass) {
+        startActivity(new Intent(context, toClass));
+    }
+
     protected void navigateTo(Class<?> cls, String key, String value) {
         Intent intent = new Intent(this, cls);
         intent.putExtra(key, value);
@@ -59,5 +71,10 @@ abstract public class ChoreStoryActivity extends AppCompatActivity {
         if (inputMethodManager.isAcceptingText()) {
             inputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
         }
+    }
+
+    protected void deleteTokenNavigateMain(Context context) {
+        tokenHandler.deleteStoredToken(context);
+        navigateTo(context, MainActivity.class);
     }
 }

@@ -9,10 +9,13 @@ import androidx.annotation.Nullable;
 
 import com.chorestory.R;
 import com.chorestory.helpers.Toaster;
+import com.chorestory.helpers.TokenHandler;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.Arrays;
+
+import javax.inject.Inject;
 
 public class ParentSignUpActivity extends ChoreStoryActivity {
 
@@ -20,6 +23,9 @@ public class ParentSignUpActivity extends ChoreStoryActivity {
 
     private Button createNewClanButton;
     private Button joinExistingClanButton;
+
+    @Inject
+    TokenHandler tokenHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +66,17 @@ public class ParentSignUpActivity extends ChoreStoryActivity {
 
             Barcode barCode = data.getParcelableExtra(getString(R.string.qr_code));
 
-            if (barCode != null) {
-                Toaster.showToast(this, barCode.displayValue); // TODO: remove this line
+            if (barCode != null && !barCode.displayValue.isEmpty()) {
 
-                // TODO cristian: join existing clan, set clan name
-                navigateTo(ParentJoinClanActivity.class);
+                if (barCode.displayValue.endsWith(getString(R.string.parent_register_identifier))) {
+
+                    // The token can be used by the child to login
+                    tokenHandler.setParentRegistrationToken(
+                            barCode.displayValue.replace(getString(R.string.parent_register_identifier), ""));
+                    navigateTo(ParentJoinClanActivity.class);
+
+                }
+
             } else {
                 Toaster.showToast(this, this.getString(R.string.unable_to_detect_qr_code));
             }

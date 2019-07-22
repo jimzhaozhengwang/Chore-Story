@@ -75,6 +75,7 @@
     <string name="token_identifier">tokenIdentifier</string>
     <string name="child_login_identifier">:childLogin</string>
     <string name="child_register_identifier">:childRegister</string>
+    <string name="parent_register_identifier">:parentRegister</string>
 
 
     <string-array name="recurrence_array">
