@@ -11,6 +11,8 @@ import com.chorestory.templates.GetQuestsResponse;
 import com.chorestory.templates.LoginRequest;
 import com.chorestory.templates.QuestCreateRequest;
 import com.chorestory.templates.QuestCreateResponse;
+import com.chorestory.templates.QuestDialogFlowRequest;
+import com.chorestory.templates.QuestDialogFlowResponse;
 import com.chorestory.templates.QuestModifyRequest;
 import com.chorestory.templates.RegisterRequest;
 import com.chorestory.templates.SaveRegistrationIdRequest;
@@ -123,6 +125,12 @@ public interface RetrofitInterface {
             @Path("ts") String ts
     );
 
+    @POST("quest/text")
+    Call<QuestDialogFlowResponse> get_quest_dialog_flow(
+            @Header("Authorization") String auth,
+            @Body QuestDialogFlowRequest questDialogFlowRequest
+    );
+
     @POST("quest/{qid}")
     Call<QuestCreateResponse> modify_quest(
             @Header("Authorization") String auth,
@@ -140,5 +148,6 @@ public interface RetrofitInterface {
     Call<SingleResponse<Boolean>> save_registration_id(
             @Header("Authorization") String auth,
             @Body SaveRegistrationIdRequest saveRegistrationIdRequest
+
     );
 }
