@@ -6,6 +6,7 @@ import com.chorestory.templates.ChildRequest;
 import com.chorestory.templates.ChildResponse;
 import com.chorestory.templates.ClanChildrenResponse;
 import com.chorestory.templates.ClanResponse;
+import com.chorestory.templates.CompleteQuestResponse;
 import com.chorestory.templates.GetQuestResponse;
 import com.chorestory.templates.GetQuestsResponse;
 import com.chorestory.templates.LoginRequest;
@@ -143,11 +144,17 @@ public interface RetrofitInterface {
             @Header("Authorization") String auth,
             @Path("qid") Integer qid
     );
-      
+
     @POST("me/registration_id")
     Call<SingleResponse<Boolean>> save_registration_id(
             @Header("Authorization") String auth,
             @Body SaveRegistrationIdRequest saveRegistrationIdRequest
 
+    );
+
+    @POST("quest/{qid}/complete")
+    Call<CompleteQuestResponse> complete_quest(
+            @Header("Authorization") String auth,
+            @Path("qid") int qid
     );
 }
