@@ -42,7 +42,7 @@ def register(cp_code, email, name, password, clan_name, picture):
         "name": "backbone",
         "password": "backbone",
         "clan_name": "clan_name",
-        "parent": "1"
+        "picture": "1"
         }
 
     **Example return**:
