@@ -82,14 +82,12 @@ public class ChildProfileFragment extends ChoreStoryFragment {
                         childLevelTextView.setText(String.format(Locale.CANADA, "%d", respData.getLevel()));
                         childExpTextView.setText(String.format(Locale.CANADA, "%d", respData.getExp()));
 
-                    } else {
-                        deleteTokenNavigateMain(getContext());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ChildResponse> call, Throwable t) {
-                    deleteTokenNavigateMain(getContext());
+
                 }
             });
         } else {
