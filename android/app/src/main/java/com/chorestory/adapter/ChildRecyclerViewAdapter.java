@@ -25,9 +25,16 @@ public class ChildRecyclerViewAdapter extends RecyclerView.Adapter<ChildRecycler
         for (Children child : childrenList) {
             this.childrenList.add(new ChildRecyclerViewItem(child));
         }
-
         // Sort the list of Children in descending order of level and exp
         Collections.sort(this.childrenList);
+
+        for (int i = 0; i < this.childrenList.size(); i++) {
+            if (i % 2 == 0) {
+                this.childrenList.get(i).setImageId(R.drawable.knight_color);
+            } else {
+                this.childrenList.get(i).setImageId(R.drawable.joker_color);
+            }
+        }
     }
 
     @NonNull

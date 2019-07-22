@@ -76,6 +76,7 @@ public class ParentCreateFragment extends ChoreStoryFragment {
     private Button selectTimeButton;
     private Spinner recurrenceSpinner;
     private CheckBox needsVerificationCheckBox;
+    private TextView needsVerificationTextView;
     private EditText descriptionEditText;
     private FloatingActionButton createQuestFab;
 
@@ -140,6 +141,10 @@ public class ParentCreateFragment extends ChoreStoryFragment {
         recurrenceSpinner = view.findViewById(R.id.recurrence_spinner);
 
         needsVerificationCheckBox = view.findViewById(R.id.needs_verification_check_box);
+        needsVerificationCheckBox.setVisibility(needsVerificationCheckBox.GONE);
+        needsVerificationTextView = view.findViewById(R.id.needs_verification_text_view);
+        needsVerificationTextView.setVisibility(needsVerificationTextView.GONE);
+
 
         descriptionEditText = view.findViewById(R.id.description_edit_text);
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chorestory.Interface.RetrofitInterface;
@@ -32,12 +33,12 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
 
     private String username;
     private String name;
+    private int picture;
 
-    private EditText emailEditText;
-    private EditText clanNameEditText;
     private EditText usernameEditText;
     private EditText nameEditText;
-    private EditText passwordEditText;
+    private ImageView jokerImageView;
+    private ImageView kightImageView;
     private Button signUpButton;
 
     @Override
@@ -49,18 +50,27 @@ public class ChildJoinClanActivity extends ChoreStoryActivity {
         welcomeTextView = findViewById(R.id.welcome_text_view);
         welcomeTextView.setText(getString(R.string.sign_up_to_join_your_clan));
 
-        emailEditText = findViewById(R.id.email_edit_text);
-        emailEditText.setVisibility(View.GONE);
-
-        clanNameEditText = findViewById(R.id.clan_name_edit_text);
-        clanNameEditText.setVisibility(View.GONE);
-
         usernameEditText = findViewById(R.id.username_edit_text);
 
         nameEditText = findViewById(R.id.name_edit_text);
 
-        passwordEditText = findViewById(R.id.password_edit_text);
-        passwordEditText.setVisibility(TextView.GONE);
+        picture = R.drawable.joker_color;
+        jokerImageView = findViewById(R.id.avatar_joker);
+        kightImageView = findViewById(R.id.avatar_knight);
+        jokerImageView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                jokerImageView.setImageResource(R.drawable.joker_color);
+                kightImageView.setImageResource(R.drawable.knight_bw);
+                picture = R.drawable.joker_color;
+            }
+        });
+        kightImageView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                jokerImageView.setImageResource(R.drawable.joker_bw);
+                kightImageView.setImageResource(R.drawable.knight_color);
+                picture = R.drawable.knight_color;
+            }
+        });
 
         signUpButton = findViewById(R.id.sign_up_button);
         buttons = Collections.singletonList(signUpButton);

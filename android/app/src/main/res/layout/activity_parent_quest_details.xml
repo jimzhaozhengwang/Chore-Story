@@ -13,7 +13,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="10dp" />
 
         <EditText
             android:id="@+id/quest_name_edit_text"
@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_due_time_text_view"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:text="@string/recurrence"
             android:textSize="20sp" />
 
@@ -129,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_due_time_text_view"
             android:layout_marginStart="160dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:textSize="20sp" />
 
         <TextView
@@ -137,7 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_recurrence_text_view"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:text="@string/child"
             android:textSize="20sp" />
 
@@ -147,13 +147,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/quest_recurrence_text_view"
             android:layout_marginStart="160dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:textSize="20sp" />
 
         <EditText
             android:id="@+id/description_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="50dp"
             android:layout_below="@id/quest_owner_text_view"
             android:layout_marginTop="10dp"
             android:background="@drawable/border"
@@ -164,7 +164,7 @@
 
         <Button
             android:id="@+id/cancel_button"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/description_edit_text"
             android:layout_alignParentLeft="true"
@@ -174,7 +174,7 @@
 
         <Button
             android:id="@+id/save_button"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/description_edit_text"
             android:layout_centerHorizontal="true"
@@ -184,7 +184,7 @@
 
         <Button
             android:id="@+id/delete_button"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/description_edit_text"
             android:layout_alignParentRight="true"
