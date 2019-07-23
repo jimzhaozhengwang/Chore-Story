@@ -77,6 +77,12 @@
     <string name="child_register_identifier">:childRegister</string>
     <string name="complete_quest">Complete Quest</string>
     <string name="parent_register_identifier">:parentRegister</string>
+    <string name="creditsTitle">Chore Story Credits</string>
+    <string name="creditsButton">Credits</string>
+    <string name="credits">Created by: Isabelle Leeson, Cristian David, Mark Tamas Keller, and Zhaozheng (Jim) Wang\n
+    Source code available for inspection on:\nhttps://github.com/jimzhaozhengwang/CS446-Project\n
+        Icon made by Freepik from www.flaticon.com
+    </string>
 
 
     <string-array name="recurrence_array">

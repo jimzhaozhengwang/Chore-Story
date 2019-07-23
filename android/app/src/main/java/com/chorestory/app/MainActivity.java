@@ -35,7 +35,8 @@ public class MainActivity extends ChoreStoryActivity {
 
         Button parentGuardianButton = findViewById(R.id.parent_guardian_button);
         Button childButton = findViewById(R.id.child_button);
-        buttons = Arrays.asList(parentGuardianButton, childButton);
+        Button creditsButton = findViewById(R.id.credits_button);
+        buttons = Arrays.asList(parentGuardianButton, childButton, creditsButton);
 
         enableButtons();
 
@@ -54,6 +55,14 @@ public class MainActivity extends ChoreStoryActivity {
 
                 Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
                 startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+
+        creditsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                disableButtons();
+                navigateTo(CreditsActivity.class);
             }
         });
     }
