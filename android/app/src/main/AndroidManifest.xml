@@ -88,6 +88,9 @@
         <activity
             android:name=".app.MainActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".app.CreditsActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
