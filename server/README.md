@@ -9,7 +9,7 @@ Services:
 ## To run backbone
 1. Clone repo
     ```bash
-    git clone https://github.com/jimzhaozhengwang/CS446-Project.git cs446-project
+    git clone https://github.com/jimzhaozhengwang/Chore-Story cs446-project
     cd cs446-project
     ```
 2. Install `backbone`:
