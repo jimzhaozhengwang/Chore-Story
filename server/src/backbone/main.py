@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from .decorators import admin_login_required
 from .views import main
-
+from sqlalchemy import pool
 
 @main.route('/')
 def index():

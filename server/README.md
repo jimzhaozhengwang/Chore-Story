@@ -10,29 +10,31 @@ Services:
 1. Clone repo
     ```bash
     git clone https://github.com/jimzhaozhengwang/CS446-Project.git cs446-project
-    ```
-2. Check out the backend dev branch (Temporary)
-    ```bash
     cd cs446-project
-    git checkout --track origin/newsletter
     ```
-3. Install all of the dependencies(pinned in `requirement.txt`):
+2. Install `backbone`:
     ```bash
-    cd server/backbone
-    python3.7 -m pip install -r server/backbone/requirements.txt
+    cd server
+    python3.7 -m pip install .
+    ```
+3. (Only if database models were changed) Generate database update 
+    ```bash
+    cd server/src/backbone
+    alembic revision -m "updated db models" --autogenerate
     ```
 4. Build the necessary database
-    ```bash
-    cd ..
-    FLASK_APP=backbone flask init-db
-    ```
-    Note: Flask command needs to be run from the server directory.
+   For a brand new database remove `db.sqlite` in `/server/src/backbone/` first.
+   ```bash
+   cd src/backbone
+   alembic upgrade head
+   ```
+    Note: Flask command needs to be run from the `server/src` directory.
 
 ## Generating Backbone documentation
 
 1. Go into Backbone directory
     ```bash
-    cd server/backbone
+    cd server/src/backbone
     ```
 2. Generate documentation using Sphinx
     * pdf (make sure you have Latex installed)

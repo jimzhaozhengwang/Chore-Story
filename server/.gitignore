@@ -296,7 +296,8 @@ tags
 
 
 # Don't submit compiled documentation
-backbone/_build
-backbone/secret_key.txt
-backbone/project_id.txt
-backbone/notif_api_key.txt
+src/backbone/_build
+src/backbone/db.sqlite
+src/backbone/secret_key.txt
+src/backbone/project_id.txt
+src/backbone/notif_api_key.txt
