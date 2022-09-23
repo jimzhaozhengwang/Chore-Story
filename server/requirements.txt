@@ -22,7 +22,7 @@ Jinja2==2.10.1
 Mako==1.1.0
 MarkupSafe==1.1.1
 packaging==19.0
-protobuf==3.9.0
+protobuf==3.18.3
 pyasn1==0.4.5
 pyasn1-modules==0.2.5
 pyfcm==1.4.7
